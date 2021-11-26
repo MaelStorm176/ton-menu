@@ -1,6 +1,19 @@
 version: "3.8"
 
 services:
+  www:
+    build:
+      dockerfile: ./php/extensions_php
+    container_name: www_docker_symfony
+    ports:
+      - "8741:80"
+    volumes:
+      - ./php/vhosts:/etc/apache2/sites-enabled
+      - ./:/var/www
+    restart: always
+    networks:
+      - dev
+
   composer:
     image: composer:2.1.9
     entrypoint: composer
@@ -25,3 +38,6 @@ services:
       - 8080:8080
     depends_on:
       - db
+
+networks:
+  dev:
