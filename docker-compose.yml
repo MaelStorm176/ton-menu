@@ -1,36 +1,32 @@
 version: "3.8"
 
 services:
-  www:
+  web:
     build:
+      context: .
       dockerfile: ./php/extensions_php
-    container_name: www_docker_symfony
     ports:
-      - "8741:80"
+      - 8741:80
     volumes:
-      - ./php/vhosts:/etc/apache2/sites-enabled
       - ./:/var/www
-    restart: always
-    networks:
-      - dev
-
-  composer:
-    image: composer:2.1.9
-    entrypoint: composer
-    volumes:
-      - .:/app
+    depends_on:
+      - db
 
   db:
-    image: mysql:5.6
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASSWORD}
-      - MYSQL_DATABASE=${DB_NAME}
-    volumes:
-      - ./database:/var/lib/postgresql/data:rw
+    image: mysql:5.7
+    container_name: db_mysql
+    restart: always
     ports:
+      # <Port exposed> : < MySQL Port running inside container>
       - 3306:3306
+    expose:
+      # Opens port 3306 on the container
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=symfony
+      - MYSQL_DATABASE=symfony
+      - MYSQL_USER=symfony
 
   adminer:
     image: adminer
