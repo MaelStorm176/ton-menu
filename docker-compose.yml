@@ -3,6 +3,7 @@ version: "3.8"
 services:
   www:
     build:
+      context: .
       dockerfile: ./php/extensions_php
     container_name: www_docker_symfony
     ports:
