@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.css">
+  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.js"></script>
+
+<table id="myTable" class="display">
+    <thead>
+        <tr>
+            <th>Mail</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for users in user %}
+            <tr>
+                <td>{{users.email}}</td>
+                <td>{{users.roles[0]}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+$(document).ready( function () {
+    $('#myTable').DataTable();
+} );
+</script>
+{% endblock %}
