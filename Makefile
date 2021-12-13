@@ -5,3 +5,7 @@ start:
 
 stop:
 	docker compose down
+
+marmiton:
+	npm run marmiton
+	symfony console doctrine:fixtures:load -n
