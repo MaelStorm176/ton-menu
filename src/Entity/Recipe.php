@@ -18,7 +18,7 @@ class Recipe
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -62,6 +62,11 @@ class Recipe
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updated_at;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $total_time;
 
     public function getId(): ?int
     {
@@ -172,6 +177,18 @@ class Recipe
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getTotalTime(): ?\DateTimeInterface
+    {
+        return $this->total_time;
+    }
+
+    public function setTotalTime(\DateTimeInterface $total_time): self
+    {
+        $this->total_time = $total_time;
 
         return $this;
     }
