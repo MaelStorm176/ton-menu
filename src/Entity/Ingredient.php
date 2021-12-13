@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\Table;
 
 /**
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
@@ -19,7 +18,7 @@ class Ingredient
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=40, unique=true)
+     * @ORM\Column(type="string", length=20)
      */
     private $name;
 

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello NewRecetteController!{% endblock %}
+
+{% block body %}
+{% for recettes in recette %}
+<p>{{recettes.name}}</p>
+{% endfor %}
+{% endblock %}
