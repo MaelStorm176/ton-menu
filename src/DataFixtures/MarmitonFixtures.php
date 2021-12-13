@@ -28,8 +28,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
 
         //Je récupère chaque object json qui représente une recette
         foreach ($json_a as $recipes_json => $recipe_json) {
-            $total_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
-            $preparation_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
+            $total_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
+            $preparation_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
             $recipe = new Recipe();
             $recipe
                 ->setUserId($manager->getRepository(User::class)->findBy(['email'=>'admin@gmail.com'])[0])
