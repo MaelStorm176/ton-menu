@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RecipeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -67,6 +69,16 @@ class Recipe
      * @ORM\Column(type="time")
      */
     private $total_time;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $recipeSteps;
+
+    public function __construct()
+    {
+        $this->recipeSteps = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -189,6 +201,36 @@ class Recipe
     public function setTotalTime(\DateTimeInterface $total_time): self
     {
         $this->total_time = $total_time;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RecipeSteps[]
+     */
+    public function getRecipeSteps(): Collection
+    {
+        return $this->recipeSteps;
+    }
+
+    public function addRecipeStep(RecipeSteps $recipeStep): self
+    {
+        if (!$this->recipeSteps->contains($recipeStep)) {
+            $this->recipeSteps[] = $recipeStep;
+            $recipeStep->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeStep(RecipeSteps $recipeStep): self
+    {
+        if ($this->recipeSteps->removeElement($recipeStep)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeStep->getRecipe() === $this) {
+                $recipeStep->setRecipe(null);
+            }
+        }
 
         return $this;
     }

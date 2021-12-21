@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
+use App\Entity\RecipeSteps;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -48,6 +49,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);
                 /******************************************************/
+
+
                 /**** INGREDIENTS ****/
                 $ingredient_liste = explode(",",$recipe_json["description"]);
                 foreach ($ingredient_liste as $ingredient_name){
@@ -64,6 +67,19 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                         $manager->persist($ingredient);
                     }
                 }
+                /******************************************************/
+
+                /**** RECIPE STEPS ****/
+                $recipe_steps_array = $recipe_json["steps"];
+                foreach ($recipe_steps_array as $recipe_step_string){
+                    $recipe_step_string = trim($recipe_step_string);
+                    $recipe_step = new RecipeSteps();
+                    $recipe_step
+                        ->setRecipe($recipe)
+                        ->setStep($recipe_step_string);
+                    $manager->persist($recipe_step);
+                }
+                /******************************************************/
             }
         }
         $manager->flush();
