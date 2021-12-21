@@ -51,36 +51,8 @@ resultsStarter.then((recipesStarter) => {
             fs.writeFile(path,recipesJSON,'utf8',function (err) {
                 if (err) throw err;
                 console.log('complete');
-                return;
             })
         });
     });
 });
 
-
-
-/*
-results(queryStarter).then((recipes) => {
-    fs.appendFileSync(path, JSON.stringify(recipes), 'utf8',function(err) {
-        if (err) throw err;
-        console.log('complete Entrées');
-        return;
-    })
-});
-
-results(queryMain).then((recipes) => {
-    fs.appendFileSync(path, JSON.stringify(recipes), 'utf8',function(err) {
-        if (err) throw err;
-        console.log('complete Plats');
-        return;
-    })
-});
-
-results(queryDessert).then((recipes) => {
-    fs.appendFileSync(path, JSON.stringify(recipes), 'utf8',function(err) {
-        if (err) throw err;
-        console.log('complete Desserts');
-        return;
-    })
-});
-*/
