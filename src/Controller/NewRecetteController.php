@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use DateTime;
+use App\Entity\Rating;
 use App\Entity\Recipe;
-use App\Form\RecetteType;
 use DateTimeImmutable;
+use App\Form\RecetteType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,7 +35,7 @@ class NewRecetteController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('/recette', [
+            return $this->redirectToRoute('recette', [
                 'id' => $recette->getId()
             ]);
         }
@@ -48,8 +49,16 @@ class NewRecetteController extends AbstractController
      * @Route("/recette/{id}", name="recette")
      */
     public function show_recette(Recipe $recette): Response{
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        $repository = $this->getDoctrine()->getRepository(Rating::class);
+        $rating = $repository->findOneBy(
+            ['user' => $user, 'recette' => $recette],
+        );
+
         return $this->render('new_recette/show.html.twig', [
             'recette' => $recette,
+            'rating' => $rating,
         ]);
     }
 
@@ -61,8 +70,12 @@ class NewRecetteController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
         $recettes = $repository->findAll();
 
+        $repository2 = $this->getDoctrine()->getRepository(Rating::class);
+        $rating = $repository2->findAll();
+
         return $this->render('new_recette/home.html.twig', [
             'recette' => $recettes,
+            'rating' => $rating,
         ]);
      }
 }
