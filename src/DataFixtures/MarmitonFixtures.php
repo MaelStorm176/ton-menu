@@ -5,6 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeSteps;
+use App\Entity\RecipeTags;
+use App\Entity\RecipeTagsLinks;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -36,6 +38,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 /**** RECIPE ****/
                 $total_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
                 $preparation_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
+
                 $recipe = new Recipe();
                 $recipe
                     ->setUserId($user_entity)
@@ -50,6 +53,25 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 $manager->persist($recipe);
                 /******************************************************/
 
+                /********* TAGS **********/
+                $tags_json = $recipe_json["tags"];
+                $tags = [];
+                foreach ($tags_json as $tag_element){
+                    $tag_element = utf8_encode(strtolower($tag_element));
+                    $tag = $manager->getRepository(RecipeTags::class)->findOneBy(['name'=>$tag_element]);
+                    if ($tag == null && !isset($tags[$tag_element])) {
+                        $tag = new RecipeTags();
+                        $tag->setName($tag_element);
+                        $tags[$tag_element] = $tag;
+                        $manager->persist($tag);
+                    }elseif (isset($tags[$tag_element])){
+                        $tag = $tags[$tag_element];
+                    }
+                    $recipeTagLink = new RecipeTagsLinks();
+                    $recipeTagLink->setRecipe($recipe);
+                    $recipeTagLink->setRecipeTag($tag);
+                    $manager->persist($recipeTagLink);
+                }
 
                 /**** INGREDIENTS ****/
                 $ingredient_liste = explode(",",$recipe_json["description"]);
@@ -80,9 +102,9 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     $manager->persist($recipe_step);
                 }
                 /******************************************************/
+                $manager->flush();
             }
         }
-        $manager->flush();
     }
 
     public function getDependencies()
