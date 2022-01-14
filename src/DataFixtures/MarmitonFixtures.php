@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
+use App\Entity\RecipeIngredients;
 use App\Entity\RecipeSteps;
 use App\Entity\RecipeTags;
 use App\Entity\RecipeTagsLinks;
@@ -57,7 +58,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 $tags_json = $recipe_json["tags"];
                 $tags = [];
                 foreach ($tags_json as $tag_element){
-                    $tag_element = utf8_encode(strtolower($tag_element));
+                    $tag_element = utf8_encode(strtolower(trim($tag_element)));
                     if (!empty($tag_element)){
                         $tag = $manager->getRepository(RecipeTags::class)->findOneBy(['name'=>$tag_element]);
                         if ($tag == null && !isset($tags[$tag_element])) {
@@ -68,6 +69,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                         }elseif (isset($tags[$tag_element])){
                             $tag = $tags[$tag_element];
                         }
+                        //On créer le lien tag → recette
                         $recipeTagLink = new RecipeTagsLinks();
                         $recipeTagLink->setRecipe($recipe);
                         $recipeTagLink->setRecipeTag($tag);
@@ -78,9 +80,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 /**** INGREDIENTS ****/
                 $ingredient_liste = explode(",",$recipe_json["description"]);
                 foreach ($ingredient_liste as $ingredient_name){
-                    $ingredient_name = trim($ingredient_name);
+                    $ingredient_name = utf8_encode(strtolower(trim($ingredient_name)));
                     if(!isset($ingredient_name_list[$ingredient_name])){
-                        $ingredient_name_list[$ingredient_name] = true;
                         $ingredient = new Ingredient();
                         $ingredient
                             ->setUserId($user_entity)
@@ -89,7 +90,13 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                             ->setSecondaryType("marmiton")
                             ->setCreatedAt(new \DateTimeImmutable());
                         $manager->persist($ingredient);
+                        $ingredient_name_list[$ingredient_name] = $ingredient;
                     }
+                    //On créer le lien ingrédient → recette
+                    $recipe_ingredient = new RecipeIngredients();
+                    $recipe_ingredient->setRecipe($recipe);
+                    $recipe_ingredient->setIngredient($ingredient_name_list[$ingredient_name]);
+                    $manager->persist($recipe_ingredient);
                 }
                 /******************************************************/
 
