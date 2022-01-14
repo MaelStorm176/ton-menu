@@ -45,9 +45,14 @@ class Recipe
     private $difficulty;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="integer")
      */
     private $preparation_time;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $total_time;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="recipes")
@@ -64,11 +69,6 @@ class Recipe
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
     private $updated_at;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    private $total_time;
 
     /**
      * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true)
@@ -157,14 +157,26 @@ class Recipe
         return $this;
     }
 
-    public function getPreparationTime(): ?\DateTimeInterface
+    public function getPreparationTime(): ?int
     {
         return $this->preparation_time;
     }
 
-    public function setPreparationTime(\DateTimeInterface $preparation_time): self
+    public function setPreparationTime(int $preparation_time): self
     {
         $this->preparation_time = $preparation_time;
+
+        return $this;
+    }
+
+    public function getTotalTime(): ?int
+    {
+        return $this->total_time;
+    }
+
+    public function setTotalTime(int $total_time): self
+    {
+        $this->total_time = $total_time;
 
         return $this;
     }
@@ -201,18 +213,6 @@ class Recipe
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    public function getTotalTime(): ?\DateTimeInterface
-    {
-        return $this->total_time;
-    }
-
-    public function setTotalTime(\DateTimeInterface $total_time): self
-    {
-        $this->total_time = $total_time;
 
         return $this;
     }

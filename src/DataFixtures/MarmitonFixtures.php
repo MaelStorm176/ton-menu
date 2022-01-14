@@ -22,23 +22,29 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
         $ingredient_name_list = [];
 
         /**** LECTURE DU JSON ****/
+        $t0 = microtime(true);
         $string = file_get_contents("marmiton_results.json");
         if ($string === false) {
             throw new \Error("Erreur lecture fichier");
         }
+        $t1 = microtime(true);
+        echo "\nLecture fichier en : " . ($t1 - $t0) ." sec";
 
+        $t0 = microtime(true);
         $json_a = json_decode($string, true);
         if ($json_a === null) {
             throw new \Error("Conversion JSON impossible");
         }
+        $t1 = microtime(true);
+        echo "\nDecodage JSON en : " . ($t1 - $t0) ." sec";
         /**** FIN LECTURE DU JSON ****/
 
         //Je récupère chaque object json qui représente une recette | 0=Entrées, 1=Plats, 2=Desserts
         for ($i=0;$i<3;$i++){
             foreach ($json_a[$i] as $recipe_json) {
                 /**** RECIPE ****/
-                $total_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
-                $preparation_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
+                //$total_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
+                //$preparation_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
 
                 $recipe = new Recipe();
                 $recipe
@@ -48,8 +54,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setType($types_recettes[$i])
                     ->setNumberOfPersons($recipe_json["people"])
                     ->setDifficulty($recipe_json["difficulty"])
-                    ->setPreparationTime(new \DateTime($preparation_time))
-                    ->setTotalTime(new \DateTime($total_time))
+                    ->setPreparationTime($recipe_json["prepTime"])
+                    ->setTotalTime($recipe_json["totalTime"])
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);
                 /******************************************************/
