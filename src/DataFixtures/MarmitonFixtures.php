@@ -58,19 +58,21 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 $tags = [];
                 foreach ($tags_json as $tag_element){
                     $tag_element = utf8_encode(strtolower($tag_element));
-                    $tag = $manager->getRepository(RecipeTags::class)->findOneBy(['name'=>$tag_element]);
-                    if ($tag == null && !isset($tags[$tag_element])) {
-                        $tag = new RecipeTags();
-                        $tag->setName($tag_element);
-                        $tags[$tag_element] = $tag;
-                        $manager->persist($tag);
-                    }elseif (isset($tags[$tag_element])){
-                        $tag = $tags[$tag_element];
+                    if (!empty($tag_element)){
+                        $tag = $manager->getRepository(RecipeTags::class)->findOneBy(['name'=>$tag_element]);
+                        if ($tag == null && !isset($tags[$tag_element])) {
+                            $tag = new RecipeTags();
+                            $tag->setName($tag_element);
+                            $tags[$tag_element] = $tag;
+                            $manager->persist($tag);
+                        }elseif (isset($tags[$tag_element])){
+                            $tag = $tags[$tag_element];
+                        }
+                        $recipeTagLink = new RecipeTagsLinks();
+                        $recipeTagLink->setRecipe($recipe);
+                        $recipeTagLink->setRecipeTag($tag);
+                        $manager->persist($recipeTagLink);
                     }
-                    $recipeTagLink = new RecipeTagsLinks();
-                    $recipeTagLink->setRecipe($recipe);
-                    $recipeTagLink->setRecipeTag($tag);
-                    $manager->persist($recipeTagLink);
                 }
 
                 /**** INGREDIENTS ****/
