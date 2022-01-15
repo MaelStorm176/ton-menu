@@ -89,6 +89,24 @@
             <label for="1">☆</label> 
         {% endif %}
     </div>
+    <div>
+        {{ form_start(recetteForm) }}
+            {{ form_row(recetteForm.content) }}
+            {{ form_row(recetteForm.save) }}
+        {{ form_end(recetteForm) }}
+    </div>
+    <div>
+        <h2>Commentaires</h2>
+        {% for comments in comment %}
+            {% if comments.recette == recette %}
+                <div>
+                    <p>{{comments.user.email}}</p>
+                    <p>{{comments.content}}</p>
+                    <p>{{comments.createdAt | date("d/m/Y h:i:s")}}</p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
     <script>
             function rate(id, value) {
                 $.ajax({
