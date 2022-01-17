@@ -20,7 +20,7 @@ class Recipe
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $name;
 
@@ -45,15 +45,25 @@ class Recipe
     private $difficulty;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="integer")
      */
     private $preparation_time;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $total_time;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user_id;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette")
+     */
+    private $ratings;
 
     /**
      * @ORM\Column(type="datetime_immutable")
@@ -66,17 +76,30 @@ class Recipe
     private $updated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette")
+     * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true)
      */
-    private $ratings;
+    private $recipeSteps;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeTagsLinks::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $recipeTagsLinks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeIngredients::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $ingredients;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
      */
     private $comments;
-
+  
     public function __construct()
     {
+        $this->recipeSteps = new ArrayCollection();
+        $this->recipeTagsLinks = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->comments = new ArrayCollection();
     }
@@ -94,8 +117,6 @@ class Recipe
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getUrl(): ?string
@@ -142,18 +163,6 @@ class Recipe
     public function setDifficulty(float $difficulty): self
     {
         $this->difficulty = $difficulty;
-
-        return $this;
-    }
-
-    public function getPreparationTime(): ?\DateTimeInterface
-    {
-        return $this->preparation_time;
-    }
-
-    public function setPreparationTime(\DateTimeInterface $preparation_time): self
-    {
-        $this->preparation_time = $preparation_time;
 
         return $this;
     }
@@ -212,6 +221,16 @@ class Recipe
         return $this;
     }
 
+    public function getPreparationTime(): ?int
+    {
+        return $this->preparation_time;
+    }
+
+    public function setPreparationTime(int $preparation_time): self
+    {
+      $this->preparation_time = $preparation_time;
+    }
+      
     public function removeRating(Rating $rating): self
     {
         if ($this->ratings->removeElement($rating)) {
@@ -220,6 +239,18 @@ class Recipe
                 $rating->setRecette(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTotalTime(): ?int
+    {
+        return $this->total_time;
+    }
+
+    public function setTotalTime(int $total_time): self
+    {
+        $this->total_time = $total_time;
 
         return $this;
     }
@@ -248,6 +279,96 @@ class Recipe
             // set the owning side to null (unless already changed)
             if ($comment->getRecette() === $this) {
                 $comment->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RecipeSteps[]
+     */
+    public function getRecipeSteps(): Collection
+    {
+        return $this->recipeSteps;
+    }
+
+    public function addRecipeStep(RecipeSteps $recipeStep): self
+    {
+        if (!$this->recipeSteps->contains($recipeStep)) {
+            $this->recipeSteps[] = $recipeStep;
+            $recipeStep->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeStep(RecipeSteps $recipeStep): self
+    {
+        if ($this->recipeSteps->removeElement($recipeStep)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeStep->getRecipe() === $this) {
+                $recipeStep->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RecipeTagsLinks[]
+     */
+    public function getRecipeTagsLinks(): Collection
+    {
+        return $this->recipeTagsLinks;
+    }
+
+    public function addRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
+    {
+        if (!$this->recipeTagsLinks->contains($recipeTagsLink)) {
+            $this->recipeTagsLinks[] = $recipeTagsLink;
+            $recipeTagsLink->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
+    {
+        if ($this->recipeTagsLinks->removeElement($recipeTagsLink)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeTagsLink->getRecipe() === $this) {
+                $recipeTagsLink->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|RecipeIngredients[]
+     */
+    public function getIngredients(): Collection
+    {
+        return $this->ingredients;
+    }
+
+    public function addIngredient(RecipeIngredients $ingredient): self
+    {
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients[] = $ingredient;
+            $ingredient->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIngredient(RecipeIngredients $ingredient): self
+    {
+        if ($this->ingredients->removeElement($ingredient)) {
+            // set the owning side to null (unless already changed)
+            if ($ingredient->getRecipe() === $this) {
+                $ingredient->setRecipe(null);
             }
         }
 
