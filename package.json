@@ -1,0 +1,30 @@
+{
+  "devDependencies": {
+    "@popperjs/core": "^2.10.2",
+    "bootstrap": "^5.1.3",
+    "jquery": "^3.6.0"
+  },
+  "name": "projet-fa",
+  "description": "Projet de fin de 4e année ESGI",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "marmiton-api": "^2.2.0"
+  },
+  "scripts": {
+    "marmiton": "node marmiton_api.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaelStorm176/projet-fa.git"
+  },
+  "author": "mael",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaelStorm176/projet-fa/issues"
+  },
+  "homepage": "https://github.com/MaelStorm176/projet-fa#readme"
+}
