@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello NewRecetteController!{% endblock %}
+
+{% block body %}
+    {% for recettes in recette %}
+    {% set r = 0 %}
+    {% set i = 0 %}
+    {% set rat = 0 %}
+    {% set c = 0 %}
+        <a href="/recette/{{recettes.id}}"><p>{{recettes.name}}</p></a>
+        {% for rate in rating %}
+            {% if rate.recette == recettes %}
+                {% set r = r + rate.rate %}
+                {% set i = i + 1 %}
+            {% endif %}
+        {% endfor %}
+        {% for comments in comment %}
+            {% if comments.recette == recettes %}
+                {% set c = c + 1 %}
+            {% endif %}
+        {% endfor %}
+        {% if i != 0 %}
+            {% set rat = r / i %}
+        {% endif %}
+        {% if rat != 0 %}
+            <p>{{rat}}/5</p><p>({{i}})</p>
+        {% else %}
+            <p>-/5</p><p>(0)</p>
+        {% endif %}
+        <p>({{c}})</p>
+    {% endfor %}
+{% endblock %}
