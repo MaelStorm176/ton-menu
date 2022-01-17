@@ -117,6 +117,8 @@ class Recipe
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function getUrl(): ?string
@@ -229,6 +231,8 @@ class Recipe
     public function setPreparationTime(int $preparation_time): self
     {
       $this->preparation_time = $preparation_time;
+
+      return $this;
     }
       
     public function removeRating(Rating $rating): self
