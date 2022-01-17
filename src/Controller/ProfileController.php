@@ -11,8 +11,10 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function index(): Response
     {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
         return $this->render('profile/index.html.twig', [
-            'controller_name' => 'ProfileController',
+            'user' => $user,
         ]);
     }
 }

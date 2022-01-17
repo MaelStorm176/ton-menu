@@ -61,6 +61,11 @@ class Recipe
     private $user_id;
 
     /**
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette")
+     */
+    private $ratings;
+
+    /**
      * @ORM\Column(type="datetime_immutable")
      */
     private $created_at;
@@ -85,11 +90,18 @@ class Recipe
      */
     private $ingredients;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
+     */
+    private $comments;
+  
     public function __construct()
     {
         $this->recipeSteps = new ArrayCollection();
         $this->recipeTagsLinks = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
+        $this->ratings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,8 +117,6 @@ class Recipe
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getUrl(): ?string
@@ -157,30 +167,6 @@ class Recipe
         return $this;
     }
 
-    public function getPreparationTime(): ?int
-    {
-        return $this->preparation_time;
-    }
-
-    public function setPreparationTime(int $preparation_time): self
-    {
-        $this->preparation_time = $preparation_time;
-
-        return $this;
-    }
-
-    public function getTotalTime(): ?int
-    {
-        return $this->total_time;
-    }
-
-    public function setTotalTime(int $total_time): self
-    {
-        $this->total_time = $total_time;
-
-        return $this;
-    }
-
     public function getUserId(): ?User
     {
         return $this->user_id;
@@ -213,6 +199,88 @@ class Recipe
     public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Rating[]
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings[] = $rating;
+            $rating->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function getPreparationTime(): ?int
+    {
+        return $this->preparation_time;
+    }
+
+    public function setPreparationTime(int $preparation_time): self
+    {
+      $this->preparation_time = $preparation_time;
+    }
+      
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getRecette() === $this) {
+                $rating->setRecette(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getTotalTime(): ?int
+    {
+        return $this->total_time;
+    }
+
+    public function setTotalTime(int $total_time): self
+    {
+        $this->total_time = $total_time;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setRecette($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getRecette() === $this) {
+                $comment->setRecette(null);
+            }
+        }
 
         return $this;
     }
