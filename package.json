@@ -11,17 +11,35 @@
         "sass-loader": "^9.0.1",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
+    "name": "projet-fa",
+    "description": "Projet de fin de 4e année ESGI",
+    "version": "1.0.0",
+    "main": "webpack.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "license": "ISC",
     "private": true,
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "marmiton": "node marmiton_api.js"
     },
     "dependencies": {
         "@popperjs/core": "^2.10.2",
         "autoprefixer": "^10.4.2",
-        "postcss-loader": "^6.2.1"
-    }
+        "postcss-loader": "^6.2.1",
+        "marmiton-api": "^2.2.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MaelStorm176/projet-fa.git"
+    },
+    "author": "mael",
+    "bugs": {
+        "url": "https://github.com/MaelStorm176/projet-fa/issues"
+    },
+    "homepage": "https://github.com/MaelStorm176/projet-fa#readme"
 }
