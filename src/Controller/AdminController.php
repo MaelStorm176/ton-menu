@@ -7,9 +7,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
+#[Route("/admin", name: "admin_")]
 class AdminController extends AbstractController
 {
-    #[Route('/admin', name: 'admin')]
+    #[Route("/",name: 'index')]
     public function show_user(): Response
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
@@ -19,11 +20,10 @@ class AdminController extends AbstractController
             'user' => $users,
         ]);
     }
-    #[Route('/set', name: 'set_admin')]
+    #[Route("/set",name: 'set_admin')]
     public function setAdmin(): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
-
 
         $user->setRoles(["ROLE_ADMIN"]);
         $entityManager = $this->getDoctrine()->getManager();
