@@ -14,3 +14,11 @@ import './bootstrap';
 //import $ from 'jquery';
 const $ = require('jquery');
 
+$(document).ready(function () {
+
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+})
+

@@ -11,15 +11,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     #[Route("/",name: 'index')]
-    public function show_user(): Response
+    public function index(): Response
+    {
+        return $this->render('admin/index.html.twig');
+    }
+
+    #[Route("/users",name: 'users')]
+    public function show_users(): Response
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
         $users = $repository->findAll();
 
-        return $this->render('admin/show_user.html.twig', [
-            'user' => $users,
+        return $this->render('admin/user/show_users.html.twig', [
+            'users' => $users,
         ]);
     }
+
     #[Route("/set",name: 'set_admin')]
     public function setAdmin(): Response
     {
