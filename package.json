@@ -7,8 +7,8 @@
         "core-js": "^3.0.0",
         "jquery": "^3.6.0",
         "regenerator-runtime": "^0.13.2",
-        "sass": "^1.48.0",
-        "sass-loader": "^9.0.1",
+        "sass": "^1.49.0",
+        "sass-loader": "^10.0.0",
         "webpack-notifier": "^1.6.0"
     },
     "name": "projet-fa",
@@ -30,8 +30,10 @@
     "dependencies": {
         "@popperjs/core": "^2.10.2",
         "autoprefixer": "^10.4.2",
-        "postcss-loader": "^6.2.1",
-        "marmiton-api": "^2.2.0"
+        "datatables.net": "^1.11.3",
+        "datatables.net-bs5": "^1.11.3",
+        "marmiton-api": "^2.2.0",
+        "postcss-loader": "^6.2.1"
     },
     "repository": {
         "type": "git",
