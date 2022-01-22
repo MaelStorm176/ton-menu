@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Ingredient;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +23,19 @@ class AdminController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(User::class);
         $users = $repository->findAll();
 
-        return $this->render('admin/user/show_users.html.twig', [
+        return $this->render('admin/users/show_users.html.twig', [
             'users' => $users,
+        ]);
+    }
+
+    #[Route("/ingredients",name: 'ingredients')]
+    public function show_ingredients(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Ingredient::class);
+        $ingredients = $repository->findAll();
+
+        return $this->render('admin/ingredients/show_ingredients.html.twig', [
+            'ingredients' => $ingredients,
         ]);
     }
 
