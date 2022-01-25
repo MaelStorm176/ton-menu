@@ -14,12 +14,22 @@ import '@popperjs/core';
 //import './bootstrap';
 
 import 'bootstrap';
+import 'datatables.net';
+import 'datatables.net-bs5';
 
 //import $ from 'jquery';
 const $ = require('jquery');
 
-$(document).ready(function () {
+//Définition des paramètres par défaut de datatable
+$.extend( true, $.fn.dataTable.defaults, {
+    language: {
+        url: 'https://cdn.datatables.net/plug-ins/1.11.4/i18n/fr_fr.json'
+    },
+    pageLength: 25,
+    responsive: true
+} );
 
+$(document).ready(function () {
     $('#sidebarCollapse').on('click', function () {
         $('#sidebar').toggleClass('active');
     });
