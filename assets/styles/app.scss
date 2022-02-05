@@ -1,7 +1,27 @@
 @import "custom";
-@import "~bootstrap/scss/bootstrap";
 @import "~datatables.net-bs5/css/dataTables.bootstrap5.min";
-/*
+
 body {
     background-color: lightgray;
-}*/
+    margin: 0;
+}
+
+#mainNav {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-family: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 700;
+  }
+
+  
+.masthead {
+padding-top: calc(6rem + 74px);
+padding-bottom: 6rem;
+}
+
+
+.footer {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    color: #fff;
+  }
