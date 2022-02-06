@@ -43,6 +43,45 @@ padding-bottom: 6rem;
   font-weight: 300;
 }
 
+.howuse .howuse-item {
+  cursor: pointer;
+  position: relative;
+  display: block;
+  max-width: 25rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.howuse .howuse-item .howuse-item-caption {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  background-color: rgba(26, 188, 156, 0.9);
+}
+.howuse .howuse-item .howuse-item-caption:hover {
+  opacity: 1;
+}
+.howuse .howuse-item .howuse-item-caption .howuse-item-caption-content {
+  font-size: 1.5rem;
+}
+
+.howuse-modal .btn-close {
+  color: #1abc9c;
+  font-size: 2rem;
+  padding: 1rem;
+}
+.howuse-modal .howuse-modal-title {
+  font-size: 2.25rem;
+  line-height: 2rem;
+}
+@media (min-width: 992px) {
+  .howuse-modal .howuse-modal-title {
+    font-size: 3rem;
+    line-height: 2.5rem;
+  }
+}
+
 
 .footer {
     padding-top: 5rem;
