@@ -41,7 +41,8 @@
         "datatables.net-responsive": "^2.2.9",
         "datatables.net-responsive-bs5": "^2.2.9",
         "marmiton-api": "^2.2.0",
-        "node-sass": "^7.0.1"
+        "node-sass": "^7.0.1",
+        "postcss-loader": "^6.2.1"
     },
     "repository": {
         "type": "git",
