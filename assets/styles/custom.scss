@@ -1,1 +1,16 @@
+$theme-colors: (
+"primary":           rgb(7, 52, 97),
+    "secondary":     rgb(26, 188, 156),
+    "success":       rgb(25, 135, 84),
+    "info":          rgb(13, 202, 240),
+    "light":         rgb(255, 193, 7),
+    "body-bg":       rgb(255, 255, 255),
+    "body-color":    rgb(33, 37, 41),
+    "dark":          rgb(33, 37, 41),
+    "footer":        #2c3e50,
+    "white":         #fff,
+);
 
+
+
+@import "~bootstrap/scss/bootstrap";
