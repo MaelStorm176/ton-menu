@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\IngredientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * @ORM\Entity(repositoryClass=IngredientRepository::class)
@@ -18,7 +19,7 @@ class Ingredient
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @ORM\Column(type="string", length=40, unique=true)
      */
     private $name;
 
@@ -55,7 +56,7 @@ class Ingredient
 
     public function getName(): ?string
     {
-        return $this->name;
+        return utf8_decode($this->name);
     }
 
     public function setName(string $name): self

@@ -14,7 +14,6 @@
         "regenerator-runtime": "^0.13.2",
         "sass": "^1.49.0",
         "sass-loader": "^10.2.1",
-        "tailwindcss": "^3.0.18",
         "webpack-notifier": "^1.6.0"
     },
     "name": "projet-fa",
