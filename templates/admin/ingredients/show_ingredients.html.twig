@@ -1,0 +1,40 @@
+{% extends "admin/admin.html.twig" %}
+
+{% block content %}
+<h3>Gestion des ingrédients</h3>
+<div class="row">
+    <div class="col">
+        <table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Créateur</th>
+                    <th>Nom</th>
+                    <th>Type primaire</th>
+                    <th>Type secondaire</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient in ingredients %}
+                <tr>
+                    <td>{{ ingredient.userId.email }}</td>
+                    <td>{{ingredient.name}}</td>
+                    <td>{{ingredient.primaryType}}</td>
+                    <td>{{ingredient.secondaryType}}</td>
+                    <td>
+                        <button type="button" class="btn btn-secondary"><i class="fs-4 bi-pen"></i> </button>
+                        <button type="button" class="btn btn-secondary"><i class="fs-4 bi-trash"></i></button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_ingredients') }}
+{% endblock %}
+
+{% endblock %}

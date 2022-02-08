@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class NewRecetteController extends AbstractController
 {
-/**
+    /**
      * @Route("/add", name="add")
      */
     public function add_recette(Request $request, SluggerInterface $slugger): Response{
