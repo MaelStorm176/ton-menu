@@ -8,9 +8,32 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 
+import '@popperjs/core';
+
 // start the Stimulus application
-import './bootstrap';
+//import './bootstrap';
+
+import 'bootstrap';
+import 'datatables.net';
+import 'datatables.net-bs5';
+import 'datatables.net-responsive-bs5';
 
 //import $ from 'jquery';
 const $ = require('jquery');
+
+//Définition des paramètres par défaut de datatable
+$.extend( true, $.fn.dataTable.defaults, {
+    language: {
+        url: 'https://cdn.datatables.net/plug-ins/1.11.4/i18n/fr_fr.json'
+    },
+    pageLength: 25,
+    responsive: true
+} );
+
+$(document).ready(function () {
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
+
+})
 

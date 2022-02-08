@@ -30,8 +30,11 @@
     "dependencies": {
         "@popperjs/core": "^2.10.2",
         "autoprefixer": "^10.4.2",
+        "bootstrap-icons": "^1.7.2",
         "datatables.net": "^1.11.3",
         "datatables.net-bs5": "^1.11.3",
+        "datatables.net-responsive": "^2.2.9",
+        "datatables.net-responsive-bs5": "^2.2.9",
         "marmiton-api": "^2.2.0",
         "postcss-loader": "^6.2.1"
     },
