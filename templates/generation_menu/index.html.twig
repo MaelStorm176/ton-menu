@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello GenerationMenuController!{% endblock %}
+
+{% block body %}
+    <div>
+        {% for j in cpt %}
+            <p>Matin</p>
+            <p>{{entreeM[j].name}}</p>
+            <p>{{platM[j].name}}</p>
+            <p>{{dessertM[j].name}}</p>
+            <p>Soir</p>
+            <p>{{entreeS[j].name}}</p>
+            <p>{{platS[j].name}}</p>
+            <p>{{dessertS[j].name}}</p>
+            <br>
+        {% endfor %}
+    </div>
+{% endblock %}

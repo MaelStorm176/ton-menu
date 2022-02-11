@@ -47,4 +47,41 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function countRecipe()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('count(t.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    public function countEntreeRecipe()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->andWhere('t.type = :val')
+            ->setParameter('val', 'ENTREE')
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    public function countPlatRecipe()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->andWhere('t.type = :val')
+            ->setParameter('val', 'PLAT')
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    public function countDessertRecipe()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.id')
+            ->andWhere('t.type = :val')
+            ->setParameter('val', 'DESSERT')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }
