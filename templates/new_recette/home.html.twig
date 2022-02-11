@@ -8,7 +8,7 @@
     {% set i = 0 %}
     {% set rat = 0 %}
     {% set c = 0 %}
-        <a href="/recette/{{recettes.id}}"><p>{{recettes.name}}</p></a>
+        <a href="{{ path("recipe_show",{'id': recettes.id}) }}"><p>{{recettes.name}}</p></a>
         {% for rate in rating %}
             {% if rate.recette == recettes %}
                 {% set r = r + rate.rate %}

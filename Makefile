@@ -27,6 +27,10 @@ marmiton:
 	@$(NPM) run marmiton
 	@$(SYMFONY_CONSOLE) doctrine:fixtures:load -n
 
+## Nettoye le cache
+cache-clear:
+	@$(SYMFONY_CONSOLE) cache:clear
+
 ## Purge les logs
 purge:
 	rm -rf var/cache/*
