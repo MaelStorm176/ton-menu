@@ -7,6 +7,7 @@ use App\Entity\Rating;
 use App\Entity\Recipe;
 use DateTimeImmutable;
 use App\Entity\Comment;
+use App\Entity\RecipeSteps;
 use App\Form\CommentType;
 use App\Form\RecetteType;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,6 +62,9 @@ class NewRecetteController extends AbstractController
         $repository2 = $this->getDoctrine()->getRepository(Comment::class);
         $commentary = $repository2->findAll();
 
+        $repository3 = $this->getDoctrine()->getRepository(RecipeSteps::class);
+        $step = $repository3->findBy(['recipe' => $recette->getId()]);
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -86,6 +90,7 @@ class NewRecetteController extends AbstractController
             'recette' => $recette,
             'rating' => $rating,
             'comment' => $commentary,
+            'step' => $step,
         ]);
     }
 

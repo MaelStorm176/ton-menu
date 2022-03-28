@@ -47,4 +47,14 @@ class RecipeStepsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllById($value): ?RecipeSteps
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.step')
+            ->andWhere('t.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getResult();
+    }
 }

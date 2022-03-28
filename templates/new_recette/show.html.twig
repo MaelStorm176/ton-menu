@@ -52,6 +52,11 @@
         }
     </style>
     <p>{{recette.name}}</p>
+    <div>
+        {% for steps in step %}
+            <p>{{steps.step}}</p>
+       {% endfor %}
+    </div>
     <div class="rating">
         {% if rating != [] and rating.rate == 5 %}
             <input type="radio" name="rating" value="5" id="5" checked onclick="rate({{recette.id}}, 5)">
