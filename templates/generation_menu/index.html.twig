@@ -3,16 +3,25 @@
 {% block title %}Hello GenerationMenuController!{% endblock %}
 
 {% block body %}
+{{dump(entreeM)}}
     <div>
+        <form method="post">
+            <select name="tag">
+                {% for tag in tags %}
+                    <option value="{{tag.id}}">{{tag.name}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Changer le tag">
+        </form>
         {% for j in cpt %}
             <p>Matin</p>
-            <p>{{entreeM[j].name}}</p>
-            <p>{{platM[j].name}}</p>
-            <p>{{dessertM[j].name}}</p>
+            <p><a href="/recette/{{entreeM[j].id}}">{{entreeM[j].name}}</a></p>
+            <p><a href="/recette/{{platM[j].id}}">{{platM[j].name}}</a></p>
+            <p><a href="/recette/{{dessertM[j].id}}">{{dessertM[j].name}}</a></p>
             <p>Soir</p>
-            <p>{{entreeS[j].name}}</p>
-            <p>{{platS[j].name}}</p>
-            <p>{{dessertS[j].name}}</p>
+            <p><a href="/recette/{{entreeS[j].id}}">{{entreeS[j].name}}</a></p>
+            <p><a href="/recette/{{platS[j].id}}">{{platS[j].name}}</a></p>
+            <p><a href="/recette/{{dessertS[j].id}}">{{dessertS[j].name}}</a></p>
             <br>
         {% endfor %}
     </div>

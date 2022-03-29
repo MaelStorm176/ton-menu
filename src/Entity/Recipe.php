@@ -223,9 +223,9 @@ class Recipe
         return $this;
     }
 
-    public function getPreparationTime(): ?int
+    public function getPreparationTime(): ?string
     {
-        return $this->preparation_time;
+        return $this->secondsToTime($this->preparation_time*60);
     }
 
     public function setPreparationTime(int $preparation_time): self
@@ -247,9 +247,9 @@ class Recipe
         return $this;
     }
 
-    public function getTotalTime(): ?int
+    public function getTotalTime(): ?string
     {
-        return $this->total_time;
+        return $this->secondsToTime($this->total_time*60);
     }
 
     public function setTotalTime(int $total_time): self
@@ -377,5 +377,15 @@ class Recipe
         }
 
         return $this;
+    }
+
+    private function secondsToTime($seconds) {
+        $dtF = new \DateTime('@0');
+        $dtT = new \DateTime("@$seconds");
+        if ($seconds >= 86400){
+            return $dtF->diff($dtT)->format('%a j %h h %i min');
+        }else{
+            return $dtF->diff($dtT)->format('%h h %i min');
+        }
     }
 }

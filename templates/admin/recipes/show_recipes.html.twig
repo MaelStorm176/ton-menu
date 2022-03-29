@@ -1,0 +1,52 @@
+{% extends "admin/admin.html.twig" %}
+
+{% block content %}
+    <h3>Gestion des recettes</h3>
+    <div class="row">
+        <div class="col">
+            <table id="recipesTable" class="display table table-striped table-bordered" style="width:100%">
+                <thead>
+                <tr>
+                    <th style="width: 2%"></th>
+                    <th style="width: 10%">Créateur</th>
+                    <th style="width: 20%">Nom</th>
+                    <th style="width: 5%">Type</th>
+                    <th style="width: 20%">URL</th>
+                    <th style="width: 5%">Personnes</th>
+                    <th style="width: 5%">Difficulté</th>
+                    <th style="width: 10%">Temps prépration</th>
+                    <th style="width: 10%">Temps total</th>
+                    <th style="width: 10%">Actions</th>
+                    <th style="width: 3%"></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for recipe in recipes %}
+                    <tr>
+                        <td></td>
+                        <td>{{ recipe.userId.email }}</td>
+                        <td><span class="d-block text-truncate" style="max-width: 300px;">{{ recipe.name }}</span></td>
+                        <td>{{ recipe.type }}</td>
+                        <td><span class="d-block text-truncate" style="max-width: 300px;"><a  href="{{ recipe.url }}" role="link">{{ recipe.url }}</a></span></td>
+                        <td>{{ recipe.NumberOfPersons }}</td>
+                        <td>{{ recipe.difficulty }} / 5</td>
+                        <td>{{ recipe.PreparationTime }}</td>
+                        <td>{{ recipe.TotalTime }}</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary d-inline-block"><i class="fs-4 bi-pen"></i></button>
+                            <button type="button" class="btn btn-secondary d-inline-block"><i class="fs-4 bi-trash"></i></button>
+                        </td>
+                        <td id="recette_ingredients_{{ recipe.id }}"><div style="width: 1000px;"></div></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {% block javascripts %}
+        {{ parent() }}
+        {{ encore_entry_script_tags('show_recipes') }}
+    {% endblock %}
+
+{% endblock %}

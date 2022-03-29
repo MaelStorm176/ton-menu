@@ -3,6 +3,7 @@
 {% block title %}Hello NewRecetteController!{% endblock %}
 
 {% block body %}
+
 <a href="/all">Retour a la liste des recettes</a>
     <style>
         .rating {
@@ -52,6 +53,11 @@
         }
     </style>
     <p>{{recette.name}}</p>
+    <div>
+        {% for ingredients in ingredient %}
+            <p>- {{ingredients.ingredient.name}}</p>
+        {% endfor %}
+    </div>
     <div>
         {% for steps in step %}
             <p>{{steps.step}}</p>

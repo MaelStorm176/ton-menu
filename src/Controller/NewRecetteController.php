@@ -7,6 +7,7 @@ use App\Entity\Rating;
 use App\Entity\Recipe;
 use DateTimeImmutable;
 use App\Entity\Comment;
+use App\Entity\RecipeIngredients;
 use App\Entity\RecipeSteps;
 use App\Form\CommentType;
 use App\Form\RecetteType;
@@ -19,7 +20,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class NewRecetteController extends AbstractController
 {
-/**
+    /**
      * @Route("/add", name="add")
      */
     public function add_recette(Request $request, SluggerInterface $slugger): Response{
@@ -65,6 +66,9 @@ class NewRecetteController extends AbstractController
         $repository3 = $this->getDoctrine()->getRepository(RecipeSteps::class);
         $step = $repository3->findBy(['recipe' => $recette->getId()]);
 
+        $repository4 = $this->getDoctrine()->getRepository(RecipeIngredients::class);
+        $ingredient = $repository4->findBy(['recipe' => $recette->getId()]);
+
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -91,6 +95,7 @@ class NewRecetteController extends AbstractController
             'rating' => $rating,
             'comment' => $commentary,
             'step' => $step,
+            'ingredient' => $ingredient,
         ]);
     }
 

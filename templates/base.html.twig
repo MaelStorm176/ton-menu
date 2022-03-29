@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
+        {% block stylesheets %}{{ encore_entry_link_tags('app') }}{% endblock %}
+
+        {% block javascripts %}{{ encore_entry_script_tags('app') }}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include 'base/nav.html.twig' %}
+        {% block body %}
+        
+        {% endblock %}
+        {% include 'base/footer.html.twig' %}
     </body>
 </html>
