@@ -27,6 +27,10 @@ marmiton:
 	@$(NPM) run marmiton
 	@$(SYMFONY_CONSOLE) doctrine:fixtures:load -n
 
+## Nettoye le cache
+cache-clear:
+	@$(SYMFONY_CONSOLE) cache:clear
+
 ## Purge les logs
 purge:
 	rm -rf var/cache/*
@@ -36,6 +40,11 @@ purge:
 install:
 	@$(COMPOSER) install --no-progress --prefer-dist --optimize-autoloader
 	@$(NPM) install
+
+run:
+	@$(SYMFONY) server:start -d
+	@$(NPM) run build
+	mysqld --console
 
 ## Build la DB en fonction des migrations et execute le script marmiton
 marmiton-check: ## Build the DB, control the schema validity, load fixtures and check the migration status
