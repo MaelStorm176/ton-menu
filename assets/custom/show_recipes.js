@@ -13,6 +13,12 @@ $(document).ready(function (){
     });
 
     $("td[id^='recette_ingredients_trigger_']").click(function () {
+        const parent_tr = $('tr.parent');
+        parent_tr.removeClass('parent shown');
+        parent_tr.each((children) => {
+            const children_tr = parent_tr[children];
+            const row = recipes_table.row(children_tr);
+        })
         show_ingredients($(this).data("id"), $(this));
     });
 
