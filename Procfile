@@ -1,1 +1,1 @@
-web: npm run build
+postdeploy: npm run build
