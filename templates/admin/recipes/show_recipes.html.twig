@@ -22,8 +22,8 @@
                 </thead>
                 <tbody>
                 {% for recipe in recipes %}
-                    <tr>
-                        <td></td>
+                    <tr id="recette_{{ recipe.id }}">
+                        <td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
                         <td>{{ recipe.userId.email }}</td>
                         <td><span class="d-block text-truncate" style="max-width: 300px;">{{ recipe.name }}</span></td>
                         <td>{{ recipe.type }}</td>
@@ -36,7 +36,7 @@
                             <button type="button" class="btn btn-secondary d-inline-block"><i class="fs-4 bi-pen"></i></button>
                             <button type="button" class="btn btn-secondary d-inline-block"><i class="fs-4 bi-trash"></i></button>
                         </td>
-                        <td id="recette_ingredients_{{ recipe.id }}"><div style="width: 1000px;"></div></td>
+                        <td id="recette_ingredients_results_{{ recipe.id }}"><div style="width: 1000px;"></div></td>
                     </tr>
                 {% endfor %}
                 </tbody>

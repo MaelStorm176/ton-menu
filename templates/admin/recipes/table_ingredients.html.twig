@@ -1,0 +1,18 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Type primaire</th>
+            <th>Type secondaire</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for ingredient in ingredients %}
+        <tr>
+            <td>{{ ingredient.name }}</td>
+            <td>{{ ingredient.primaryType }}</td>
+            <td>{{ ingredient.secondaryType }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
