@@ -20,6 +20,7 @@ import 'datatables.net-responsive-bs5';
 
 //import $ from 'jquery';
 const $ = require('jquery');
+window.bootstrap = require("bootstrap")
 
 //Définition des paramètres par défaut de datatable
 $.extend( true, $.fn.dataTable.defaults, {

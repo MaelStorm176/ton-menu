@@ -1,5 +1,5 @@
 $(document).ready(function (){
-    $("#recipesTable").DataTable({
+    let recipes_table = $("#recipesTable").DataTable({
         responsive: {
             details: {
                 type: 'column'
@@ -12,27 +12,34 @@ $(document).ready(function (){
         } ],
     });
 
+    $("td[id^='recette_ingredients_trigger_']").click(function () {
+        const parent_tr = $('tr.parent');
+        parent_tr.removeClass('parent shown');
+        parent_tr.each((children) => {
+            const children_tr = parent_tr[children];
+            const row = recipes_table.row(children_tr);
+        })
+        show_ingredients($(this).data("id"), $(this));
+    });
 
-    function show_ingredients(id_recette,obj){
-        var tr = $(obj).closest('tr');
-        var row = recette_table.row( tr );
+    function show_ingredients(id_recette, obj){
+        const trigger_td = $("recette_ingredients_trigger_"+id_recette);
+        const results_td = $("recette_ingredients_results_"+id_recette);
+        const tr = $(obj).closest('tr');
+        const row = recipes_table.row( tr );
 
         if ( !row.child.isShown() ) {
             // Open this row
             $.ajax({
                 method: "POST",
-                url: "recette/"+id_recette,
+                url: "../recipe/"+id_recette+"/ingredients",
+                dataType: 'html'
             })
-            .done(function( contenu_html ) {
-                row.child( contenu_html ).show();
+            .done(function (contenu_html) {
+                $(".dtr-details li:last-child").append(contenu_html);
+                row.child.show();
                 tr.addClass('shown');
             });
         }
-        /*
-        else {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }*/
     }
 });
