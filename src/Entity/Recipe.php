@@ -223,9 +223,14 @@ class Recipe
         return $this;
     }
 
-    public function getPreparationTime(): ?string
+    public function getPreparationTimeToTime(): ?string
     {
         return $this->secondsToTime($this->preparation_time*60);
+    }
+
+    public function getPreparationTime(): int
+    {
+        return $this->preparation_time;
     }
 
     public function setPreparationTime(int $preparation_time): self
@@ -247,9 +252,14 @@ class Recipe
         return $this;
     }
 
-    public function getTotalTime(): ?string
+    public function getTotalTimeToTime(): ?string
     {
         return $this->secondsToTime($this->total_time*60);
+    }
+
+    public function getTotalTime(): ?string
+    {
+        return $this->total_time;
     }
 
     public function setTotalTime(int $total_time): self

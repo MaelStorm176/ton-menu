@@ -3,5 +3,33 @@
 {% block title %}Hello NewRecetteController!{% endblock %}
 
 {% block body %}
-{{ form(recetteForm) }}
+    {{ form_start(recetteForm) }}
+
+    <div>
+
+        <table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Choisir</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ingredient in ingredients %}
+                <tr>
+                    <td>{{ ingredient.name }}</td>
+                    <td class="text-center">
+                        <input type="checkbox" name="choosen_ingredient[]" value="{{ ingredient.id }}"/>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ form_end(recetteForm) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_ingredients') }}
 {% endblock %}
