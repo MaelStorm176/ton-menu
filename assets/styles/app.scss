@@ -8,6 +8,15 @@ body {
     margin: 0;
 }
 
+a:link {
+  color: black;
+  text-decoration: none;
+
+  :hover {
+    text-decoration: underline;
+  }
+}
+
 #mainNav {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -15,6 +24,7 @@ body {
     font-weight: 700;
   }
 
+/////////////////HomePage//////////////////
 
 .masthead {
 padding-top: calc(6rem + 74px);
@@ -85,16 +95,60 @@ padding-bottom: 6rem;
 }
 
 
+/////////////////LOGIN//////////////////
+
+.login_form {
+  width: 60%;
+  text-align: center;
+}
+
+/////////////////Generator Menu//////////////////
+
+.filter {
+  background-color: antiquewhite;
+}
+
+.menu_content{
+  margin: 2% 5%;
+}
+
+.change_menubutton {
+  padding-top: 10px;
+}
+
+.menu_title {
+  padding-top: 20px;
+}
+
+.menu_unit {
+  border: 7px solid #65b2ff;
+  margin-right: 10px;
+  height: 400px;
+  width: 350px;
+}
+
+.bi {
+  font-size: 0.7em;
+}
+
+.list_content {
+  margin: 20% 5%;
+}
+
+.mb_img {
+  width: 40%;
+  height: 150px;
+}
+
+.img_menu {
+  background-color: antiquewhite;
+  padding: 1% 0;
+}
+
+/////////////////Footer//////////////////
+
 .footer {
     padding-top: 5rem;
     padding-bottom: 5rem;
     color: #fff;
   }
-
-.login_form {
-
-}
-
-.login  {
-  margin: 10% ;
-}

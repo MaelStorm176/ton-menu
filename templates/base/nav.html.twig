@@ -3,7 +3,7 @@
   <div class="container">
     <div>
       <a class="navbar-brand" href="/">
-          <img src="/img/logo.png" class="navbar-brand-img" alt="...">
+          <img src="/img/ton_menu.png" class="navbar-brand-img w-50" alt="...">
       </a>
     </div>
 
@@ -12,8 +12,19 @@
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded text-white" href="#UseIt">Comment utiliser notre site</a></li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded text-white" href="#about">A Propos de nous</a></li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded text-white" href="#contact">Contact</a></li>
-          <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded text-white" href="/login">Se Connecter</a></li>
-      </ul>
+          <div class="dropdown nav-item mx-0 mx-lg-1">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <span class="nav-link py-3 px-0 px-lg-3 rounded text-white" href="/login">Se Connecter</span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" href="/login">Se Connecter</a></li>
+                <li><a class="dropdown-item" href="/admin">Mon Profil</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" href="/">Deconnexion</a></li>
+            </ul>
+        </div>
       </ul>
     </div>
     
