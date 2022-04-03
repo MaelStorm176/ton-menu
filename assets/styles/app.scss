@@ -17,6 +17,8 @@ a:link {
   }
 }
 
+/////////////////NavBar//////////////////
+
 #mainNav {
     padding-top: 1rem;
     padding-bottom: 1rem;
@@ -97,9 +99,50 @@ padding-bottom: 6rem;
 
 /////////////////LOGIN//////////////////
 
-.login_form {
-  width: 60%;
-  text-align: center;
+.login_content{
+  padding: 5% 5% 5% 10%;
+}
+
+.login_lside{
+  width: 40%;
+}
+
+.login_rside{
+  width: 30%;
+}
+
+.login_title{
+  padding-bottom: 60px;
+}
+
+.email_content {
+  text-align: left;
+}
+
+.password_content {
+  text-align: left;
+  padding-top: 5%;
+}
+
+.password_label{
+  font-size: 1.5rem;
+}
+
+.login_button {
+  text-align: left;
+  padding: 30px;
+}
+
+.buttonlogin {
+  width: 50%;
+}
+
+.account_button {
+  padding-left: 20%;
+}
+
+.account_title {
+  padding-bottom: 5%;
 }
 
 /////////////////Generator Menu//////////////////
