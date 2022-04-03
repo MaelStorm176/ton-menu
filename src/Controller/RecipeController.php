@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\RecipeTags;
+use App\Entity\RecipeTagsLinks;
 use DateTime;
 use App\Entity\Rating;
 use App\Entity\Recipe;
@@ -39,6 +41,7 @@ class RecipeController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($recette);
 
+            /** AJOUT DES INGREDIENTS A LA RECETTE **/
             if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])){
                 foreach ($requete["choosen_ingredient"] as $ingredient_id) {
                     $ingredient = $this->getDoctrine()->getRepository(Ingredient::class)->find($ingredient_id);
@@ -49,8 +52,18 @@ class RecipeController extends AbstractController
                 }
             }
 
+            /** AJOUT DES TAGS A LA RECETTE **/
+            if (isset($requete["choosen_tag"]) && !empty($requete["choosen_tag"])){
+                foreach ($requete["choosen_tag"] as $tag_id) {
+                    $tag = $this->getDoctrine()->getRepository(RecipeTags::class)->find($tag_id);
+                    $recipeTagLink = new RecipeTagsLinks();
+                    $recipeTagLink->setRecipeTag($tag);
+                    $recipeTagLink->setRecipe($recette);
+                    $entityManager->persist($recipeTagLink);
+                }
+            }
+
             $entityManager->flush();
-            // do anything else you need here, like send an email
 
             return $this->redirectToRoute('recipe_show', [
                 'id' => $recette->getId()
@@ -59,7 +72,8 @@ class RecipeController extends AbstractController
 
         return $this->render('new_recette/create.html.twig', [
             'recetteForm' => $form->createView(),
-            'ingredients'=> $this->getDoctrine()->getRepository(Ingredient::class)->findAll()
+            'ingredients'=> $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+            'tags' => $this->getDoctrine()->getRepository(RecipeTags::class)->findAll()
         ]);
     }
 

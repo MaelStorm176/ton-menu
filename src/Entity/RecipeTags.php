@@ -41,7 +41,7 @@ class RecipeTags
 
     public function getName(): ?string
     {
-        return $this->name;
+        return utf8_decode($this->name);
     }
 
     public function setName(string $name): self
