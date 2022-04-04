@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Ingredient;
+use App\Entity\RecipeTags;
+use App\Entity\RecipeTagsLinks;
 use DateTime;
 use App\Entity\Rating;
 use App\Entity\Recipe;
@@ -11,53 +14,66 @@ use App\Entity\RecipeIngredients;
 use App\Entity\RecipeSteps;
 use App\Form\CommentType;
 use App\Form\RecetteType;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RecipeController extends AbstractController
 {
-    private $serializer;
-    public function __construct()
-    {
-        $encoders = [new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $this->serializer = new Serializer($normalizers, $encoders);
-    }
-
     /**
      * @Route("/recipe/add", name="recipe_add")
      */
-    public function add_recette(Request $request, SluggerInterface $slugger): Response{
+    public function add_recette(Request $request, SluggerInterface $slugger): Response {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $recette = new Recipe();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
+        $requete = $request->request->all();
+
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
             $today = new DateTimeImmutable();
             $recette->setUserId($user);
             $recette->setCreatedAt($today);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($recette);
-            $entityManager->flush();
-            // do anything else you need here, like send an email
 
-            return $this->redirectToRoute('recette', [
+            /** AJOUT DES INGREDIENTS A LA RECETTE **/
+            if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])){
+                foreach ($requete["choosen_ingredient"] as $ingredient_id) {
+                    $ingredient = $this->getDoctrine()->getRepository(Ingredient::class)->find($ingredient_id);
+                    $recipeIngredient = new RecipeIngredients();
+                    $recipeIngredient->setIngredient($ingredient);
+                    $recipeIngredient->setRecipe($recette);
+                    $entityManager->persist($recipeIngredient);
+                }
+            }
+
+            /** AJOUT DES TAGS A LA RECETTE **/
+            if (isset($requete["choosen_tag"]) && !empty($requete["choosen_tag"])){
+                foreach ($requete["choosen_tag"] as $tag_id) {
+                    $tag = $this->getDoctrine()->getRepository(RecipeTags::class)->find($tag_id);
+                    $recipeTagLink = new RecipeTagsLinks();
+                    $recipeTagLink->setRecipeTag($tag);
+                    $recipeTagLink->setRecipe($recette);
+                    $entityManager->persist($recipeTagLink);
+                }
+            }
+
+            $entityManager->flush();
+
+            return $this->redirectToRoute('recipe_show', [
                 'id' => $recette->getId()
             ]);
         }
 
         return $this->render('new_recette/create.html.twig', [
             'recetteForm' => $form->createView(),
+            'ingredients'=> $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+            'tags' => $this->getDoctrine()->getRepository(RecipeTags::class)->findAll()
         ]);
     }
 
