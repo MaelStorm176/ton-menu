@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Recipe;
+use App\Entity\MonMenu;
 use App\Entity\RecipeTags;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,13 @@ class RandomRecipeController extends AbstractController
     #[Route('/generation-menu/{nb_jour}', name: 'generation_menu')]
     public function menu(Request $request): Response
     {
+        //get data in db from user
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($user->getId());
+        $menu = $user->getMonMenu();
+        //var_dump($menu->getMenuSave());
+
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
         $countE = $repository->countEntreeRecipe();
         $countP = $repository->countPlatRecipe();
@@ -34,9 +43,6 @@ class RandomRecipeController extends AbstractController
 
         $repository2 = $this->getDoctrine()->getRepository(RecipeTags::class);
         $tags = $repository2->findAll();
-
-        $test3 = $request->request->all();
-        //
 
         $rEntreM = [];
         $rPlatM = [];
@@ -76,6 +82,28 @@ class RandomRecipeController extends AbstractController
             array_push($rDessertS, $recette6);
 
             array_push($j, $i);
+        }
+
+        if(isset($_POST["save"])){
+            $allPlat = [];
+            array_push($allPlat, $rEntreM, $rPlatM, $rDessertM, $rEntreS, $rPlatS, $rDessertS);
+            //generate date immutable
+            var_dump($allPlat[0][0]->getName());
+            $date = new \DateTimeImmutable();
+            $date->format('Y-m-d H:i:s');
+
+            $em = $this->getDoctrine()->getManager();
+            $menu = new MonMenu();
+            $menu->setDateGenerate($date);
+            $menu->setMenuSave($allPlat);
+            $em->persist($menu);
+            $em->flush();
+
+            //add id menu generate in user database
+            $user = $this->getUser();
+            $user->setMonMenu($menu);
+            $em->persist($user);
+            $em->flush();
         }
 
         return $this->render('generation_menu/index.html.twig', [
