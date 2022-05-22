@@ -1,39 +1,54 @@
 version: "3.8"
 
 services:
-  web:
+## PHP - NPM
+  www:
     build:
-      context: .
       dockerfile: ./php/extensions_php
+    container_name: php_fa
     ports:
-      - 8741:80
+      - "8741:80"
     volumes:
+      - ./php/vhosts:/etc/apache2/sites-enabled
       - ./:/var/www
-    depends_on:
-      - db
+    #restart: always
+    networks:
+      - dev
 
+## Composer
+  composer:
+    container_name: composer_fa
+    image: composer:2.1.9
+    entrypoint: ["composer", "install", "--no-interaction"]
+    volumes:
+      - .:/app
+
+## MY SQL
   db:
-    image: mysql:5.7
-    container_name: db_mysql
-    restart: always
-    ports:
-      # <Port exposed> : < MySQL Port running inside container>
-      - 3306:3306
-    expose:
-      # Opens port 3306 on the container
-      - 3306
+    container_name: mysql_fa
+    image: mysql:5.6
+    #restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_PASSWORD=symfony
-      - MYSQL_DATABASE=symfony
-      - MYSQL_USER=symfony
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    volumes:
+      - ./datavolume:/var/lib/mysql:rw
+    ports:
+      - 3306:3306
 
+## ADMINER
   adminer:
+    container_name: adminer_fa
     image: adminer
     ports:
-      - 8081:8080
+      - 8080:8080
     depends_on:
       - db
+
+volumes:
+  datavolume:
 
 networks:
   dev:

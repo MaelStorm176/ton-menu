@@ -33,6 +33,7 @@
         "marmiton": "node marmiton_api.js"
     },
     "dependencies": {
+        "@babel/core": "^7.17.10",
         "@popperjs/core": "^2.10.2",
         "autoprefixer": "^10.4.2",
         "bootstrap-icons": "^1.7.2",

@@ -18,9 +18,12 @@ list:
 start:
 	@$(DOCKER) compose --env-file=".env.local" up -d
 
+down:
+	@$(DOCKER) compose --env-file=".env.local" down -v
+
 ## Arrete les containers
 stop:
-	@$(DOCKER) compose down
+	@$(DOCKER) compose --env-file=".env.local" stop
 
 ## Execute le script marmiton
 marmiton:
@@ -47,7 +50,7 @@ run:
 	mysqld --console
 
 ## Build la DB en fonction des migrations et execute le script marmiton
-marmiton-check: ## Build the DB, control the schema validity, load fixtures and check the migration status
+marmiton-check:
 	@$(SYMFONY_CONSOLE) doctrine:cache:clear-metadata
 	@$(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists
 	@$(SYMFONY_CONSOLE) doctrine:schema:drop --force
