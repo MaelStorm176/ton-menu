@@ -35,87 +35,150 @@ class RandomRecipeController extends AbstractController
         $user = $repository->find($user->getId());
         $menu = $user->getMonMenu();
         //var_dump($menu->getMenuSave());
+        //var_dump($_POST['change']);
+        if (isset($menu) && $menu->getMenuSave() != "" && !isset($_POST['change'])) {
+            $menu_save = $menu->getMenuSave();
+            $rEntreM = [];
+            $rPlatM = [];
+            $rDessertM = [];
 
-        $repository = $this->getDoctrine()->getRepository(Recipe::class);
-        $countE = $repository->countEntreeRecipe();
-        $countP = $repository->countPlatRecipe();
-        $countD = $repository->countDessertRecipe();
+            $rEntreS = [];
+            $rPlatS = [];
+            $rDessertS = [];
 
-        $repository2 = $this->getDoctrine()->getRepository(RecipeTags::class);
-        $tags = $repository2->findAll();
+            $j = [];
 
-        $rEntreM = [];
-        $rPlatM = [];
-        $rDessertM = [];
+            $repository = $this->getDoctrine()->getRepository(Recipe::class);
 
-        $rEntreS = [];
-        $rPlatS = [];
-        $rDessertS = [];
-        $j = [];
+            $repository2 = $this->getDoctrine()->getRepository(RecipeTags::class);
+            $tags = $repository2->findAll();
 
-        $test = $request->get('nb_jour');
+            for ($i = 0; $i < count($menu_save); $i++) {
+                for ($t = 0; $t < count($menu_save[$i]); $t++) {
+                    $recette = $repository->find($menu_save[$i][$t]);
 
-        $randEM = array_rand($countE, $test);
-        $randPM = array_rand($countP, $test);
-        $randDM = array_rand($countD, $test);
+                    if($i == 0){
+                        array_push($rEntreM, $recette);
+                    }else if($i == 1){
+                        array_push($rPlatM, $recette);
+                    }else if($i == 2){
+                        array_push($rDessertM, $recette);
+                    }else if($i == 3){
+                        array_push($rEntreS, $recette);
+                    }else if($i == 4){
+                        array_push($rPlatS, $recette);
+                    }else if($i == 5){
+                        array_push($rDessertS, $recette);
+                    }
+                }
+                array_push($j, $i);
+            }
+            return $this->render('generation_menu/index.html.twig', [
+                'entreeM' => $rEntreM,
+                'platM' => $rPlatM,
+                'dessertM' => $rDessertM,
+                'entreeS' => $rEntreS,
+                'platS' => $rPlatS,
+                'dessertS' => $rDessertS,
+                'cpt' => $j,
+                'tags' => $tags,
+            ]);
+        } else {
+            $repository = $this->getDoctrine()->getRepository(Recipe::class);
+            $countE = $repository->countEntreeRecipe();
+            $countP = $repository->countPlatRecipe();
+            $countD = $repository->countDessertRecipe();
 
-        $randES = array_rand($countE, $test);
-        $randPS = array_rand($countP, $test);
-        $randDS = array_rand($countD, $test);
+            $repository2 = $this->getDoctrine()->getRepository(RecipeTags::class);
+            $tags = $repository2->findAll();
 
-        for ($i = 0; $i < count($randEM); $i++) {
-            $recette1 = $repository->find($countE[$randEM[$i]]['id']);
-            $recette2 = $repository->find($countP[$randPM[$i]]['id']);
-            $recette3 = $repository->find($countD[$randDM[$i]]['id']);
+            $rEntreM = [];
+            $rPlatM = [];
+            $rDessertM = [];
 
-            $recette4 = $repository->find($countE[$randES[$i]]['id']);
-            $recette5 = $repository->find($countP[$randPS[$i]]['id']);
-            $recette6 = $repository->find($countD[$randDS[$i]]['id']);
+            $rEntreS = [];
+            $rPlatS = [];
+            $rDessertS = [];
+
+            $rEntreM1 = [];
+            $rPlatM1 = [];
+            $rDessertM1 = [];
+
+            $rEntreS1 = [];
+            $rPlatS1 = [];
+            $rDessertS1 = [];
+
+            $j = [];
+
+            $test = $request->get('nb_jour');
+
+            $randEM = array_rand($countE, $test);
+            $randPM = array_rand($countP, $test);
+            $randDM = array_rand($countD, $test);
+
+            $randES = array_rand($countE, $test);
+            $randPS = array_rand($countP, $test);
+            $randDS = array_rand($countD, $test);
+
+            for ($i = 0; $i < count($randEM); $i++) {
+                $recette1 = $repository->find($countE[$randEM[$i]]['id']);
+                $recette2 = $repository->find($countP[$randPM[$i]]['id']);
+                $recette3 = $repository->find($countD[$randDM[$i]]['id']);
+
+                $recette4 = $repository->find($countE[$randES[$i]]['id']);
+                $recette5 = $repository->find($countP[$randPS[$i]]['id']);
+                $recette6 = $repository->find($countD[$randDS[$i]]['id']);
 
 
-            array_push($rEntreM, $recette1);
-            array_push($rPlatM, $recette2);
-            array_push($rDessertM, $recette3);
+                array_push($rEntreM, $recette1);
+                array_push($rPlatM, $recette2);
+                array_push($rDessertM, $recette3);
+                array_push($rEntreS, $recette4);
+                array_push($rPlatS, $recette5);
+                array_push($rDessertS, $recette6);
 
-            array_push($rEntreS, $recette4);
-            array_push($rPlatS, $recette5);
-            array_push($rDessertS, $recette6);
+                array_push($rEntreM1, $recette1->getId());
+                array_push($rPlatM1, $recette2->getId());
+                array_push($rDessertM1, $recette3->getId());
+                array_push($rEntreS1, $recette4->getId());
+                array_push($rPlatS1, $recette5->getId());
+                array_push($rDessertS1, $recette6->getId());
 
-            array_push($j, $i);
+                array_push($j, $i);
+            }
+
+            if (isset($_POST["save"])) {
+                $allPlat = [];
+                array_push($allPlat, $rEntreM1, $rPlatM1, $rDessertM1, $rEntreS1, $rPlatS1, $rDessertS1);
+                //generate date immutable
+                //var_dump($allPlat[0][0]->getName());
+                $date = new \DateTimeImmutable();
+                $date->format('Y-m-d H:i:s');
+
+                $em = $this->getDoctrine()->getManager();
+                $menu = new MonMenu();
+                $menu->setDateGenerate($date);
+                $menu->setMenuSave($allPlat);
+                $em->persist($menu);
+                $em->flush();
+
+                //add id menu generate in user database
+                $user = $this->getUser();
+                $user->setMonMenu($menu);
+                $em->persist($user);
+                $em->flush();
+            }
+
+            return $this->render('generation_menu/index.html.twig', [
+                'entreeM' => $rEntreM,
+                'platM' => $rPlatM,
+                'dessertM' => $rDessertM,
+                'entreeS' => $rEntreS,
+                'platS' => $rPlatS,
+                'dessertS' => $rDessertS,
+                'cpt' => $j,
+                'tags' => $tags,
+            ]);
         }
-
-        if(isset($_POST["save"])){
-            $allPlat = [];
-            array_push($allPlat, $rEntreM, $rPlatM, $rDessertM, $rEntreS, $rPlatS, $rDessertS);
-            //generate date immutable
-            var_dump($allPlat[0][0]->getName());
-            $date = new \DateTimeImmutable();
-            $date->format('Y-m-d H:i:s');
-
-            $em = $this->getDoctrine()->getManager();
-            $menu = new MonMenu();
-            $menu->setDateGenerate($date);
-            $menu->setMenuSave($allPlat);
-            $em->persist($menu);
-            $em->flush();
-
-            //add id menu generate in user database
-            $user = $this->getUser();
-            $user->setMonMenu($menu);
-            $em->persist($user);
-            $em->flush();
-        }
-
-        return $this->render('generation_menu/index.html.twig', [
-            'entreeM' => $rEntreM,
-            'platM' => $rPlatM,
-            'dessertM' => $rDessertM,
-            'entreeS' => $rEntreS,
-            'platS' => $rPlatS,
-            'dessertS' => $rDessertS,
-            'cpt' => $j,
-            'test' => $countD[$randDM[0]]['id'],
-            'tags' => $tags,
-        ]);
     }
 }
