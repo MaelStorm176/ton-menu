@@ -57,17 +57,17 @@ class RandomRecipeController extends AbstractController
                 for ($t = 0; $t < count($menu_save[$i]); $t++) {
                     $recette = $repository->find($menu_save[$i][$t]);
 
-                    if($i == 0){
+                    if ($i == 0) {
                         array_push($rEntreM, $recette);
-                    }else if($i == 1){
+                    } else if ($i == 1) {
                         array_push($rPlatM, $recette);
-                    }else if($i == 2){
+                    } else if ($i == 2) {
                         array_push($rDessertM, $recette);
-                    }else if($i == 3){
+                    } else if ($i == 3) {
                         array_push($rEntreS, $recette);
-                    }else if($i == 4){
+                    } else if ($i == 4) {
                         array_push($rPlatS, $recette);
-                    }else if($i == 5){
+                    } else if ($i == 5) {
                         array_push($rDessertS, $recette);
                     }
                 }
@@ -82,6 +82,7 @@ class RandomRecipeController extends AbstractController
                 'dessertS' => $rDessertS,
                 'cpt' => $j,
                 'tags' => $tags,
+                'msg' => "Importation du menu sauvegardé",
             ]);
         } else {
             $repository = $this->getDoctrine()->getRepository(Recipe::class);
@@ -147,27 +148,25 @@ class RandomRecipeController extends AbstractController
                 array_push($j, $i);
             }
 
-            if (isset($_POST["save"])) {
-                $allPlat = [];
-                array_push($allPlat, $rEntreM1, $rPlatM1, $rDessertM1, $rEntreS1, $rPlatS1, $rDessertS1);
-                //generate date immutable
-                //var_dump($allPlat[0][0]->getName());
-                $date = new \DateTimeImmutable();
-                $date->format('Y-m-d H:i:s');
+            $allPlat = [];
+            array_push($allPlat, $rEntreM1, $rPlatM1, $rDessertM1, $rEntreS1, $rPlatS1, $rDessertS1);
+            //generate date immutable
+            //var_dump($allPlat[0][0]->getName());
+            $date = new \DateTimeImmutable();
+            $date->format('Y-m-d H:i:s');
 
-                $em = $this->getDoctrine()->getManager();
-                $menu = new MonMenu();
-                $menu->setDateGenerate($date);
-                $menu->setMenuSave($allPlat);
-                $em->persist($menu);
-                $em->flush();
+            $em = $this->getDoctrine()->getManager();
+            $menu = new MonMenu();
+            $menu->setDateGenerate($date);
+            $menu->setMenuSave($allPlat);
+            $em->persist($menu);
+            $em->flush();
 
-                //add id menu generate in user database
-                $user = $this->getUser();
-                $user->setMonMenu($menu);
-                $em->persist($user);
-                $em->flush();
-            }
+            //add id menu generate in user database
+            $user = $this->getUser();
+            $user->setMonMenu($menu);
+            $em->persist($user);
+            $em->flush();
 
             return $this->render('generation_menu/index.html.twig', [
                 'entreeM' => $rEntreM,
@@ -178,6 +177,7 @@ class RandomRecipeController extends AbstractController
                 'dessertS' => $rDessertS,
                 'cpt' => $j,
                 'tags' => $tags,
+                'msg' => "Nouveau menu sauvegarder",
             ]);
         }
     }
