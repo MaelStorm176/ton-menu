@@ -2,16 +2,33 @@ version: "3.8"
 
 services:
 ## PHP - NPM
-  www:
+  php:
+    container_name: php
     build:
       dockerfile: ./php/extensions_php
-    container_name: php_fa
     ports:
-      - "8741:80"
+      - "9000:9000"
+      - "8000:8000"
     volumes:
       - ./php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www
+      - ./:/var/www/app
     #restart: always
+    networks:
+      - dev
+    depends_on:
+      - db
+
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8741:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./:/var/www/app
+    depends_on:
+      - php
+      - db
     networks:
       - dev
 
