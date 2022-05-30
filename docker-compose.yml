@@ -69,3 +69,7 @@ volumes:
 
 networks:
   dev:
+    name: dev
+  elk:
+    name: elk_external
+    external: true
