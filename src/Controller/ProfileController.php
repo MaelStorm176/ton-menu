@@ -17,27 +17,7 @@ class ProfileController extends AbstractController
     public function index(Request $request, SluggerInterface $slugger): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
-        $menu = $user->getMonMenu();
-        $menu2 = $menu->getMenuSave();
 
-        $date_menu = $menu->getDateGenerate();
-        $now = new \DateTime();
-        $diff = $now->diff($date_menu);
-
-        if($diff->d > count($menu2[0])){
-            $user->setMonMenu(null);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
-        }
-        if(isset($menu)){
-            $recipes = [];
-            $repository = $this->getDoctrine()->getRepository(Recipe::class);
-            $recipes1 = $repository->findBy(['id' => $menu2[0][$diff->d]]);
-            $recipes2 = $repository->findBy(['id' => $menu2[1][$diff->d]]);
-            $recipes3 = $repository->findBy(['id' => $menu2[2][$diff->d]]);    
-            array_push($recipes, $recipes1, $recipes2, $recipes3);
-        }
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
@@ -51,7 +31,7 @@ class ProfileController extends AbstractController
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename.'-'.uniqid().'.'.$brochureFile->guessExtension();
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $brochureFile->guessExtension();
 
                 // Move the file to the directory where brochures are stored
                 try {
@@ -75,7 +55,49 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
-            "recette" => $recipes,
         ]);
+    }
+    // nouvelle route profile/menu
+    #[Route('/profile/menu', name: 'profile_menu')]
+    public function seeMenu(): Response
+    {
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $menu = $user->getMonMenu();
+        if ($menu !== null) {
+            $menu2 = $menu->getMenuSave();
+
+            $date_menu = $menu->getDateGenerate();
+            $now = new \DateTime();
+            $diff = $now->diff($date_menu);
+
+            if ($diff->d > count($menu2[0])) {
+                $user->setMonMenu(null);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($user);
+                $entityManager->flush();
+            }
+            if (isset($menu)) {
+                $recipes = [];
+                $repository = $this->getDoctrine()->getRepository(Recipe::class);
+                $recipes1 = $repository->findBy(['id' => $menu2[0][$diff->d]]);
+                $recipes2 = $repository->findBy(['id' => $menu2[1][$diff->d]]);
+                $recipes3 = $repository->findBy(['id' => $menu2[2][$diff->d]]);
+                $recipes4 = $repository->findBy(['id' => $menu2[3][$diff->d]]);
+                $recipes5 = $repository->findBy(['id' => $menu2[4][$diff->d]]);
+                $recipes6 = $repository->findBy(['id' => $menu2[5][$diff->d]]);
+                array_push($recipes, $recipes1, $recipes2, $recipes3, $recipes4, $recipes5, $recipes6);
+            }
+            $none = 0;
+            return $this->render('profile/menu.html.twig', [
+                "recette" => $recipes,
+                "test" => $none,
+            ]);
+        }else{
+            $none = 1;
+            return $this->render('profile/menu.html.twig', [
+                "test" => $none,
+            ]);
+        }
+
     }
 }
