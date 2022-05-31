@@ -75,6 +75,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $menu;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerify;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -324,6 +329,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setMenu(?string $menu): self
     {
         $this->menu = $menu;
+
+        return $this;
+    }
+
+    public function getIsVerify(): ?bool
+    {
+        return $this->isVerify;
+    }
+
+    public function setIsVerify(bool $isVerify): self
+    {
+        $this->isVerify = $isVerify;
 
         return $this;
     }

@@ -34,7 +34,6 @@
             {% elseif is_granted('ROLE_USER') %}
             <div class="dropdown nav-item mx-0 mx-lg-1">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span href="/login">{{ app.user.email }}</span>
                     <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
