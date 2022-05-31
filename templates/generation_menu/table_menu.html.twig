@@ -16,23 +16,26 @@
                         <li><a class="dropdown-item" href="/generation-menu/6">6 jours</a></li>
                         <li><a class="dropdown-item" href="/generation-menu/7">7 jours</a></li>
                 </div>
-                <div class="change_menubutton">
-                
-                    {# <select name="tag">
-                        {% for tag in tags %}
-                            <option value="{{tag.id}}">{{tag.name}}</option>
-                        {% endfor %}
-                    </select>#}
+                {%if is_granted('ROLE_USER') %}
+                    <div class="change_menubutton">
                     
-                    <input type="submit" value="Regénérer un Menu">
-                </div>
-                
+                        {# <select name="tag">
+                            {% for tag in tags %}
+                                <option value="{{tag.id}}">{{tag.name}}</option>
+                            {% endfor %}
+                        </select>#}
+                        
+                        <input type="submit" value="Regénérer un Menu">
+                    </div>
+                {% endif %}    
             </form>
-            <button id="save">Sauvegarder</button>
-            <form method="post">
-                <input type="hidden" name="ingredient" value="1">
-                <input type="submit" value="Envoi des ingrédients par mail">
-            </form>
+            {%if is_granted('ROLE_USER') %}
+                <button id="save">Sauvegarder</button>
+                <form method="post">
+                    <input type="hidden" name="ingredient" value="1">
+                    <input type="submit" value="Envoi des ingrédients par mail">
+                </form>
+            {% endif %}
             <p>{{msg}}</p>
         </div>
         <div class="text-center d-flex flex-column">
