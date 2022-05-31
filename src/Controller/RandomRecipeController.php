@@ -6,10 +6,15 @@ use App\Entity\User;
 use App\Entity\Recipe;
 use App\Entity\MonMenu;
 use App\Entity\RecipeTags;
+use App\Entity\RecipeIngredients;
+use App\Entity\Ingredients;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class RandomRecipeController extends AbstractController
 {
@@ -27,7 +32,7 @@ class RandomRecipeController extends AbstractController
     }
 
     #[Route('/generation-menu/{nb_jour}', name: 'generation_menu')]
-    public function menu(Request $request): Response
+    public function menu(Request $request, MailerInterface $mailer): Response
     {
         //get data in db from user
         if ($this->isGranted('ROLE_USER') == true) {
@@ -35,14 +40,37 @@ class RandomRecipeController extends AbstractController
             $repository = $this->getDoctrine()->getRepository(User::class);
             $user = $repository->find($user->getId());
             $menu = $user->getMonMenu();
+
             if($menu != null){
                 $menu2 = $menu->getMenuSave();
+
+                if(isset($_POST['ingredient']) && $_POST['ingredient'] != null){
+                    $all_ingredient = [];
+                    $repository4 = $this->getDoctrine()->getRepository(RecipeIngredients::class);
+                    for($v=0; $v<count($menu2); $v++){
+                        for($b=0; $b<count($menu2[$v]); $b++){
+                            $ingredient = $repository4->findBy(['recipe' => $menu2[$v][$b]]);
+                            foreach($ingredient as $ing){
+                                array_push($all_ingredient, $ing->getIngredient()->getName());
+                            }
+                        }
+                    }
+                    $email = (new TemplatedEmail())
+                    ->from('tonmenu@mange.fr')
+                    ->to($user->getEmail())
+                    ->subject('Votre liste d\'ingrédients pour votre menu de la semaine')
+                    ->htmlTemplate('ingredient/send.html.twig')
+                    ->context([
+                        'all_ingredient' => $all_ingredient,
+                    ]);
+                    $mailer->send($email);
+                }
 
                 $date_menu = $menu->getDateGenerate();
                 $now = new \DateTime();
                 $diff = $now->diff($date_menu);
     
-                if ($diff["d"] > count($menu2[0])) {
+                if ($diff->d > count($menu2[0])) {
                     $user->setMonMenu(null);
                     $entityManager = $this->getDoctrine()->getManager();
                     $entityManager->persist($user);

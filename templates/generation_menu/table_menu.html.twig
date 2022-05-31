@@ -29,6 +29,10 @@
                 
             </form>
             <button id="save">Sauvegarder</button>
+            <form method="post">
+                <input type="hidden" name="ingredient" value="1">
+                <input type="submit" value="Envoi des ingrédients par mail">
+            </form>
             <p>{{msg}}</p>
         </div>
         <div class="text-center d-flex flex-column">
@@ -85,14 +89,3 @@
     </div>
 
 </section>
-    <script>
-            function save(id, value) {
-                $.ajax({
-                    type: 'post',
-                    url: "/rate/"+id+"/"+value,
-                    dataType: 'json',
-                    success: function(json){
-                        console.log("Rating good !");
-                }});
-            }
-        </script>

@@ -55,8 +55,9 @@ class RegistrationController extends AbstractController
             );
 
             $email = new TemplatedEmail();
-            $email->from('send@example.com');
+            $email->from('tonmenu@mange.fr');
             $email->to($user->getEmail());
+            $email->subject('Confirmation de votre inscription');
             $email->htmlTemplate('registration/confirmation_email.html.twig');
             $email->context(['signedUrl' => $signatureComponents->getSignedUrl()]);
 
