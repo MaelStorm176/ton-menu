@@ -28,6 +28,7 @@
                 </div>
                 
             </form>
+            <button id="save">Sauvegarder</button>
             <p>{{msg}}</p>
         </div>
         <div class="text-center d-flex flex-column">
@@ -84,3 +85,14 @@
     </div>
 
 </section>
+    <script>
+            function save(id, value) {
+                $.ajax({
+                    type: 'post',
+                    url: "/rate/"+id+"/"+value,
+                    dataType: 'json',
+                    success: function(json){
+                        console.log("Rating good !");
+                }});
+            }
+        </script>

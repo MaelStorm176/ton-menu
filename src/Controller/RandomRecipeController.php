@@ -34,8 +34,19 @@ class RandomRecipeController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($user->getId());
         $menu = $user->getMonMenu();
-        //var_dump($menu->getMenuSave());
-        //var_dump($_POST['change']);
+        $menu2 = $menu->getMenuSave();
+
+        $date_menu = $menu->getDateGenerate();
+        $now = new \DateTime();
+        $diff = $now->diff($date_menu);
+
+        if($diff["d"] > count($menu2[0])){
+            $user->setMonMenu(null);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($user);
+            $entityManager->flush();
+        }
+
         if (isset($menu) && $menu->getMenuSave() != "" && !isset($_POST['change'])) {
             $menu_save = $menu->getMenuSave();
             $rEntreM = [];

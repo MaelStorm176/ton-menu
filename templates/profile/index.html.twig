@@ -4,4 +4,9 @@
 
 {% block body %}
     <p>{{user.email}}</p>
+    {{dump(recette)}}
+    {{ form_start(form) }}
+        {{ form_row(form.profile_picture) }}
+    {{ form_end(form) }}
+
 {% endblock %}

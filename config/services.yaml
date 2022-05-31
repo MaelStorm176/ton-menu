@@ -9,6 +9,7 @@ parameters:
     database_name: symfony
     database_user: symfony
     database_password: symfony
+    profile_picture: '%kernel.project_dir%/public/profile_picture'
 
 services:
     # default configuration for services in *this* file
