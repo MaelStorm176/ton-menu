@@ -5,6 +5,8 @@ EXEC_PHP 		= php
 SYMFONY 		= symfony
 SYMFONY_CONSOLE = $(SYMFONY) console
 DOCKER 			= docker
+DOCKER_COMPOSE 	= $(DOCKER) compose --env-file=".env.local"
+DOCKER_RUN 		= $(DOCKER_COMPOSE) run --rm
 COMPOSER 		= composer
 NPM 			= npm
 
@@ -14,43 +16,65 @@ no_targets__:
 list:
 	sh -c "$(MAKE) -p no_targets__ | awk -F':' '/^[a-zA-Z0-9][^\$$#\/\\t=]*:([^=]|$$)/ {split(\$$1,A,/ /);for(i in A)print A[i]}' | grep -v '__\$$' | sort"
 
+## Build les images
+build:
+	@$(DOCKER_COMPOSE) build
+
 ## Démarre les containers
 start:
-	@$(DOCKER) compose --env-file=".env.local" up -d
+	@$(DOCKER_COMPOSE) up -d
+
+down:
+	@$(DOCKER_COMPOSE) down --remove-orphans
 
 ## Arrete les containers
 stop:
-	@$(DOCKER) compose down
-
-## Execute le script marmiton
-marmiton:
-	@$(NPM) run marmiton
-	@$(SYMFONY_CONSOLE) doctrine:fixtures:load -n
+	@$(DOCKER_COMPOSE) stop
 
 ## Nettoye le cache
 cache-clear:
-	@$(SYMFONY_CONSOLE) cache:clear
+	$(DOCKER_RUN) php $(SYMFONY_CONSOLE) cache:clear
 
 ## Purge les logs
 purge:
 	rm -rf var/cache/*
 	rm -rf var/log/*
 
-## Install les dépendances composer et npm
-install:
-	@$(COMPOSER) install --no-progress --prefer-dist --optimize-autoloader
-	@$(NPM) install
+## Install les dépendances de l'application (composer)
+composer-install:
+	$(DOCKER_RUN) composer $(COMPOSER) install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader
 
-run:
-	@$(SYMFONY) server:start -d
-	@$(NPM) run build
-	mysqld --console
+## Install les dépendances de l'application (npm)
+npm-install:
+	$(DOCKER_RUN) encore $(NPM) install
+
+## Webpack (npm) Encore
+npm-watch:
+	$(DOCKER_RUN) encore $(NPM) run watch
+npm-dev:
+	$(DOCKER_RUN) encore $(NPM) run dev
+npm-build:
+	$(DOCKER_RUN) encore $(NPM) run build
+
+## Install les dépendances composer + npm
+install:
+	make composer-install
+	make npm-install
+
+build-db:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:cache:clear-metadata
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:drop --force
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:create
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:validate
 
 ## Build la DB en fonction des migrations et execute le script marmiton
-marmiton-check: ## Build the DB, control the schema validity, load fixtures and check the migration status
-	@$(SYMFONY_CONSOLE) doctrine:cache:clear-metadata
-	@$(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists
-	@$(SYMFONY_CONSOLE) doctrine:schema:drop --force
-	@$(SYMFONY_CONSOLE) doctrine:schema:create
-	@$(SYMFONY_CONSOLE) doctrine:schema:validate
+marmiton-check:
+	make build-db
 	make marmiton
+
+## Execute le script marmiton
+marmiton:
+	@$(DOCKER_RUN) encore $(NPM) run marmiton
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:fixtures:load -n
+
