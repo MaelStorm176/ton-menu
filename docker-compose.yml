@@ -71,7 +71,8 @@ services:
     networks:
       - dev
 
-
+volumes:
+  datavolume:
 
 networks:
   dev:
