@@ -3,59 +3,89 @@
         <div class="filter" >
             <form method="post" class="d-flex justify-content-around">
             
-            <div class="dropdown nav-item mx-0 mx-lg-1">
-                <a href="#" class="d-flex align-items-center text-black text-decoration-underline dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <span class="nav-link py-3 px-0 px-lg-3 rounded text-black" href="#">Nombre de jours : </span>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser2">
-                    <li><a class="dropdown-item" href="/generation-menu/2">2 jours</a></li>
-                    <li><a class="dropdown-item" href="/generation-menu/3">3 jours</a></li>
-                    <li><a class="dropdown-item" href="/generation-menu/4">4 jours</a></li>
-                    <li><a class="dropdown-item" href="/generation-menu/5">5 jours</a></li>
-                    <li><a class="dropdown-item" href="/generation-menu/6">6 jours</a></li>
-                    <li><a class="dropdown-item" href="/generation-menu/7">7 jours</a></li>
-            </div>
-            <div class="change_menubutton">
-            
-                {# <select name="tag">
-                    {% for tag in tags %}
-                        <option value="{{tag.id}}">{{tag.name}}</option>
-                    {% endfor %}
-                </select>#}
-                
-                <input type="submit" value="Regénérer un Menu">
-            </div>
-                
+                <div class="dropdown nav-item mx-0 mx-lg-1">
+                    <a href="#" class="d-flex align-items-center text-black text-decoration-underline dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="nav-link py-3 px-0 px-lg-3 rounded text-black" href="#">Nombre de jours : </span>
+                    </a>
+                    <input type="hidden" name="change" value="1">
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser2">
+                        <li><a class="dropdown-item" href="/generation-menu/2">2 jours</a></li>
+                        <li><a class="dropdown-item" href="/generation-menu/3">3 jours</a></li>
+                        <li><a class="dropdown-item" href="/generation-menu/4">4 jours</a></li>
+                        <li><a class="dropdown-item" href="/generation-menu/5">5 jours</a></li>
+                        <li><a class="dropdown-item" href="/generation-menu/6">6 jours</a></li>
+                        <li><a class="dropdown-item" href="/generation-menu/7">7 jours</a></li>
+                </div>
+                {%if is_granted('ROLE_USER') %}
+                    <div class="change_menubutton">
+                    
+                        {# <select name="tag">
+                            {% for tag in tags %}
+                                <option value="{{tag.id}}">{{tag.name}}</option>
+                            {% endfor %}
+                        </select>#}
+                        
+                        <input type="submit" value="Regénérer un Menu">
+                    </div>
+                {% endif %}    
+            </form>
+            {%if is_granted('ROLE_USER') %}
+                <button id="save">Sauvegarder</button>
+                <form method="post">
+                    <input type="hidden" name="ingredient" value="1">
+                    <input type="submit" value="Envoi des ingrédients par mail">
                 </form>
+            {% endif %}
+            <p>{{msg}}</p>
         </div>
         <div class="text-center d-flex flex-column">
             <div class="menu_title"><span class=" h3 text-uppercase">Déjeuners</span></div>
             <div class="menu_content d-flex justify-contant-center align-item-center">
                 {% for j in cpt %}
-                <div class="menu_unit rounded">
-                    <div class="list_content d-flex flex-column">
-                        <p><a href="/recipe/{{entreeM[j].id}}">{{entreeM[j].name}}</a></p>
-                        <i class="bi bi-asterisk"></i>
-                        <p><a href="/recipe/{{platM[j].id}}">{{platM[j].name}}</a></p>
-                        <i class="bi bi-asterisk"></i>
-                        <p><a href="/recipe/{{dessertM[j].id}}">{{dessertM[j].name}}</a></p>
+                    <div class="menu_unit rounded">
+                        {% if is_granted('ROLE_USER') %}
+                            <div class="list_content d-flex flex-column">
+                                <p><a href="/recipe/{{entreeM[j].id}}">{{entreeM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                <i class="bi bi-asterisk"></i>
+                                <p><a href="/recipe/{{platM[j].id}}">{{platM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                <i class="bi bi-asterisk"></i>
+                                <p><a href="/recipe/{{dessertM[j].id}}">{{dessertM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                            </div>
+                        {% else %}
+                            <div class="list_content d-flex flex-column">
+                                <p>{{entreeM[j].name}}</p>
+                                <i class="bi bi-asterisk"></i>
+                                <p>{{platM[j].name}}</p>
+                                <i class="bi bi-asterisk"></i>
+                                <p>{{dessertM[j].name}}</p>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
                 {% endfor %}
             </div>
             <div class="img_menu"><img class="mb_img" src="/img/mb.jpg" alt="MangerBoouger.fr"/></div>
             <div class="menu_title"><span class="menu_title h3 text-uppercase">Diners</span></div>
             <div class="menu_content d-flex flex-row justify-contant-arround align-item-center">
                 {% for j in cpt %}
-                <div class="menu_unit rounded">
-                    <div class="list_content d-flex flex-column">
-                        <p><a href="/recipe/{{entreeM[j].id}}">{{entreeM[j].name}}</a></p>
-                        <i class="bi bi-asterisk"></i>
-                        <p><a href="/recipe/{{platM[j].id}}">{{platM[j].name}}</a></p>
-                        <i class="bi bi-asterisk"></i>
-                        <p><a href="/recipe/{{dessertM[j].id}}">{{dessertM[j].name}}</a></p>
+                    <div class="menu_unit rounded">
+                        {% if is_granted('ROLE_USER') %}
+                            <div class="list_content d-flex flex-column">
+                                <p><a href="/recipe/{{entreeS[j].id}}">{{entreeS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                <i class="bi bi-asterisk"></i>
+                                <p><a href="/recipe/{{platS[j].id}}">{{platS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                <i class="bi bi-asterisk"></i>
+                                <p><a href="/recipe/{{dessertS[j].id}}">{{dessertS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                            </div>
+                        {% else %}
+                            <div class="list_content d-flex flex-column">
+                                <p>{{entreeS[j].name}}</p>
+                                <i class="bi bi-asterisk"></i>
+                                <p>{{platS[j].name}}</p>
+                                <i class="bi bi-asterisk"></i>
+                                <p>{{dessertS[j].name}}</p>
+                            </div>
+                        {% endif %}
                     </div>
-                </div>
                 {% endfor %}
             </div>
         </div> 

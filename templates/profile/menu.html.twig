@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+{% set i = 0 %}
+    {% if test == "1" %}
+        <p>Vous n'avez pas de menu générez, suivez le lien ci-dessous pour en générer un nouveau</p>
+        <a href="/generation-menu/7" class="btn btn-primary">Générer un menu</a>
+    {% elseif test == "0" %}
+        <p>Menu du jour</p>
+        {% for recettes in recette %}
+            
+            {% if i == 3 %}
+                <hr>
+            {% endif %}
+            <a href="/recipe/{{recettes[0].id}}"><p>{{recettes[0].name}}</p></a>
+            {% set i = i + 1 %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}

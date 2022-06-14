@@ -60,6 +60,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $recette;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=MonMenu::class, inversedBy="user")
+     */
+    private $monMenu;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $profile_picture;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $menu;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isVerify;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -273,6 +293,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $recette->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMonMenu(): ?MonMenu
+    {
+        return $this->monMenu;
+    }
+
+    public function setMonMenu(?MonMenu $monMenu): self
+    {
+        $this->monMenu = $monMenu;
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profile_picture;
+    }
+
+    public function setProfilePicture(?string $profile_picture): self
+    {
+        $this->profile_picture = $profile_picture;
+
+        return $this;
+    }
+
+    public function getMenu(): ?string
+    {
+        return $this->menu;
+    }
+
+    public function setMenu(?string $menu): self
+    {
+        $this->menu = $menu;
+
+        return $this;
+    }
+
+    public function getIsVerify(): ?bool
+    {
+        return $this->isVerify;
+    }
+
+    public function setIsVerify(bool $isVerify): self
+    {
+        $this->isVerify = $isVerify;
 
         return $this;
     }
