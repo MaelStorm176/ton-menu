@@ -47,6 +47,19 @@ class RecipeRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function getRandomRecipes($type,$max=1)
+    {
+        $query = $this->createQueryBuilder('r')
+            ->where('r.type = :type')
+            ->setParameter('type', $type)
+            ->orderBy('RAND()')
+            ->setMaxResults($max)
+            ->getQuery();
+
+        return $query->getResult();
+    }
+
     public function countRecipe()
     {
         return $this->createQueryBuilder('t')

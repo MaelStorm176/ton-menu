@@ -1,0 +1,32 @@
+<section class="d-flex justify-content-center">
+{% for i in range(0,nb_jour) %}
+
+    <!-- MIDI -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">{{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") | localizedate('full', 'none', app.request.locale ) }}</h4>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOIR -->
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">{{ "now"|date_modify("+" ~ i ~ " day")|date("m/d/Y") }}</h4>
+                </div>
+                <div class="card-body">
+
+                </div>
+            </div>
+        </div>
+{% endfor %}
+
+</section>
