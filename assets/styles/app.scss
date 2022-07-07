@@ -124,6 +124,10 @@ padding-bottom: 6rem;
   padding-top: 5%;
 }
 
+.agree_content {
+  text-align: left;
+}
+
 .password_label{
   font-size: 1.5rem;
 }
@@ -163,8 +167,13 @@ padding-bottom: 6rem;
   padding-top: 20px;
 }
 
+.btn_day{
+  border: none;
+  box-shadow: none;
+}
+
 .menu_unit {
-  border: 7px solid #65b2ff;
+  border: 7px solid #000000;
   margin-right: 10px;
   height: 400px;
   width: 350px;
