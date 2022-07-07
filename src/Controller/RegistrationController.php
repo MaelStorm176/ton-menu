@@ -42,7 +42,7 @@ class RegistrationController extends AbstractController
                 )
             );
             $user->setIsVerify(false);
-
+            $user->setProfilePicture("/blank.png");
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
