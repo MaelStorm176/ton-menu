@@ -63,7 +63,7 @@ class RegistrationController extends AbstractController
 
             $this->mailer->send($email);
 
-            return $this->redirectToRoute('login');
+            return $this->redirectToRoute('app_confirm');
         }
 
         return $this->render('registration/register.html.twig', [
@@ -98,5 +98,12 @@ class RegistrationController extends AbstractController
         $this->addFlash('success', 'Your e-mail address has been verified.');
 
         return $this->redirectToRoute('home');
+    }
+
+    //Route vers une page qui indique de valider son email
+    #[Route('/confirm', name: 'app_confirm')]
+    public function verify(): Response
+    {
+        return $this->render('registration/confirm.html.twig');
     }
 }
