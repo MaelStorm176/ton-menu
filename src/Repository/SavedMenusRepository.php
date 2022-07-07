@@ -2,30 +2,32 @@
 
 namespace App\Repository;
 
-use App\Entity\MonMenu;
+use App\Entity\SavedMenus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method MonMenu|null find($id, $lockMode = null, $lockVersion = null)
- * @method MonMenu|null findOneBy(array $criteria, array $orderBy = null)
- * @method MonMenu[]    findAll()
- * @method MonMenu[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @extends ServiceEntityRepository<SavedMenus>
+ *
+ * @method SavedMenus|null find($id, $lockMode = null, $lockVersion = null)
+ * @method SavedMenus|null findOneBy(array $criteria, array $orderBy = null)
+ * @method SavedMenus[]    findAll()
+ * @method SavedMenus[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class MonMenuRepository extends ServiceEntityRepository
+class SavedMenusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, MonMenu::class);
+        parent::__construct($registry, SavedMenus::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(MonMenu $entity, bool $flush = true): void
+    public function add(SavedMenus $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -37,7 +39,7 @@ class MonMenuRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(MonMenu $entity, bool $flush = true): void
+    public function remove(SavedMenus $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -46,15 +48,15 @@ class MonMenuRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return MonMenu[] Returns an array of MonMenu objects
+    //  * @return SavedMenus[] Returns an array of SavedMenus objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
+            ->orderBy('s.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -63,10 +65,10 @@ class MonMenuRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?MonMenu
+    public function findOneBySomeField($value): ?SavedMenus
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

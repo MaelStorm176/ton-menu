@@ -1,9 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Generation Menu{% endblock %}
+{% block title %} Generation Menu {% endblock %}
 
 {% block body %}
     <div class="container-fluid">
         {% include 'generation_menu/results_menu.html.twig' %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('results_menu') }}
 {% endblock %}
