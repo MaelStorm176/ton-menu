@@ -327,11 +327,11 @@ class RandomRecipeController extends AbstractController
             $user = $this->getUser();
             $id_menu = $request->get("id_menu", 0);
             if ($id_menu == 0) {
-                dd("ok");
                 $savedMenu = new SavedMenus();
                 $savedMenu->setUser($user);
             } else {
                 $savedMenu = $savedMenuRepository->find($id_menu);
+                $savedMenu->setUpdatedAt(new \DateTimeImmutable());
                 if ($savedMenu->getUser()->getId() != $user->getId()) {
                     return new JsonResponse(["error" => "Vous n'avez pas le droit d'éditer ce menu"]);
                 }
@@ -384,18 +384,58 @@ class RandomRecipeController extends AbstractController
     }
 
     #[Route('/generation-menu/{nb_jour}', name: 'generation_menu', methods: ['GET'])]
-    public function menu(Request $request, UserRepository $userRepository, SavedMenusRepository $savedMenusRepository): Response
+    public function menu(Request $request): Response
     {
         //Si l'utilisateur est connecté
         if ($this->isGranted('ROLE_USER')) {
             $user = $this->getUser();
             $nb_jour = (int) $request->get('nb_jour');
-            $nb_matin_soir = $nb_jour*2;
 
             //Si je demande à voir un menu en particulier
             if ($id_menu = $request->get('id_menu')){
-                $monMenu = $savedMenusRepository->find($id_menu);
+                $monMenu = $this->savedMenusRepository->find($id_menu);
                 if ($monMenu && $monMenu->getUser()->getId() == $user->getId()){
+                    $nb_jour_mon_menu = $monMenu->getNbJours();
+                    if ($nb_jour != $nb_jour_mon_menu){
+                        //Si le nombre de jour demandé est SUPERIEUR au nombre de jours du menu en base
+                        if ($nb_jour > $nb_jour_mon_menu) {
+                            $diff = ($nb_jour * 2) - ($nb_jour_mon_menu * 2);
+
+                            $newEntrees = $this->randomEntrees($diff);
+                            $newPlats = $this->randomPlats($diff);
+                            $newDesserts = $this->randomDesserts($diff);
+
+                            $newEntreesIds = array_map(function ($e) {
+                                return $e->getId();
+                            }, $newEntrees);
+                            $newPlatsIds = array_map(function ($p) {
+                                return $p->getId();
+                            }, $newPlats);
+                            $newDessertsIds = array_map(function ($d) {
+                                return $d->getId();
+                            }, $newDesserts);
+
+                            $newEntreesRecipes = array_merge($monMenu->getRecipes()["entrees"], $newEntreesIds);
+                            $newPlatsRecipes = array_merge($monMenu->getRecipes()["plats"], $newPlatsIds);
+                            $newDessertsRecipes = array_merge($monMenu->getRecipes()["desserts"], $newDessertsIds);
+                            $nb_jour = $nb_jour_mon_menu;
+                        }
+                        //Si le nombre de jour demandé est INFERIEUR au nombre de jours du menu en base
+                        else  {
+                            $newEntreesRecipes = $monMenu->getRecipes()["entrees"] = array_slice($monMenu->getRecipes()["entrees"], 0, $nb_jour * 2);
+                            $newPlatsRecipes = $monMenu->getRecipes()["plats"] = array_slice($monMenu->getRecipes()["plats"], 0, $nb_jour * 2);
+                            $newDessertsRecipes = $monMenu->getRecipes()["desserts"] = array_slice($monMenu->getRecipes()["desserts"], 0, $nb_jour * 2);
+                        }
+                        $monMenu->setRecipes([
+                            "entrees" => $newEntreesRecipes,
+                            "plats" => $newPlatsRecipes,
+                            "desserts" => $newDessertsRecipes,
+                        ]);
+                        $em = $this->getDoctrine()->getManagerForClass(SavedMenus::class);
+                        $em->persist($monMenu);
+                        $em->flush();
+                    }
+
                     $idsRecipes = $monMenu->getRecipes(); //[entrees: [id, id, id], plats: [id, id, id], desserts: [id, id, id]]
                     $entrees = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['entrees']]);
                     $plats = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['plats']]);
@@ -407,7 +447,8 @@ class RandomRecipeController extends AbstractController
             }
 
             //Si je genere un menu
-            else{
+            else {
+                $nb_matin_soir = $nb_jour*2;
                 $id_menu = 0;
                 $entrees = $this->randomEntrees($nb_matin_soir);
                 $plats = $this->randomPlats($nb_matin_soir);
@@ -440,7 +481,6 @@ class RandomRecipeController extends AbstractController
             return $this->redirectToRoute('home');
         }
         return new Response("pas connecté");
-
     }
 
     private function randomEntrees($nb_matin_soir = 1){

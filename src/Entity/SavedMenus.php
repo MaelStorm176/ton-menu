@@ -96,4 +96,12 @@ class SavedMenus
 
         return $this;
     }
+
+    public function getNbJours(): int
+    {
+        if (count($this->recipes) === 0) {
+            return 0;
+        }
+        return count($this->recipes["entrees"]) / 2;
+    }
 }
