@@ -77,6 +77,6 @@ class AdminController extends AbstractController
         $entityManager->flush();
         // do anything else you need here, like send an email
     
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('admin_users');
     }
 }

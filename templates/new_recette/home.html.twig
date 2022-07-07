@@ -3,6 +3,10 @@
 {% block title %}Hello NewRecetteController!{% endblock %}
 
 {% block body %}
+    <input type="text" id="search" placeholder="Rechercher une recette...">
+    {% if is_granted('ROLE_CHIEF') %}
+        <a href="{{ path('recipe_add') }}">Ajouter une recette</a>
+    {% endif %}
     {% for recettes in recette %}
     {% set r = 0 %}
     {% set i = 0 %}
