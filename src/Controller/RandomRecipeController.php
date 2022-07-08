@@ -7,6 +7,7 @@ use App\Entity\Recipe;
 use App\Entity\MonMenu;
 use App\Entity\RecipeTags;
 use App\Entity\RecipeIngredients;
+use App\Repository\RecipeRepository;
 use App\Entity\Ingredients;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,15 +47,34 @@ class RandomRecipeController extends AbstractController
 
                 if(isset($_POST['ingredient']) && $_POST['ingredient'] != null){
                     $all_ingredient = [];
+                    $count_ingredient = [];
+                    $i = 0;
                     $repository4 = $this->getDoctrine()->getRepository(RecipeIngredients::class);
                     for($v=0; $v<count($menu2); $v++){
                         for($b=0; $b<count($menu2[$v]); $b++){
-                            $ingredient = $repository4->findBy(['recipe' => $menu2[$v][$b]]);
+
+                            //convert $menu2 id to string
+
+                            $ingredient = $repository4->findOneBy(['recipe' => $menu2[$v][$b]]);
+                            var_dump($menu2[$v][$b]);
+                            var_dump($ingredient);
                             foreach($ingredient as $ing){
-                                array_push($all_ingredient, $ing->getIngredient()->getName());
+                                $i++;
+                                //var_dump(count($ingredient));
+                                if(in_array($ing->getIngredient()->getName(), $all_ingredient) == false){
+                                    array_push($all_ingredient, $ing->getIngredient()->getName());
+                                    $count_ingredient[$ing->getIngredient()->getName()] = 1;
+                                }
+                                if(in_array($ing->getIngredient()->getName(), $all_ingredient) == true){
+                                    $count_ingredient[$ing->getIngredient()->getName()] = $count_ingredient[$ing->getIngredient()->getName()] + 1;
+                                }
+                                //break;
                             }
                         }
+                        //break;
                     }
+                    var_dump($count_ingredient);
+                    var_dump($i);
                     $email = (new TemplatedEmail())
                     ->from('tonmenu@mange.fr')
                     ->to($user->getEmail())
@@ -62,6 +82,7 @@ class RandomRecipeController extends AbstractController
                     ->htmlTemplate('ingredient/send.html.twig')
                     ->context([
                         'all_ingredient' => $all_ingredient,
+                        'count_ingredient' => $count_ingredient,
                     ]);
                     $mailer->send($email);
                 }
