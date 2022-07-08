@@ -26,6 +26,7 @@ class UserFixtures extends Fixture {
         $user->setPassword($password_encoded);
         $user->setRoles(["ROLE_ADMIN"]);
         $user->setIsVerify(true);
+        $user->setProfilePicture("/blank.png");
         $manager->persist($user);
         $manager->flush();
     }

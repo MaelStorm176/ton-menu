@@ -11,6 +11,9 @@
       <ul class="navbar-nav ms-auto">
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#UseIt">Comment utiliser notre site</a></li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#about">A Propos de nous</a></li>
+          {% if is_granted('ROLE_USER') %}
+                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/recipe/all">Inventaires des recettes</a></li>
+          {% endif %}
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#contact">Contact</a></li>
           <li class="nav-item mx-0 mx-lg-1">
             {% if is_granted('ROLE_ADMIN') %} 
@@ -47,7 +50,10 @@
             </div>
 
             {% else %} 
-            <a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/login">Se Connecter</a>
+            <div class="d-flex">
+              <a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/login">Se Connecter</a>
+              <a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/register">S'inscrire</a>
+              </div>
             {% endif %}
         </li>
       </ul>

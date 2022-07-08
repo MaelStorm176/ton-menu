@@ -4,14 +4,12 @@
 
 {% block body %}
 
-<div class="recipe_content text-center ">
-    <h1> {{ recette.name }}</h1>
-    <a href="/all">Retour a la liste des recettes</a>
-        <style>
-            .rating {
-                display: flex;
-                flex-direction: row-reverse;
-            }
+<a href="/recipe/all">Retour a la liste des recettes</a>
+    <style>
+        .rating {
+            display: flex;
+            flex-direction: row-reverse;
+        }
 
             .rating>input {
                 display: none
@@ -49,7 +47,86 @@
                 color: #fff;
                 height: 49px
             }
-
+        .rating-submit:hover {
+            color: #fff
+        }
+    </style>
+    <p>{{recette.name}}</p>
+    <div>
+        {% for ingredients in ingredient %}
+            <p>- {{ingredients.ingredient.name}}</p>
+        {% endfor %}
+    </div>
+    <div>
+        {% for steps in step %}
+            <p>{{steps.step}}</p>
+       {% endfor %}
+    </div>
+    <div class="rating">
+        {% if rating != [] and rating.rate == 5 %}
+            <input type="radio" name="rating" value="5" id="5" checked onclick="rate({{recette.id}}, 5)">
+            <label for="5">☆</label>
+        {% else %}
+            <input type="radio" name="rating" value="5" id="5" onclick="rate({{recette.id}}, 5)">
+            <label for="5">☆</label> 
+        {% endif %}
+        {% if rating != [] and rating.rate == 4 %}
+            <input type="radio" name="rating" value="4" id="4" checked onclick="rate({{recette.id}}, 4)">
+            <label for="4">☆</label>
+        {% else %}
+            <input type="radio" name="rating" value="4" id="4" onclick="rate({{recette.id}}, 4)">
+            <label for="4">☆</label> 
+        {% endif %}
+        {% if rating != [] and rating.rate == 3 %}
+            <input type="radio" name="rating" value="3" id="3" checked onclick="rate({{recette.id}}, 3)">
+            <label for="3">☆</label>
+        {% else %}
+            <input type="radio" name="rating" value="3" id="3" onclick="rate({{recette.id}}, 3)">
+            <label for="3">☆</label> 
+        {% endif %}
+        {% if rating != [] and rating.rate == 2 %}
+            <input type="radio" name="rating" value="2" id="2" checked onclick="rate({{recette.id}}, 2)">
+            <label for="2">☆</label>
+        {% else %}
+            <input type="radio" name="rating" value="2" id="2" onclick="rate({{recette.id}}, 2)">
+            <label for="2">☆</label> 
+        {% endif %}
+        {% if rating != [] and rating.rate == 2 %}
+            <input type="radio" name="rating" value="1" id="1" checked onclick="rate({{recette.id}}, 1)">
+            <label for="1">☆</label>
+        {% else %}
+            <input type="radio" name="rating" value="1" id="1" onclick="rate({{recette.id}}, 1)">
+            <label for="1">☆</label> 
+        {% endif %}
+    </div>
+    <div>
+        {{ form_start(recetteForm) }}
+            {{ form_row(recetteForm.content) }}
+            {{ form_row(recetteForm.save) }}
+        {{ form_end(recetteForm) }}
+    </div>
+    <div>
+        <h2>Commentaires</h2>
+        {% for comments in comment %}
+            {% if comments.recette == recette %}
+                <div>
+                    <p>{{comments.user.email}}</p>
+                    <p>{{comments.content}}</p>
+                    <p>{{comments.createdAt | date("d/m/Y h:i:s")}}</p>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+            function rate(id, value) {
+                $.ajax({
+                    type: 'post',
+                    url: "/rate/"+id+"/"+value,
+                    dataType: 'json',
+                    success: function(json){
+                        console.log("Rating good !");
+                }});
             .rating-submit:hover {
                 color: #fff
             }
