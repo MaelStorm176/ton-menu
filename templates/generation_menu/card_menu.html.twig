@@ -1,0 +1,27 @@
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-around">
+            <h4 class="card-title">{{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}</h4>
+            <button id="refresh_day_{{ index }}" class="btn btn-outline-primary mr-auto" data-day="{{ index }}">
+                <i class="fs-4 bi-arrow-clockwise"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12" id="entree_{{ index }}">
+                    <b>Entrée : </b>{{ entree.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="plat_{{ index }}">
+                    <b>Plat : </b>{{ plat.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="dessert_{{ index }}">
+                    <b>Dessert : </b>{{ dessert.name }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
