@@ -55,13 +55,13 @@
             }
         </style>
         <div class ="components_content" >
-        <h2 class="compo_title">Ingrédients</h2>
+        <h2 class="compo_title">Ingrédients :</h2>
             <span>{% for ingredients in ingredient %}
                 <p  class="comp_list">- {{ingredients.ingredient.name}}</p>
             {% endfor %}</span>
         </div>
         <div class="task_content">
-        <h2 class="compo_title">Préparation</h2>
+        <h2 class="compo_title">Préparation :</h2>
         <span>{% for steps in step %}
                 <p  class="comp_list">- {{steps.step}}</p>
         {% endfor %}</span>

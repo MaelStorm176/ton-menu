@@ -18,6 +18,9 @@ a:link {
 }
 
 /////////////////NavBar//////////////////
+.nav_bg{
+  background: linear-gradient(to bottom right, #0b9bef, rgb(0 255 204 / 90%));
+}
 
 #mainNav {
     padding-top: 1rem;
@@ -71,7 +74,7 @@ padding-bottom: 6rem;
   left: 0;
   transition: all 0.2s ease-in-out;
   opacity: 0;
-  background-color: rgba(26, 188, 156, 0.9);
+  background-color: #00bedd;
 }
 .howuse .howuse-item .howuse-item-caption:hover {
   opacity: 1;
@@ -98,9 +101,9 @@ padding-bottom: 6rem;
 
 ///////////////RECIPE/////////////////
 .recipe_content{
-  padding: 3% 10%;
-  border: #000000 solid 1px;
-  //box-shadow: 12px 12px 2px 1px rgba(26, 188, 156, 0.9);
+  margin: 3% 10%;
+  box-shadow: 15px 15px 15px rgb(26 188 156 / 90%);
+  border: 3px solid #00bf8a
 }
 
 .components_content {
@@ -176,11 +179,15 @@ padding-bottom: 6rem;
 /////////////////Generator Menu//////////////////
 
 .filter {
-  background-color: antiquewhite;
+  background-color: #00bedd;
 }
 
 .menu_content{
-  margin: 2% 5%;
+  margin: 2% 3%;
+}
+
+.btn_day {
+  border: 3px solid #00bf8a;
 }
 
 .change_menubutton {
@@ -191,21 +198,15 @@ padding-bottom: 6rem;
   padding-top: 20px;
 }
 
-.btn_day{
-  border: none;
-  box-shadow: none;
-}
 
 .menu_unit {
-  border: 7px solid #000000;
-  margin-right: 10px;
+  box-shadow: 5px 5px 5px rgba(26, 188, 156, 0.9);
+  border: 3px solid #00bf8a;
+  margin-right: 20px;
   height: 400px;
   width: 350px;
 }
 
-.bi {
-  font-size: 0.7em;
-}
 
 .list_content {
   margin: 20% 5%;
@@ -213,14 +214,28 @@ padding-bottom: 6rem;
 
 .mb_img {
   width: 40%;
-  height: 150px;
+  height: 250px;
 }
 
 .img_menu {
-  background-color: antiquewhite;
+  background-color: rgba(26, 188, 156, 0.9);
   padding: 1% 0;
 }
 
+.save {
+  margin-left: 50%;
+  width: 7%;
+}
+
+.sendmail{
+  margin-left: 56%;
+  margin-top: 10px;
+  width: 13%;
+}
+
+.msgsend{
+  padding-bottom: 15px;
+}
 /////////////////Footer//////////////////
 
 .footer {

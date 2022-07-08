@@ -25,21 +25,21 @@
                             {% endfor %}
                         </select>#}
                         
-                        <input type="submit" value="Regénérer un Menu">
+                        <input class="btn_day" type="submit" value="Regénérer un Menu">
                     </div>
                 {% endif %}    
             </form>
             {%if is_granted('ROLE_USER') %}
-                <button id="save">Sauvegarder</button>
+                <button class="save btn_day" id="save"><i class="bi bi-file-earmark-arrow-down-fill"></i></i>Sauvegarder</button>
                 <form method="post">
                     <input type="hidden" name="ingredient" value="1">
-                    <input type="submit" value="Envoi des ingrédients par mail">
+                    <input type="submit" value="Envoi des ingrédients par mail" class="sendmail btn_day">
                 </form>
             {% endif %}
-            <p>{{msg}}</p>
+            <p class="msgsend">{{msg}}</p>
         </div>
         <button class="btn_day" id="btn-jour"><i class="bi bi-brightness-high"></i>Midi</button>
-        <button class="btn_night" id="btn-nuit"><i class="bi bi-cloud-moon"></i>Soir</button>
+        <button class="btn_day" id="btn-nuit"><i class="bi bi-cloud-moon"></i>Soir</button>
         <h1 id="test">Menu du Midi</h1>
         <script>
             /**
@@ -73,7 +73,6 @@
         </script>
         <div class="text-center d-flex flex-column">
             <div class="jour" id="jour">
-                <div class="menu_title"><span class=" h3 text-uppercase">Déjeuners</span></div>
                 <div class="menu_content d-flex justify-contant-center align-item-center">
                     {% for j in cpt %}
                         <div class="menu_unit rounded">
@@ -99,7 +98,6 @@
                 </div>
             </div>
             <div class="nuit d-none" id="nuit">
-                <div class="menu_title"><span class="menu_title h3 text-uppercase">Diners</span></div>
                 <div class="menu_content d-flex flex-row justify-contant-arround align-item-center">
                     {% for j in cpt %}
                         <div class="menu_unit rounded">
