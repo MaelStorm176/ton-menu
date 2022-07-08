@@ -25,6 +25,7 @@ Encore
 .addEntry('show_recipes', './assets/custom/show_recipes.js')
 .addEntry('show_tags', './assets/custom/show_tags.js')
 .addEntry('results_menu', './assets/custom/results_menu.js')
+.addEntry('new_recette_show', './assets/custom/new_recette_show.js')
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge('./assets/controllers.json')
