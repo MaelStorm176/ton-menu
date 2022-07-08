@@ -15,6 +15,7 @@
                         <li><a class="dropdown-item" href="/generation-menu/5">5 jours</a></li>
                         <li><a class="dropdown-item" href="/generation-menu/6">6 jours</a></li>
                         <li><a class="dropdown-item" href="/generation-menu/7">7 jours</a></li>
+                    </ul>
                 </div>
                 {%if is_granted('ROLE_USER') %}
                     <div class="change_menubutton">
@@ -29,6 +30,7 @@
                     </div>
                 {% endif %}    
             </form>
+            
             {%if is_granted('ROLE_USER') %}
                 <button class="save btn_day" id="save"><i class="bi bi-file-earmark-arrow-down-fill"></i></i>Sauvegarder</button>
                 <form method="post">
