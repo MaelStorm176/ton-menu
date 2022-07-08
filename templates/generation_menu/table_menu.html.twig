@@ -26,69 +26,107 @@
                             {% endfor %}
                         </select>#}
                         
-                        <input type="submit" value="Regénérer un Menu">
+                        <input class="btn_day" type="submit" value="Regénérer un Menu">
                     </div>
                 {% endif %}    
             </form>
-            {% if is_granted('ROLE_USER') %}
-                <button id="save">Sauvegarder</button>
+            
+            {%if is_granted('ROLE_USER') %}
+                <button class="save btn_day" id="save"><i class="bi bi-file-earmark-arrow-down-fill"></i></i>Sauvegarder</button>
                 <form method="post">
                     <input type="hidden" name="ingredient" value="1">
-                    <input type="submit" value="Envoi des ingrédients par mail">
+                    <input type="submit" value="Envoi des ingrédients par mail" class="sendmail btn_day">
                 </form>
             {% endif %}
-            <p>{{msg}}</p>
+            <p class="msgsend">{{msg}}</p>
         </div>
+        <button class="btn_day" id="btn-jour"><i class="bi bi-brightness-high"></i>Midi</button>
+        <button class="btn_day" id="btn-nuit"><i class="bi bi-cloud-moon"></i>Soir</button>
+        <h1 id="test">Menu du Midi</h1>
+        <script>
+            /**
+            * @param {Boolean} isDay - Is day or night
+            * @param {String} message - Title
+            */
+            let menu_day = (isDay, message) => {
+            let object = document.querySelector('#test');
+            object.innerText = message;
+            if (isDay) {
+                document.querySelector('#jour').classList.remove('d-none')
+                document.querySelector('#nuit').classList.add('d-none')
+            } else {
+                document.querySelector('#jour').classList.add('d-none')
+                document.querySelector('#nuit').classList.remove('d-none')
+            }
+            }
+
+            let first = document.querySelector('#btn-jour');
+            first.addEventListener('click', function() {
+            console.log('jour');
+            menu_day(true, 'Menu du Midi');
+            });
+
+            let second = document.querySelector('#btn-nuit');
+            second.addEventListener('click', function() {
+            console.log('nuit');
+            menu_day(false, 'Menu du Soir');
+            });
+
+        </script>
         <div class="text-center d-flex flex-column">
-            <div class="menu_title"><span class=" h3 text-uppercase">Déjeuners</span></div>
-            <div class="menu_content d-flex justify-contant-center align-item-center">
-                {% for j in cpt %}
-                    <div class="menu_unit rounded">
-                        {% if is_granted('ROLE_USER') %}
-                            <div class="list_content d-flex flex-column">
-                                <p><a href="/recipe/{{entreeM[j].id}}">{{entreeM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                                <i class="bi bi-asterisk"></i>
-                                <p><a href="/recipe/{{platM[j].id}}">{{platM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                                <i class="bi bi-asterisk"></i>
-                                <p><a href="/recipe/{{dessertM[j].id}}">{{dessertM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                            </div>
-                        {% else %}
-                            <div class="list_content d-flex flex-column">
-                                <p>{{entreeM[j].name}}</p>
-                                <i class="bi bi-asterisk"></i>
-                                <p>{{platM[j].name}}</p>
-                                <i class="bi bi-asterisk"></i>
-                                <p>{{dessertM[j].name}}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
+            <div class="jour" id="jour">
+                <div class="menu_content d-flex justify-contant-center align-item-center">
+                    {% for j in cpt %}
+                        <div class="menu_unit rounded">
+                            {% if is_granted('ROLE_USER') %}
+                                <div class="list_content d-flex flex-column">
+                                    <p><a href="/recipe/{{entreeM[j].id}}">{{entreeM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p><a href="/recipe/{{platM[j].id}}">{{platM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p><a href="/recipe/{{dessertM[j].id}}">{{dessertM[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                </div>
+                            {% else %}
+                                <div class="list_content d-flex flex-column">
+                                    <p>{{entreeM[j].name}}</p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p>{{platM[j].name}}</p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p>{{dessertM[j].name}}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="nuit d-none" id="nuit">
+                <div class="menu_content d-flex flex-row justify-contant-arround align-item-center">
+                    {% for j in cpt %}
+                        <div class="menu_unit rounded">
+                            {% if is_granted('ROLE_USER') %}
+                                <div class="list_content d-flex flex-column">
+                                    <p><a href="/recipe/{{entreeS[j].id}}">{{entreeS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p><a href="/recipe/{{platS[j].id}}">{{platS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p><a href="/recipe/{{dessertS[j].id}}">{{dessertS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
+                                </div>
+                            {% else %}
+                                <div class="list_content d-flex flex-column">
+                                    <p>{{entreeS[j].name}}</p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p>{{platS[j].name}}</p>
+                                    <i class="bi bi-asterisk"></i>
+                                    <p>{{dessertS[j].name}}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
             <div class="img_menu"><img class="mb_img" src="/img/mb.jpg" alt="MangerBoouger.fr"/></div>
-            <div class="menu_title"><span class="menu_title h3 text-uppercase">Diners</span></div>
-            <div class="menu_content d-flex flex-row justify-contant-arround align-item-center">
-                {% for j in cpt %}
-                    <div class="menu_unit rounded">
-                        {% if is_granted('ROLE_USER') %}
-                            <div class="list_content d-flex flex-column">
-                                <p><a href="/recipe/{{entreeS[j].id}}">{{entreeS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                                <i class="bi bi-asterisk"></i>
-                                <p><a href="/recipe/{{platS[j].id}}">{{platS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                                <i class="bi bi-asterisk"></i>
-                                <p><a href="/recipe/{{dessertS[j].id}}">{{dessertS[j].name}}</a><a href="#"><i class="fa-solid fa-arrows-rotate"></i></a></p>
-                            </div>
-                        {% else %}
-                            <div class="list_content d-flex flex-column">
-                                <p>{{entreeS[j].name}}</p>
-                                <i class="bi bi-asterisk"></i>
-                                <p>{{platS[j].name}}</p>
-                                <i class="bi bi-asterisk"></i>
-                                <p>{{dessertS[j].name}}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
+            
+            
         </div> 
     </div>
 
