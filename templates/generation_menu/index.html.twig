@@ -1,8 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Generation Menu{% endblock %}
+{% block title %} Generation Menu {% endblock %}
 
 {% block body %}
+    <div class="container">
         {% include 'generation_menu/table_menu.html.twig' %}
-    
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('results_menu') }}
+
+    <script type="application/javascript">
+    /**
+    * @param {Boolean} isDay - Is day or night
+    * @param {String} message - Title
+    */
+    const menu_day = (isDay, message) => {
+        const object = document.querySelector('#test');
+        object.innerText = message;
+        if (isDay) {
+            document.querySelector('#jour').classList.remove('d-none')
+            document.querySelector('#nuit').classList.add('d-none')
+        } else {
+            document.querySelector('#jour').classList.add('d-none')
+            document.querySelector('#nuit').classList.remove('d-none')
+        }
+    }
+
+    let first = document.querySelector('#btn-jour');
+        first.addEventListener('click', function() {
+        menu_day(true, 'Menu du Midi');
+    });
+
+    let second = document.querySelector('#btn-nuit');
+        second.addEventListener('click', function() {
+        menu_day(false, 'Menu du Soir');
+    });
+    </script>
+
 {% endblock %}

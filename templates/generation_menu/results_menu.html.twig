@@ -1,0 +1,42 @@
+<section class="grid">
+    <div class="row">
+        <div class="col-md-4">
+
+            <form method="post" action="{{ path('save_menu') }}">
+                <input type="hidden" name="id_menu" value="{{ id_menu }}">
+                <input type="hidden" name="nb_jour" value="{{ nb_jour }}">
+                <textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
+                <button type="submit" id="save_menu" class="btn btn-success">Sauvegarder le menu</button>
+            </form>
+
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>-- MIDI --</h1>
+        </div>
+    </div>
+
+    <!-- MIDI -->
+    <div class="row">
+    {% for i in range(0,nb_jour-1) %}
+        {% include 'generation_menu/card_menu.html.twig' with {index: i+nb_jour, entree: entrees[i], plat: plats[i], dessert: desserts[i]} %}
+    {% endfor %}
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1> -- SOIR --</h1>
+        </div>
+    </div>
+
+    <!-- SOIR -->
+    <div class="row">
+    {% for i in range(0,nb_jour-1) %}
+        {% include 'generation_menu/card_menu.html.twig' with {index: i+nb_jour, entree: entrees[i+nb_jour], plat: plats[i+nb_jour], dessert: desserts[i+nb_jour]} %}
+    {% endfor %}
+    </div>
+
+</section>

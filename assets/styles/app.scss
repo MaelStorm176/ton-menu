@@ -18,6 +18,9 @@ a:link {
 }
 
 /////////////////NavBar//////////////////
+.nav_bg{
+  background: linear-gradient(to bottom right, #0b9bef, rgb(0 255 204 / 90%));
+}
 
 #mainNav {
     padding-top: 1rem;
@@ -71,7 +74,7 @@ padding-bottom: 6rem;
   left: 0;
   transition: all 0.2s ease-in-out;
   opacity: 0;
-  background-color: rgba(26, 188, 156, 0.9);
+  background-color: #00bedd;
 }
 .howuse .howuse-item .howuse-item-caption:hover {
   opacity: 1;
@@ -96,6 +99,30 @@ padding-bottom: 6rem;
   }
 }
 
+///////////////RECIPE/////////////////
+.recipe_content{
+  margin: 3% 10%;
+  box-shadow: 15px 15px 15px rgb(26 188 156 / 90%);
+  border: 3px solid #00bf8a
+}
+
+.components_content {
+  text-align: left;
+  margin-left: 20%;
+}
+
+.task_content {
+  text-align: left;
+  margin-left: 20%;
+}
+
+.compo_title{
+  margin-bottom: 20px;
+}
+
+.comp_list{ 
+  margin-left: 5%;
+}
 
 /////////////////LOGIN//////////////////
 
@@ -124,6 +151,10 @@ padding-bottom: 6rem;
   padding-top: 5%;
 }
 
+.agree_content {
+  text-align: left;
+}
+
 .password_label{
   font-size: 1.5rem;
 }
@@ -148,11 +179,15 @@ padding-bottom: 6rem;
 /////////////////Generator Menu//////////////////
 
 .filter {
-  background-color: antiquewhite;
+  background-color: #00bedd;
 }
 
 .menu_content{
-  margin: 2% 5%;
+  margin: 2% 3%;
+}
+
+.btn_day {
+  border: 3px solid #00bf8a;
 }
 
 .change_menubutton {
@@ -163,16 +198,12 @@ padding-bottom: 6rem;
   padding-top: 20px;
 }
 
+
 .menu_unit {
-  border: 7px solid #65b2ff;
-  margin-right: 10px;
-  height: 400px;
-  width: 350px;
+  box-shadow: 5px 5px 5px rgba(26, 188, 156, 0.9);
+  border: 3px solid #00bf8a;
 }
 
-.bi {
-  font-size: 0.7em;
-}
 
 .list_content {
   margin: 20% 5%;
@@ -180,14 +211,28 @@ padding-bottom: 6rem;
 
 .mb_img {
   width: 40%;
-  height: 150px;
+  height: 250px;
 }
 
 .img_menu {
-  background-color: antiquewhite;
+  background-color: rgba(26, 188, 156, 0.9);
   padding: 1% 0;
 }
 
+.save {
+  margin-left: 50%;
+  width: 7%;
+}
+
+.sendmail{
+  margin-left: 56%;
+  margin-top: 10px;
+  width: 13%;
+}
+
+.msgsend{
+  padding-bottom: 15px;
+}
 /////////////////Footer//////////////////
 
 .footer {

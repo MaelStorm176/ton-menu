@@ -1,0 +1,80 @@
+<div class="menu_unit rounded h-100">
+    <div class="card-header">
+        <h4 class="card-title text-center">
+            <i class="fas fa-chart-pie mr-1"></i>
+            {{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}
+        </h4>
+    </div>
+
+    {% if is_granted('ROLE_USER') %}
+        <div class="list_content d-flex flex-column">
+            <div id="entree_{{ index }}" class="text-center">
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: entree.id, name: entree.name} %}
+                <i class="bi bi-asterisk"></i>
+            </div>
+            <div id="plat_{{ index }}" class="text-center">
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: plat.id, name: plat.name} %}
+                <i class="bi bi-asterisk"></i>
+            </div>
+            <div id="dessert_{{ index }}" class="text-center">
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: dessert.id, name: dessert.name} %}
+            </div>
+        </div>
+    {% else %}
+        <div class="list_content d-flex flex-column">
+            <div id="entree_{{ index }}" class="text-center">
+                <p>{{entree.name}}</p>
+                <i class="bi bi-asterisk"></i>
+            </div>
+            <div id="plat_{{ index }}" class="text-center">
+                <p>{{plat.name}}</p>
+                <i class="bi bi-asterisk"></i>
+            </div>
+            <div id="dessert_{{ index }}" class="text-center">
+                <p>{{dessert.name}}</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<div class="col-md-4">
+    <div class="card">
+        <div class="card-header d-flex justify-content-around">
+            <h4 class="card-title">{{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}</h4>
+            <button id="refresh_day_{{ index }}" class="btn btn-outline-primary mr-auto" data-day="{{ index }}">
+                <i class="fs-4 bi-arrow-clockwise"></i>
+            </button>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12" id="entree_{{ index }}">
+                    <b>Entrée : </b>{{ entree.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="plat_{{ index }}">
+                    <b>Plat : </b>{{ plat.name }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="dessert_{{ index }}">
+                    <b>Dessert : </b>{{ dessert.name }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
