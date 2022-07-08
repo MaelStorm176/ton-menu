@@ -48,16 +48,27 @@ class RecipeRepository extends ServiceEntityRepository
     }
     */
 
-    public function getRandomRecipes($type,$max=1)
+    public function getRandomRecipes($type,$max=1,$notIn=[])
     {
-        $query = $this->createQueryBuilder('r')
-            ->where('r.type = :type')
-            ->setParameter('type', $type)
-            ->orderBy('RAND()')
-            ->setMaxResults($max)
-            ->getQuery();
+        if (count($notIn)>0) {
+            $qb = $this->createQueryBuilder('r')
+                ->where('r.type = :type')
+                ->andWhere('r.id NOT IN (:notIn)')
+                ->setParameter('type', $type)
+                ->setParameter('notIn', $notIn)
+                ->orderBy('r.id', 'DESC')
+                ->setMaxResults($max)
+                ->getQuery();
+        } else {
+            $qb = $this->createQueryBuilder('r')
+                ->where('r.type = :type')
+                ->setParameter('type', $type)
+                ->orderBy('r.id', 'DESC')
+                ->setMaxResults($max)
+                ->getQuery();
+        }
 
-        return $query->getResult();
+        return $qb->getResult();
     }
 
     public function countRecipe()

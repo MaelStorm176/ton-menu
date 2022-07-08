@@ -3,24 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\SavedMenus;
-use App\Entity\User;
 use App\Entity\Recipe;
-use App\Entity\MonMenu;
-use App\Entity\RecipeTags;
-use App\Entity\RecipeIngredients;
-use App\Entity\Ingredient;
-use App\Repository\MonMenuRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
-use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RandomRecipeController extends AbstractController
 {
@@ -401,9 +392,9 @@ class RandomRecipeController extends AbstractController
                         if ($nb_jour > $nb_jour_mon_menu) {
                             $diff = ($nb_jour * 2) - ($nb_jour_mon_menu * 2);
 
-                            $newEntrees = $this->randomEntrees($diff);
-                            $newPlats = $this->randomPlats($diff);
-                            $newDesserts = $this->randomDesserts($diff);
+                            $newEntrees = $this->randomEntrees($diff, $monMenu->getRecipes()['entrees']);
+                            $newPlats = $this->randomPlats($diff, $monMenu->getRecipes()['plats']);
+                            $newDesserts = $this->randomDesserts($diff, $monMenu->getRecipes()['desserts']);
 
                             $newEntreesIds = array_map(function ($e) {
                                 return $e->getId();
@@ -415,10 +406,10 @@ class RandomRecipeController extends AbstractController
                                 return $d->getId();
                             }, $newDesserts);
 
+
                             $newEntreesRecipes = array_merge($monMenu->getRecipes()["entrees"], $newEntreesIds);
                             $newPlatsRecipes = array_merge($monMenu->getRecipes()["plats"], $newPlatsIds);
                             $newDessertsRecipes = array_merge($monMenu->getRecipes()["desserts"], $newDessertsIds);
-                            $nb_jour = $nb_jour_mon_menu;
                         }
                         //Si le nombre de jour demandé est INFERIEUR au nombre de jours du menu en base
                         else  {
@@ -435,7 +426,6 @@ class RandomRecipeController extends AbstractController
                         $em->persist($monMenu);
                         $em->flush();
                     }
-
                     $idsRecipes = $monMenu->getRecipes(); //[entrees: [id, id, id], plats: [id, id, id], desserts: [id, id, id]]
                     $entrees = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['entrees']]);
                     $plats = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['plats']]);
@@ -464,7 +454,6 @@ class RandomRecipeController extends AbstractController
                     "desserts" => $dessertsIds,
                 ]);
             }
-
             //Si on a bien générer des entrees, plats et desserts, on peut rendre la vue
             if($entrees && $plats && $desserts && count($entrees) == count($plats) && count($plats) == count($desserts)){
                 return $this->render('generation_menu/index.html.twig', [
@@ -480,25 +469,25 @@ class RandomRecipeController extends AbstractController
             //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
             return $this->redirectToRoute('home');
         }
-        return new Response("pas connecté");
+        throw new NotFoundHttpException('Not logged');
     }
 
-    private function randomEntrees($nb_matin_soir = 1){
-        return $this->randomRecipes("ENTREE",$nb_matin_soir);
+    private function randomEntrees($nb_matin_soir = 1,$not_in = []){
+        return $this->randomRecipes("ENTREE",$nb_matin_soir,$not_in);
     }
 
-    private function randomPlats($nb_matin_soir = 1){
-        return $this->randomRecipes("PLAT",$nb_matin_soir);
+    private function randomPlats($nb_matin_soir = 1,$not_in = []){
+        return $this->randomRecipes("PLAT",$nb_matin_soir,$not_in);
     }
 
-    private function randomDesserts($nb_matin_soir = 1){
-        return $this->randomRecipes("DESSERT",$nb_matin_soir);
+    private function randomDesserts($nb_matin_soir = 1,$not_in = []){
+        return $this->randomRecipes("DESSERT",$nb_matin_soir,$not_in);
     }
 
-    private function randomRecipes($type,$max=1) {
+    private function randomRecipes($type,$max=1,$notIn=[]) {
         $type = strtoupper($type);
         if (in_array($type,["ENTREE", "PLAT", "DESSERT"])){
-            return $this->recipeRepository->getRandomRecipes($type,$max);
+            return $this->recipeRepository->getRandomRecipes($type,$max,$notIn);
         }
         else{
             return null;
