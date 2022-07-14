@@ -94,6 +94,16 @@ class Recipe
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
      */
     private $comments;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeImages::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $recipeImages;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $budget;
   
     public function __construct()
     {
@@ -102,6 +112,7 @@ class Recipe
         $this->ingredients = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->recipeImages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -397,5 +408,47 @@ class Recipe
         }else{
             return $dtF->diff($dtT)->format('%h h %i min');
         }
+    }
+
+    /**
+     * @return Collection<int, RecipeImages>
+     */
+    public function getRecipeImages(): Collection
+    {
+        return $this->recipeImages;
+    }
+
+    public function addRecipeImage(RecipeImages $recipeImage): self
+    {
+        if (!$this->recipeImages->contains($recipeImage)) {
+            $this->recipeImages[] = $recipeImage;
+            $recipeImage->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeImage(RecipeImages $recipeImage): self
+    {
+        if ($this->recipeImages->removeElement($recipeImage)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeImage->getRecipe() === $this) {
+                $recipeImage->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBudget(): ?int
+    {
+        return $this->budget;
+    }
+
+    public function setBudget(int $budget): self
+    {
+        $this->budget = $budget;
+
+        return $this;
     }
 }
