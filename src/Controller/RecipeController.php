@@ -5,6 +5,9 @@ namespace App\Controller;
 use App\Entity\Ingredient;
 use App\Entity\RecipeTags;
 use App\Entity\RecipeTagsLinks;
+use App\Repository\CommentRepository;
+use App\Repository\RatingRepository;
+use App\Repository\RecipeRepository;
 use DateTime;
 use App\Entity\Rating;
 use App\Entity\Recipe;
@@ -80,20 +83,10 @@ class RecipeController extends AbstractController
     /**
      * @Route("/recipe/all", name="recipe_all")
      */
-    public function show_all(){
-        $repository = $this->getDoctrine()->getRepository(Recipe::class);
-        $recettes = $repository->findAll();
-
-        $repository2 = $this->getDoctrine()->getRepository(Rating::class);
-        $rating = $repository2->findAll();
-
-        $repository3 = $this->getDoctrine()->getRepository(Comment::class);
-        $comment = $repository3->findAll();
-
+    public function show_all(RecipeRepository $recipeRepository, RatingRepository $ratingRepository, CommentRepository $commentRepository): Response {
+        $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 10);
         return $this->render('new_recette/home.html.twig', [
-            'recette' => $recettes,
-            'rating' => $rating,
-            'comment' => $comment,
+            'recettes' => $recettes,
         ]);
     }
 

@@ -81,11 +81,6 @@ class Recipe
     private $recipeSteps;
 
     /**
-     * @ORM\OneToMany(targetEntity=RecipeTagsLinks::class, mappedBy="recipe", orphanRemoval=true)
-     */
-    private $recipeTagsLinks;
-
-    /**
      * @ORM\OneToMany(targetEntity=RecipeIngredients::class, mappedBy="recipe", orphanRemoval=true)
      */
     private $ingredients;
@@ -104,15 +99,20 @@ class Recipe
      * @ORM\Column(type="integer")
      */
     private $budget;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=RecipeTags::class, mappedBy="recipe")
+     */
+    private $recipeTags;
   
     public function __construct()
     {
         $this->recipeSteps = new ArrayCollection();
-        $this->recipeTagsLinks = new ArrayCollection();
         $this->ingredients = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->recipeImages = new ArrayCollection();
+        $this->recipeTags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -224,6 +224,10 @@ class Recipe
         return $this->ratings;
     }
 
+    /**
+     * @param Rating $rating
+     * @return $this
+     */
     public function addRating(Rating $rating): self
     {
         if (!$this->ratings->contains($rating)) {
@@ -232,6 +236,25 @@ class Recipe
         }
 
         return $this;
+    }
+
+    public function getAverageRating(): ?float
+    {
+        $ratings = $this->getRatings();
+        $sum = 0;
+        foreach ($ratings as $rating) {
+            $sum += $rating->getRate();
+        }
+        if (count($ratings) > 0) {
+            return floatval($sum / count($ratings), 1);
+        } else {
+            return null;
+        }
+    }
+
+    public function getNumberOfRating(): ?int
+    {
+        return count($this->getRatings());
     }
 
     public function getPreparationTimeToTime(): ?string
@@ -341,36 +364,6 @@ class Recipe
     }
 
     /**
-     * @return Collection|RecipeTagsLinks[]
-     */
-    public function getRecipeTagsLinks(): Collection
-    {
-        return $this->recipeTagsLinks;
-    }
-
-    public function addRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
-    {
-        if (!$this->recipeTagsLinks->contains($recipeTagsLink)) {
-            $this->recipeTagsLinks[] = $recipeTagsLink;
-            $recipeTagsLink->setRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
-    {
-        if ($this->recipeTagsLinks->removeElement($recipeTagsLink)) {
-            // set the owning side to null (unless already changed)
-            if ($recipeTagsLink->getRecipe() === $this) {
-                $recipeTagsLink->setRecipe(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection|RecipeIngredients[]
      */
     public function getIngredients(): Collection
@@ -448,6 +441,33 @@ class Recipe
     public function setBudget(int $budget): self
     {
         $this->budget = $budget;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeTags>
+     */
+    public function getRecipeTags(): Collection
+    {
+        return $this->recipeTags;
+    }
+
+    public function addRecipeTag(RecipeTags $recipeTag): self
+    {
+        if (!$this->recipeTags->contains($recipeTag)) {
+            $this->recipeTags[] = $recipeTag;
+            $recipeTag->addRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeTag(RecipeTags $recipeTag): self
+    {
+        if ($this->recipeTags->removeElement($recipeTag)) {
+            $recipeTag->removeRecipe($this);
+        }
 
         return $this;
     }

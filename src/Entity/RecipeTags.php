@@ -25,14 +25,15 @@ class RecipeTags
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=RecipeTagsLinks::class, mappedBy="recipeTag", orphanRemoval=true)
+     * @ORM\ManyToMany(targetEntity=Recipe::class, inversedBy="recipeTags")
      */
-    private $recipeTagsLinks;
+    private $recipe;
 
     public function __construct()
     {
-        $this->recipeTagsLinks = new ArrayCollection();
+        $this->recipe = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -52,31 +53,25 @@ class RecipeTags
     }
 
     /**
-     * @return Collection|RecipeTagsLinks[]
+     * @return Collection<int, Recipe>
      */
-    public function getRecipeTagsLinks(): Collection
+    public function getRecipe(): Collection
     {
-        return $this->recipeTagsLinks;
+        return $this->recipe;
     }
 
-    public function addRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
+    public function addRecipe(Recipe $recipe): self
     {
-        if (!$this->recipeTagsLinks->contains($recipeTagsLink)) {
-            $this->recipeTagsLinks[] = $recipeTagsLink;
-            $recipeTagsLink->setRecipeTag($this);
+        if (!$this->recipe->contains($recipe)) {
+            $this->recipe[] = $recipe;
         }
 
         return $this;
     }
 
-    public function removeRecipeTagsLink(RecipeTagsLinks $recipeTagsLink): self
+    public function removeRecipe(Recipe $recipe): self
     {
-        if ($this->recipeTagsLinks->removeElement($recipeTagsLink)) {
-            // set the owning side to null (unless already changed)
-            if ($recipeTagsLink->getRecipeTag() === $this) {
-                $recipeTagsLink->setRecipeTag(null);
-            }
-        }
+        $this->recipe->removeElement($recipe);
 
         return $this;
     }

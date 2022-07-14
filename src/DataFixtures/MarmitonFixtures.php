@@ -72,16 +72,14 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                         if ($tag == null && !isset($tags[$tag_element])) {
                             $tag = new RecipeTags();
                             $tag->setName($tag_element);
+                            $tag->addRecipe($recipe);
                             $tags[$tag_element] = $tag;
                             $manager->persist($tag);
-                        }elseif (isset($tags[$tag_element])){
-                            $tag = $tags[$tag_element];
+                        }else if ($tag != null && !isset($tags[$tag_element])){
+                            $tag->addRecipe($recipe);
+                        }else{
+                            $tags[$tag_element]->addRecipe($recipe);
                         }
-                        //On créer le lien tag → recette
-                        $recipeTagLink = new RecipeTagsLinks();
-                        $recipeTagLink->setRecipe($recipe);
-                        $recipeTagLink->setRecipeTag($tag);
-                        $manager->persist($recipeTagLink);
                     }
                 }
 
