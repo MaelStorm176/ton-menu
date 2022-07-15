@@ -1,19 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
-
 {% block body %}
-    <h1>Register</h1>
+<form class="login_content text-center d-flex flex-column" >
+    <span class="h2 login_title">Créer mon compte</span>
+    <div class="d-flex justify-content-around">
+        <div class="login_lside">
+            {{ form_start(registrationForm) }}
+            <div class="email_content d-flex flex-column">
+                {{ form_row(registrationForm.email) }}
+            </div>
+            <div class="password_content d-flex flex-column">
+                {{ form_row(registrationForm.plainPassword, {
+                    label: 'Password'
+                }) }}
+            </div>
+            <div class="agree_content d-flex flex-column">
+                {{ form_row(registrationForm.agreeTerms) }}
+            </div>
+            <div class="d-flex flex-column">
+                <button class="btn btn-success" type="submit">Créer mon compte</button>
+            </div>
+            {{ form_end(registrationForm) }}
+        </div>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
-    <span class="account_title"> Vous avez déjà un compte ?</span>
-                        <a type="" href="/login">Se Connecter</a>
+        <div class="login_rside d-flex flex-row">
+                <div class="vr"></div>
+                <div class="account_button d-flex flex-column">
+                <span class="account_title"> Vous avez déjà un compte ?</span>
+                <a type="" href="/login">Se Connecter</a>
+                </div>
+        </div>
+    </div>             
+</form>
 {% endblock %}

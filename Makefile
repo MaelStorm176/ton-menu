@@ -68,6 +68,10 @@ build-db:
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:create
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:validate
 
+## Créer une nouvelle entité
+new-entity:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) make:entity
+
 ## Build la DB en fonction des migrations et execute le script marmiton
 marmiton-check:
 	make build-db

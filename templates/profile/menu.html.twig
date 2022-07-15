@@ -8,7 +8,9 @@
         <p>Vous n'avez pas de menu générez, suivez le lien ci-dessous pour en générer un nouveau</p>
         <a href="/generation-menu/7" class="btn btn-primary">Générer un menu</a>
     {% elseif test == "0" %}
-        <p>Menu du jour</p>
+    <div class="recipe_content text-center ">
+        <h1>Menu du jour</h1>
+        <div class="components_content">
         {% for recettes in recette %}
             
             {% if i == 3 %}
@@ -17,6 +19,9 @@
             <a href="/recipe/{{recettes[0].id}}"><p>{{recettes[0].name}}</p></a>
             {% set i = i + 1 %}
         {% endfor %}
+        </div>
+        </div>
+
     {% endif %}
 
 {% endblock %}

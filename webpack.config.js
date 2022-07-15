@@ -20,10 +20,12 @@ Encore
  * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
  */
 .addEntry('app', './assets/app.js')
-    .addEntry('show_user', './assets/custom/show_user.js')
-    .addEntry('show_ingredients', './assets/custom/show_ingredients.js')
-    .addEntry('show_recipes', './assets/custom/show_recipes.js')
-    .addEntry('show_tags', './assets/custom/show_tags.js')
+.addEntry('show_user', './assets/custom/show_user.js')
+.addEntry('show_ingredients', './assets/custom/show_ingredients.js')
+.addEntry('show_recipes', './assets/custom/show_recipes.js')
+.addEntry('show_tags', './assets/custom/show_tags.js')
+.addEntry('results_menu', './assets/custom/results_menu.js')
+.addEntry('new_recette_show', './assets/custom/new_recette_show.js')
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge('./assets/controllers.json')

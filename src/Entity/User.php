@@ -61,11 +61,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $recette;
 
     /**
-     * @ORM\ManyToOne(targetEntity=MonMenu::class, inversedBy="user")
-     */
-    private $monMenu;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $profile_picture;
@@ -80,12 +75,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $isVerify;
 
+    /**
+     * @ORM\OneToMany(targetEntity=SavedMenus::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $savedMenuses;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->recipes = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->recette = new ArrayCollection();
+        $this->savedMenuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,18 +298,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMonMenu(): ?MonMenu
-    {
-        return $this->monMenu;
-    }
-
-    public function setMonMenu(?MonMenu $monMenu): self
-    {
-        $this->monMenu = $monMenu;
-
-        return $this;
-    }
-
     public function getProfilePicture(): ?string
     {
         return $this->profile_picture;
@@ -341,6 +330,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerify(bool $isVerify): self
     {
         $this->isVerify = $isVerify;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, SavedMenus>
+     */
+    public function getSavedMenuses(): Collection
+    {
+        return $this->savedMenuses;
+    }
+
+    public function addSavedMenus(SavedMenus $savedMenus): self
+    {
+        if (!$this->savedMenuses->contains($savedMenus)) {
+            $this->savedMenuses[] = $savedMenus;
+            $savedMenus->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSavedMenus(SavedMenus $savedMenus): self
+    {
+        if ($this->savedMenuses->removeElement($savedMenus)) {
+            // set the owning side to null (unless already changed)
+            if ($savedMenus->getUser() === $this) {
+                $savedMenus->setUser(null);
+            }
+        }
 
         return $this;
     }

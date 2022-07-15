@@ -1,5 +1,5 @@
 <!-- WELCOME -->
-<div class="masthead bg-secondary text-white text-center">
+<div class="masthead text-white text-center" style="height: 100vh; background-image: url('/img/pexels-luna-lovegood-4087610.png');">
 		<div class="container d-flex align-items-center flex-column">
 			
 
@@ -15,12 +15,6 @@
 						Générer mon menu
 						<i class="bi bi-arrow-down-circle-fill"></i>
 					</a>
-						{% if is_granted('ROLE_USER') %}
-							<a href="/profile/menu" class="btn btn-primary lift">
-								Voir mon menu
-								<i class="bi bi-arrow-down-circle-fill"></i>
-							</a>
-						{% endif %}
 				</div>
 
 		</div>
