@@ -12,13 +12,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route("/admin", name: "admin_")]
 class AdminController extends AbstractController
 {
-    #[Route("/",name: 'index')]
+    #[Route("/", name: 'index')]
     public function index(): Response
     {
         return $this->render('admin/index.html.twig');
     }
 
-    #[Route("/users",name: 'users')]
+    #[Route("/users", name: 'users')]
     public function show_users(): Response
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
@@ -29,7 +29,7 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route("/ingredients",name: 'ingredients')]
+    #[Route("/ingredients", name: 'ingredients')]
     public function show_ingredients(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Ingredient::class);

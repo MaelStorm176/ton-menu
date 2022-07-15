@@ -66,11 +66,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $profile_picture;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $menu;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isVerify;
@@ -306,18 +301,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePicture(?string $profile_picture): self
     {
         $this->profile_picture = $profile_picture;
-
-        return $this;
-    }
-
-    public function getMenu(): ?string
-    {
-        return $this->menu;
-    }
-
-    public function setMenu(?string $menu): self
-    {
-        $this->menu = $menu;
 
         return $this;
     }

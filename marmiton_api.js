@@ -17,16 +17,19 @@ const limit_number = Number(50);
 //On sélectionne les entrées
 const queryStarter = qbStarter
     .withType(marmiton.RECIPE_TYPE.STARTER)
+    .withPhoto()
     .build();
 
 //On sélectionne les plats
 const queryMain = qbMain
     .withType(marmiton.RECIPE_TYPE.MAIN_COURSE)
+    .withPhoto()
     .build();
 
 //On sélectionne les desserts
 const queryDessert = qbDessert
     .withType(marmiton.RECIPE_TYPE.DESSERT)
+    .withPhoto()
     .build();
 
 /*
@@ -41,8 +44,7 @@ const query = qb
 */
 
 async function results(query) {
-    let recipes;
-    return recipes = await marmiton.searchRecipes(query,{limit:limit_number});
+    return await marmiton.searchRecipes(query,{limit:limit_number});
 }
 
 let resultsStarter = results(queryStarter);

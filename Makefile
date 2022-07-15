@@ -44,6 +44,10 @@ purge:
 composer-install:
 	$(DOCKER_RUN) composer $(COMPOSER) install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader
 
+## Install une dépendance choisie (composer)
+composer-require:
+	$(DOCKER_RUN) composer $(COMPOSER) require
+
 ## Install les dépendances de l'application (npm)
 npm-install:
 	$(DOCKER_RUN) encore $(NPM) install
@@ -61,12 +65,19 @@ install:
 	make composer-install
 	make npm-install
 
+## Construit toute la base de données
 build-db:
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:cache:clear-metadata
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:database:create --if-not-exists
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:drop --force
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:create
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:schema:validate
+
+migration:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) make:migration --no-interaction
+
+migrate:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction
 
 ## Créer une nouvelle entité
 new-entity:
