@@ -104,6 +104,11 @@ class Recipe
      * @ORM\ManyToMany(targetEntity=RecipeTags::class, mappedBy="recipe")
      */
     private $recipeTags;
+
+    /**
+     * @ORM\OneToMany(targetEntity=RecipeQuantities::class, mappedBy="recipe", orphanRemoval=true)
+     */
+    private $recipeQuantities;
   
     public function __construct()
     {
@@ -113,6 +118,7 @@ class Recipe
         $this->comments = new ArrayCollection();
         $this->recipeImages = new ArrayCollection();
         $this->recipeTags = new ArrayCollection();
+        $this->recipeQuantities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -467,6 +473,36 @@ class Recipe
     {
         if ($this->recipeTags->removeElement($recipeTag)) {
             $recipeTag->removeRecipe($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeQuantities>
+     */
+    public function getRecipeQuantities(): Collection
+    {
+        return $this->recipeQuantities;
+    }
+
+    public function addRecipeQuantity(RecipeQuantities $recipeQuantity): self
+    {
+        if (!$this->recipeQuantities->contains($recipeQuantity)) {
+            $this->recipeQuantities[] = $recipeQuantity;
+            $recipeQuantity->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeQuantity(RecipeQuantities $recipeQuantity): self
+    {
+        if ($this->recipeQuantities->removeElement($recipeQuantity)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeQuantity->getRecipe() === $this) {
+                $recipeQuantity->setRecipe(null);
+            }
         }
 
         return $this;

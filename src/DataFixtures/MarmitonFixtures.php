@@ -6,6 +6,7 @@ use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeImages;
 use App\Entity\RecipeIngredients;
+use App\Entity\RecipeQuantities;
 use App\Entity\RecipeSteps;
 use App\Entity\RecipeTags;
 use App\Entity\User;
@@ -62,6 +63,15 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);
                 /******************************************************/
+
+                /********* QUANTITIES *********/
+                $quantities = $recipe_json["ingredients"];
+                foreach ($quantities as $quantity) {
+                    $quantityObj = new RecipeQuantities();
+                    $quantityObj->setContent($quantity);
+                    $quantityObj->setRecipe($recipe);
+                    $manager->persist($quantityObj);
+                }
 
                 /********* TAGS **********/
                 $tags_json = $recipe_json["tags"];
