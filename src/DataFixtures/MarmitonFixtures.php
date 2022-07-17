@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
+use App\Entity\RecipeImages;
 use App\Entity\RecipeIngredients;
 use App\Entity\RecipeSteps;
 use App\Entity\RecipeTags;
@@ -56,6 +57,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setDifficulty($recipe_json["difficulty"])
                     ->setPreparationTime($recipe_json["prepTime"])
                     ->setTotalTime($recipe_json["totalTime"])
+                    ->setBudget($recipe_json["budget"])
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);
                 /******************************************************/
@@ -70,16 +72,25 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                         if ($tag == null && !isset($tags[$tag_element])) {
                             $tag = new RecipeTags();
                             $tag->setName($tag_element);
+                            $tag->addRecipe($recipe);
                             $tags[$tag_element] = $tag;
                             $manager->persist($tag);
-                        }elseif (isset($tags[$tag_element])){
-                            $tag = $tags[$tag_element];
+                        }else if ($tag != null && !isset($tags[$tag_element])){
+                            $tag->addRecipe($recipe);
+                        }else{
+                            $tags[$tag_element]->addRecipe($recipe);
                         }
-                        //On créer le lien tag → recette
-                        $recipeTagLink = new RecipeTagsLinks();
-                        $recipeTagLink->setRecipe($recipe);
-                        $recipeTagLink->setRecipeTag($tag);
-                        $manager->persist($recipeTagLink);
+                    }
+                }
+
+                /********* IMAGES **********/
+                $images_json = $recipe_json["images"];
+                foreach ($images_json as $image_element){
+                    if (!empty($image_element) && filter_var($image_element, FILTER_VALIDATE_URL)){
+                        $image = new RecipeImages();
+                        $image->setRecipe($recipe);
+                        $image->setUrl($image_element);
+                        $manager->persist($image);
                     }
                 }
 
