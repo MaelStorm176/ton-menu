@@ -47,4 +47,10 @@ class IngredientRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function save(Ingredient $ingredient)
+    {
+        $ingredient->setUpdatedAt(new \DateTimeImmutable());
+        $this->_em->persist($ingredient);
+        $this->_em->flush();
+    }
 }
