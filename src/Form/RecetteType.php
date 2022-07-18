@@ -27,6 +27,7 @@ class RecetteType extends AbstractType
             ])
             ->add('type',ChoiceType::class,[
                 'label' => 'Type de recette',
+                'required' => true,
                 'choices'  => [
                     '-- Selectionnez un type de recette --' => null,
                     'Entrée' => "ENTREE",
@@ -53,13 +54,30 @@ class RecetteType extends AbstractType
                     'Difficile' => 4,
                 ],
             ])
-            ->add('preparation_time', IntegerType::class,[
-                'label' => 'Temps de préparation',
-                'attr' => ['maxlength' => 4, 'min' => 0]
+            ->add('budget', ChoiceType::class,[
+                'label' => 'Budget',
+                'choices'  => [
+                    '-- Selectionnez un budget --' => null,
+                    'Cheap' => 1,
+                    'Moyen' => 2,
+                    'Chère' => 4,
+                ],
             ])
-            ->add('total_time',IntegerType::class,[
-                'label' => 'Temps total pour effectuer la recette',
-                'attr' => ['maxlength' => 4, 'min' => 0]
+            ->add('preparationTime', TimeType::class,[
+                'label' => 'Temps de prépapation (HH:MM)',
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+                'html5' => false,
+                'attr' => ['placeholder' => 'Temps de prépapation'],
+            ])
+            ->add('totalTime',TimeType::class,[
+                'label' => 'Temps total pour effectuer la recette (HH:MM)',
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+                'html5' => false,
+                'attr' => ['placeholder' => 'Temps total pour effectuer la recette']
             ])
             ->add('save', SubmitType::class)
         ;
