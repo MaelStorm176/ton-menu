@@ -17,41 +17,14 @@
        {% endfor %}
     </div>
     <div class="rating">
-        {% if rating != [] and rating.rate == 5 %}
-            <input type="radio" name="rating" value="5" id="5" checked onclick="rate({{recette.id}}, 5)">
-            <label for="5">☆</label>
-        {% else %}
-            <input type="radio" name="rating" value="5" id="5" onclick="rate({{recette.id}}, 5)">
-            <label for="5">☆</label> 
-        {% endif %}
-        {% if rating != [] and rating.rate == 4 %}
-            <input type="radio" name="rating" value="4" id="4" checked onclick="rate({{recette.id}}, 4)">
-            <label for="4">☆</label>
-        {% else %}
-            <input type="radio" name="rating" value="4" id="4" onclick="rate({{recette.id}}, 4)">
-            <label for="4">☆</label> 
-        {% endif %}
-        {% if rating != [] and rating.rate == 3 %}
-            <input type="radio" name="rating" value="3" id="3" checked onclick="rate({{recette.id}}, 3)">
-            <label for="3">☆</label>
-        {% else %}
-            <input type="radio" name="rating" value="3" id="3" onclick="rate({{recette.id}}, 3)">
-            <label for="3">☆</label> 
-        {% endif %}
-        {% if rating != [] and rating.rate == 2 %}
-            <input type="radio" name="rating" value="2" id="2" checked onclick="rate({{recette.id}}, 2)">
-            <label for="2">☆</label>
-        {% else %}
-            <input type="radio" name="rating" value="2" id="2" onclick="rate({{recette.id}}, 2)">
-            <label for="2">☆</label> 
-        {% endif %}
-        {% if rating != [] and rating.rate == 2 %}
-            <input type="radio" name="rating" value="1" id="1" checked onclick="rate({{recette.id}}, 1)">
-            <label for="1">☆</label>
-        {% else %}
-            <input type="radio" name="rating" value="1" id="1" onclick="rate({{recette.id}}, 1)">
-            <label for="1">☆</label> 
-        {% endif %}
+        {% for i in (1..5) %}
+            {% if rating != [] and rating.rate == i %}
+                <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
+            {% else %}
+                <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
+            {% endif %}
+                <label for="rating_{{ i }}">☆</label>
+        {% endfor %}
     </div>
     <div>
         {{ form_start(recetteForm) }}
@@ -71,4 +44,9 @@
             {% endif %}
         {% endfor %}
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('new_recette_show') }}
 {% endblock %}

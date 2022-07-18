@@ -45,5 +45,11 @@ class RatingRepository extends ServiceEntityRepository
             ->getQuery()
         ;
     }
-    
+
+    public function save($value)
+    {
+        $this->getEntityManager()->persist($value);
+        $this->getEntityManager()->flush();
+    }
+
 }

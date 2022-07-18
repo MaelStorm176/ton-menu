@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello NewRecetteController!{% endblock %}
+{% block title %}Liste des recettes{% endblock %}
 
 {% block body %}
 
@@ -10,24 +10,23 @@
             {% for recette in recettes %}
                 <!-- Gallery item -->
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                    <div class="bg-white rounded shadow-sm"><img src="{{ recette.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+                    <div class="bg-white rounded shadow-sm h-100">
+                        <img src="{{ recette.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
                         <div class="p-4">
                             <h5> <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a> </h5>
-                            {% for tag in recette.recipeTags %}
-                                <small class="text-muted">{{ tag.name }}</small>
-                            {% endfor %}
-                            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
+                            <small class="text-muted">{{ recette.description }}</small>
+                            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
                                 <!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
                                 <div class="d-flex flex-row-reverse justify-content-center">
                                     {% for i in 1..5 %}
                                         {% if i <= recette.getAverageRating %}
-                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill" style="color: yellow"></i>
                                         {% else %}
-                                            <i class="bi bi-star"></i>
+                                            <i class="bi bi-star" style="color: yellow"></i>
                                         {% endif %}
                                     {% endfor %}
                                 </div>
-                                <div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">Featured</div>
+                                <div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">{{ recette.averageRating }}/5</div>
                             </div>
                         </div>
                     </div>
