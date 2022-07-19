@@ -89,6 +89,7 @@ class RecipeController extends AbstractController
             'recettes' => $recettes,
         ]);
     }
+    
 
     /**
      * @Route("/recipe/{id}", name="recipe_show")

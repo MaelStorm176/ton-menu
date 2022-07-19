@@ -3,12 +3,18 @@
     <div class="container position-relative text-center text-lg-start" data-aos="zoom-in" data-aos-delay="100">
       <div class="row">
         <div class="col-lg-8">
-          <h1>Bienvenue dans <span>Ton Menu</span></h1>
+          <h1>Bienvenue dans <span>TON MENU</span></h1>
           <h2>1 Clique = 1 Semaine de Gourmandise !</h2>
-
+          
+          {% if is_granted('IS_ANONYMOUS') %} 
+          <div class="btns">
+            <a href="/login" class="btn-menu animated fadeInUp ">Générer mon menu</a>
+          </div>
+          {% else %}
           <div class="btns">
             <a href="/generation-menu/7" class="btn-menu animated fadeInUp ">Générer mon menu</a>
           </div>
+          {% endif %}
         </div>
 
       </div>

@@ -5,7 +5,8 @@
 {% block body %} 
         {% include 'home/hero.html.twig' %}
         {% include 'home/about.html.twig' %}
-        {% include 'home/ourbest.html.twig' %}
+        {% include 'home/ourbest.html.twig' with {recipes:recipes} %}
         {% include 'home/howtouse.html.twig' %}
+        {% include 'home/gallery.html.twig' %}
 
 {% endblock %}
