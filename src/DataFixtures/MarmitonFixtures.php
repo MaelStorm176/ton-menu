@@ -130,13 +130,16 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
 
                 /**** RECIPE STEPS ****/
                 $recipe_steps_array = $recipe_json["steps"];
+                $step_number = 1;
                 foreach ($recipe_steps_array as $recipe_step_string){
                     $recipe_step_string = trim($recipe_step_string);
                     $recipe_step = new RecipeSteps();
                     $recipe_step
                         ->setRecipe($recipe)
+                        ->setOrdre($step_number)
                         ->setStep($recipe_step_string);
                     $manager->persist($recipe_step);
+                    $step_number++;
                 }
                 /******************************************************/
                 $manager->flush();

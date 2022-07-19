@@ -3,9 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use App\Entity\RecipeSteps;
 use phpDocumentor\Reflection\Types\Integer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -79,7 +83,19 @@ class RecetteType extends AbstractType
                 'html5' => false,
                 'attr' => ['placeholder' => 'Temps total pour effectuer la recette']
             ])
-            ->add('save', SubmitType::class)
+            ->add('recipeImages', FileType::class,[
+                'label' => 'Images de la recette',
+                'multiple' => true,
+                'required' => false,
+                'attr' => ['placeholder' => 'Images de la recette']
+            ])
+            ->add('recipeSteps', CollectionType::class,[
+                'entry_type' => StepType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
+            ->add('Enregistrer', SubmitType::class)
         ;
     }
 
