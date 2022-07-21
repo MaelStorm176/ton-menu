@@ -57,8 +57,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setType($types_recettes[$i])
                     ->setNumberOfPersons($recipe_json["people"])
                     ->setDifficulty($recipe_json["difficulty"])
-                    ->setPreparationTime($recipe_json["prepTime"])
-                    ->setTotalTime($recipe_json["totalTime"])
+                    ->setPreparationTime((new \DateTime)->setTime(0,$recipe_json["prepTime"]))
+                    ->setTotalTime((new \DateTime)->setTime(0,$recipe_json["totalTime"]))
                     ->setBudget($recipe_json["budget"])
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);

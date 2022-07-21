@@ -83,12 +83,6 @@ class RecetteType extends AbstractType
                 'html5' => false,
                 'attr' => ['placeholder' => 'Temps total pour effectuer la recette']
             ])
-            ->add('recipeImages', FileType::class,[
-                'label' => 'Images de la recette',
-                'multiple' => true,
-                'required' => false,
-                'attr' => ['placeholder' => 'Images de la recette']
-            ])
             ->add('recipeSteps', CollectionType::class,[
                 'entry_type' => StepType::class,
                 'entry_options' => ['label' => false],
@@ -98,6 +92,14 @@ class RecetteType extends AbstractType
             ->add('Enregistrer', SubmitType::class)
         ;
     }
+
+    /*
+            ->add('recipeImages', FileType::class,[
+                'label' => 'Images de la recette',
+                'multiple' => true,
+                'required' => false,
+                'attr' => ['placeholder' => 'Images de la recette']
+            ])*/
 
     public function configureOptions(OptionsResolver $resolver): void
     {

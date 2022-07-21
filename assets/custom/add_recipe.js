@@ -59,5 +59,19 @@ const addTagFormDeleteLink = (item) => {
 addTagLink.addEventListener("click", addFormToCollection);
 
 $(document).ready(function() {
-  $('#recette_recipeImages').imageUploader();
+  const recipeImages = $('.input-images');
+  const dataTableOptions = {
+    pageLength: 5,
+    responsive: true,
+    info: false,
+    lengthChange: false,
+  }
+  recipeImages.imageUploader({
+    maxSize: 2 * 1024 * 1024,
+    maxFiles: 10
+  });
+
+  //$("fieldset").remove();
+  $("#ingredientsTable").DataTable(dataTableOptions);
+  $("#tagsTable").DataTable(dataTableOptions);
 });

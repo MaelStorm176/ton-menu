@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,11 @@ class RegistrationController extends AbstractController
             $email->htmlTemplate('registration/confirmation_email.html.twig');
             $email->context(['signedUrl' => $signatureComponents->getSignedUrl()]);
 
-            $this->mailer->send($email);
+            try{
+                $this->mailer->send($email);
+            } catch (TransportExceptionInterface $e) {
+                $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi de l\'email de confirmation');
+            }
 
             return $this->redirectToRoute('app_confirm');
         }

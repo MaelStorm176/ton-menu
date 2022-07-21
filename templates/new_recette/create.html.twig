@@ -103,15 +103,19 @@
             </div>
             <!-- PHOTOS -->
             <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
-                {{ form_row(recetteForm.recipeImages) }}
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="input-images"></div>
+                    </div>
+                </div>
             </div>
 
             <!-- ETAPES -->
             <div class="tab-pane fade" id="etapes" role="tabpanel" aria-labelledby="etapes-tab">
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-md-12">
                         <ul class="steps list-group"
-                            data-index="{{ recetteForm.recipeSteps|length > 0 ? recetteForm.recipeSteps|last.vars.ordre + 1 : 0 }}"
+                            data-index="{{ recetteForm.recipeSteps|length > 0 ? recetteForm.recipeSteps|last.vars.name + 1 : 0 }}"
                             data-prototype="{{ form_widget(recetteForm.recipeSteps.vars.prototype)|e('html_attr') }}"
                         >
                             {% for step in recetteForm.recipeSteps %}
@@ -132,7 +136,5 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('file_uploader') }}
-    {{ encore_entry_script_tags('show_ingredients') }}
-    {{ encore_entry_script_tags('show_tags') }}
     {{ encore_entry_script_tags('add_recipe') }}
 {% endblock %}
