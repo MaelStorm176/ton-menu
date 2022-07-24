@@ -8,7 +8,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Filson Soft";
   background: #0c0b09;
   color: #fff;
 }
@@ -21,10 +21,6 @@ a {
 a:hover {
   color: #d9ba85;
   text-decoration: none;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: "Playfair Display", serif;
 }
 
 /////////////////NavBar//////////////////
@@ -56,13 +52,12 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 300;
   letter-spacing: 1px;
   text-transform: uppercase;
-  font-family: "Poppins", sans-serif;
 }
 #header .logo a {
   color: #fff;
 }
 #header .logo img {
-  max-height: 120px;
+  max-height: 70px;
 }
 /**
 * Desktop Navigation 
@@ -88,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
   white-space: nowrap;
   transition: 0.3s;
-  font-size: 18px;
+  font-size: 15px;
 }
 .navbar a i, .navbar a:focus i {
   font-size: 12px;
@@ -165,7 +160,6 @@ padding-bottom: 6rem;
   color: #cda45e;
   font-size: 36px;
   font-weight: 700;
-  font-family: "Playfair Display", serif;
 
   .page-section-heading {
     font-size: 2.25rem;
@@ -255,52 +249,17 @@ padding-bottom: 6rem;
 
 .login_content{
   padding: 5% 5% 5% 10%;
+  background-color: white;
+  color: black;
+}
+.login_form {
+  border: 5px solid #cda45e;
+  padding: 4%;
 }
 
-.login_lside{
-  width: 40%;
-}
-
-.login_rside{
-  width: 30%;
-}
-
-.login_title{
-  padding-bottom: 60px;
-}
-
-.email_content {
-  text-align: left;
-}
-
-.password_content {
-  text-align: left;
-  padding-top: 5%;
-}
-
-.agree_content {
-  text-align: left;
-}
-
-.password_label{
-  font-size: 1.5rem;
-}
-
-.login_button {
-  text-align: left;
-  padding: 30px;
-}
-
-.buttonlogin {
-  width: 50%;
-}
-
-.account_button {
-  padding-left: 20%;
-}
-
-.account_title {
-  padding-bottom: 5%;
+.login_title {
+  font-size: 2.5rem;
+  padding-bottom: 20px;
 }
 
 /////////////////Generator Menu//////////////////
@@ -385,7 +344,6 @@ section {
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #aaaaaa;
-  font-family: "Poppins", sans-serif;
 }
 .section-title h2::after {
   content: "";
@@ -400,7 +358,6 @@ section {
   margin: 0;
   font-size: 36px;
   font-weight: 700;
-  font-family: "Playfair Display", serif;
   color: #cda45e;
 }
 
@@ -696,7 +653,6 @@ section {
   font-weight: 700;
   line-height: 56px;
   color: #fff;
-  font-family: "Poppins", sans-serif;
 }
 #hero h1 span {
   color: #cda45e;
@@ -917,13 +873,11 @@ section {
   line-height: 1;
   font-weight: 300;
   text-transform: uppercase;
-  font-family: "Poppins", sans-serif;
 }
 #footer .footer-top .footer-info p {
   font-size: 14px;
   line-height: 24px;
   margin-bottom: 0;
-  font-family: "Playfair Display", serif;
   color: #fff;
 }
 
