@@ -3,8 +3,11 @@
 {% block title %}Hello NewRecetteController!{% endblock %}
 
 {% block body %}
-
-    <div class="container">
+            {{ 
+                render(
+                    controller('App\\Controller\\RecipeController::searchBar')
+                )
+            }}
         <div class="row">
 
             {% for recette in recettes %}
@@ -37,5 +40,4 @@
 
         </div>
     </div>
-
 {% endblock %}

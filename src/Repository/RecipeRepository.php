@@ -48,9 +48,9 @@ class RecipeRepository extends ServiceEntityRepository
     }
     */
 
-    public function getRandomRecipes($type,$max=1,$notIn=[])
+    public function getRandomRecipes($type, $max = 1, $notIn = [])
     {
-        if (count($notIn)>0) {
+        if (count($notIn) > 0) {
             $qb = $this->createQueryBuilder('r')
                 ->where('r.type = :type')
                 ->andWhere('r.id NOT IN (:notIn)')
@@ -118,5 +118,34 @@ class RecipeRepository extends ServiceEntityRepository
             ->groupBy('t.id')
             ->getQuery()
             ->getScalarResult();
+    }
+
+    public function findByName($value)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.name like :query')
+            ->setParameter('query', "%" . $value . "%")
+            // ->orderBy('c.id', 'ASC')
+            // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    // Find/search articles by title/content
+    public function findArticlesByName(string $query)
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb
+            ->where(
+                $qb->expr()->andX(
+                    $qb->expr()->orX(
+                        $qb->expr()->like('p.name', ':query'),
+                    ),
+                )
+            )
+            ->setParameter('query', '%' . $query . '%');
+        return $qb
+            ->getQuery()
+            ->getResult();
     }
 }

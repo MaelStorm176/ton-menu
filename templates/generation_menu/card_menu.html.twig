@@ -7,28 +7,24 @@
     </div>
 
     {% if is_granted('ROLE_USER') %}
-        <div class="list_content d-flex flex-column">
-            <div id="entree_{{ index }}" class="text-center">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: entree.id, name: entree.name} %}
-                <i class="bi bi-asterisk"></i>
+        <div class="list_content d-flex flex-column justify-content-around">
+            <div id="entree_{{ index }}" class="text-center mb-3">
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: entree.id, name: entree.name, img: entree.recipeImages} %}
             </div>
-            <div id="plat_{{ index }}" class="text-center">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: plat.id, name: plat.name} %}
-                <i class="bi bi-asterisk"></i>
+            <div id="plat_{{ index }}" class="text-center mb-3">
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: plat.id, name: plat.name, img: plat.recipeImages} %}
             </div>
             <div id="dessert_{{ index }}" class="text-center">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: dessert.id, name: dessert.name} %}
+                {% include 'generation_menu/paragraph_menu.html.twig' with {id: dessert.id, name: dessert.name, img: dessert.recipeImages} %}
             </div>
         </div>
     {% else %}
-        <div class="list_content d-flex flex-column">
-            <div id="entree_{{ index }}" class="text-center">
+        <div class="list_content d-flex flex-column justify-content-around">
+            <div id="entree_{{ index }}" class="text-center mb-3">
                 <p>{{entree.name}}</p>
-                <i class="bi bi-asterisk"></i>
             </div>
-            <div id="plat_{{ index }}" class="text-center">
+            <div id="plat_{{ index }}" class="text-center mb-3">
                 <p>{{plat.name}}</p>
-                <i class="bi bi-asterisk"></i>
             </div>
             <div id="dessert_{{ index }}" class="text-center">
                 <p>{{dessert.name}}</p>
