@@ -37,11 +37,6 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - {
-        path: ^/articles,
-        roles: [IS_ANONYMOUS, IS_AUTHENTICATED_FULLY],
-        methods: GET,
-      }
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/profile, roles: ROLE_USER }
     - { path: ^/recipe/add, roles: [ROLE_CHIEF, ROLE_ADMIN] }

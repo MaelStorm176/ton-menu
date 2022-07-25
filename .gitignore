@@ -1,4 +1,6 @@
 /.idea
+/.vscode
+/.packge-lock.json
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php

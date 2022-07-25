@@ -1,20 +1,13 @@
-<!-- NAVBAR -->
-<nav class="nav_bg navbar navbar-expand-lg text-uppercase w-100" > 
-  <div class="container">
-    <div>
-      <a class="navbar-brand" href="/">
-          <img src="/img/ton_menu.png" class="navbar-brand-img w-25" alt="...">
-      </a>
-    </div>
+  <!-- ======= Header ======= -->
+  <header id="header" class=" d-flex align-items-center">
+    <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
-    <div class="collapse navbar-collapse " id="navbarResponsive">
-      <ul class="navbar-nav ms-auto">
-          <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#UseIt">Comment utiliser notre site</a></li>
-          <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#about">A Propos de nous</a></li>
-          {% if is_granted('ROLE_USER') %}
-                      <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/recipe/all">Inventaires des recettes</a></li>
-          {% endif %}
-          <li class="nav-item mx-0 mx-lg-1"><a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="#contact">Contact</a></li>
+      <a href="/" class="logo me-auto me-lg-0"><img src="/img/ton_menu.png"  alt="" class="img-fluid"></a>
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto active" href="/">Home</a></li>
+            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link scrollto active" href="/recipe/all">Inventaires des recettes</a></li>
           <li class="nav-item mx-0 mx-lg-1">
             {% if is_granted('ROLE_ADMIN') %} 
             <div class="dropdown nav-item mx-0 mx-lg-1">
@@ -51,13 +44,12 @@
 
             {% else %} 
             <div class="d-flex">
-              <a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/login">Se Connecter</a>
-              <a class="nav-link nav_a py-3 px-0 px-lg-3 rounded text-white" href="/register">S'inscrire</a>
+              <a class="nav-link scrollto active" href="/login">Se Connecter</a>
+              <a class="nav-link scrollto active" href="/register">S'inscrire</a>
               </div>
             {% endif %}
-        </li>
-      </ul>
+        </ul>
+      </nav><!-- .navbar -->
+
     </div>
-    
-  </div>
-</nav>
+  </header><!-- End Header -->

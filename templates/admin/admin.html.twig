@@ -19,27 +19,28 @@
                     <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-primary">
                         <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
                             <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                                <span class="fs-5 d-none d-sm-inline">Panel-Admin</span>
+                                <span class="fs-5 d-none d-sm-inline">Menu Admin</span>
                             </a>
                             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                                 
-                                <li>
-                                    <a href="{{ path('admin_users') }}" class="nav-link px-0 align-middle">
+                                <li class="nav-link">
+                                    <a href="{{ path('admin_users') }}" class=" text-white px-0 align-middle">
                                         <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Utilisateurs</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="{{ path('admin_ingredients') }}" class="nav-link px-0 align-middle">
+                                <li class="nav-link">
+                                    <a href="{{ path('admin_ingredients') }}" class=" text-white px-0 align-middle">
                                         <i class="fs-4 bi-egg-fried"></i> <span class="ms-1 d-none d-sm-inline">Ingrédients</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
-                                        <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span>
+                                <li class="nav-link">
+                                    <a href="{{ path('admin_recipes') }}" class=" text-white px-0 align-middle">
+                                        <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Recettes</span>
                                     </a>
-                                </li><li class="nav-item">
-                                    <a href="/" class="nav-link align-middle px-0">
-                                        <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                                </li>
+                                <li class="nav-item nav-link">
+                                    <a href="/" class="text-white  align-middle px-0">
+                                        <i class="fs-4 bi-house"></i><span class="ms-1 d-none d-sm-inline">Home</span>
                                     </a>
                                 </li>
                             </ul>
