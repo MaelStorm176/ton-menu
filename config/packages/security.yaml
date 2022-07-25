@@ -44,4 +44,8 @@ security:
       }
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/profile, roles: ROLE_USER }
-    - { path: ^/add, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/recipe/add, roles: [ROLE_CHIEF, ROLE_ADMIN] }
+    - { path: ^/recipe, roles: ROLE_USER }
+    - { path: ^/rate, roles: ROLE_USER }
+    - { path: ^/logout, roles: ROLE_USER }
+    - { path: ^/ingredient, roles: ROLE_ADMIN }

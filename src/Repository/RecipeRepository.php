@@ -108,4 +108,15 @@ class RecipeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getScalarResult();
     }
+
+    public function findRecipeByIdAndCountEachRecipe($value)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t.name, count(t.id)')
+            ->andWhere('r.id = :val')
+            ->setParameter('val', $value)
+            ->groupBy('t.id')
+            ->getQuery()
+            ->getScalarResult();
+    }
 }
