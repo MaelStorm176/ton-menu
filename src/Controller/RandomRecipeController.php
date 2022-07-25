@@ -4,7 +4,11 @@ namespace App\Controller;
 
 use App\Entity\SavedMenus;
 use App\Entity\Recipe;
+use App\Entity\MonMenu;
+use App\Entity\RecipeTags;
+use App\Entity\RecipeIngredients;
 use App\Repository\RecipeRepository;
+use App\Entity\Ingredients;
 use App\Repository\SavedMenusRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,7 +66,10 @@ class RandomRecipeController extends AbstractController
                                 $all_ingredient[] = $ing->getIngredient()->getName();
                             }
                         }
+                        //break;
                     }
+                    var_dump($count_ingredient);
+                    var_dump($i);
                     $email = (new TemplatedEmail())
                     ->from('tonmenu@mange.fr')
                     ->to($user->getEmail())
@@ -70,6 +77,7 @@ class RandomRecipeController extends AbstractController
                     ->htmlTemplate('ingredient/send.html.twig')
                     ->context([
                         'all_ingredient' => $all_ingredient,
+                        'count_ingredient' => $count_ingredient,
                     ]);
                     $mailer->send($email);
                 }

@@ -21,7 +21,7 @@ a:link {
 
 /////////////////NavBar//////////////////
 .nav_bg{
-  background: linear-gradient(to bottom right, #0b9bef, rgb(0 255 204 / 90%));
+  background-color: rbg(0, 0, 0, 0.3);
 }
 
 #mainNav {
@@ -34,7 +34,7 @@ a:link {
 /////////////////HomePage//////////////////
 
 .masthead {
-padding-top: calc(6rem + 74px);
+padding-top: calc(12rem + 74px);
 padding-bottom: 6rem;
 }
 

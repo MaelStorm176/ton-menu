@@ -1,20 +1,20 @@
 <section class="mt-3">
     <div id="filter" class="">
         {% if is_granted('ROLE_USER') %}
-            <div class="row">
+            <div class="row align-items-center">
                 <form class="col-8" method="get" action="#">
-                    <div class="d-flex justify-content-between">
-                        <div class="form-group">
-                            <label for="nb_jour">
+                    <div class="d-flex col-12 justify-content-around align-items-center">
+                        <div class="form-group d-flex justify-content-around align-items-center col-9">
+                            <label for="nb_jour" class="">
                                 Nombre de jours :
                             </label>
-                            <select class="form-select" name="nb_jour" id="nb_jour">
+                            <select class="form-select w-50" name="nb_jour" id="nb_jour">
                                 {% for i in range(2,7) %}
                                     <option value="{{ i }}">{{ i }} jours</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div>
+                        <div class="col-3">
 
                             {# <select name="tag">
                                 {% for tag in tags %}
@@ -22,7 +22,7 @@
                                 {% endfor %}
                             </select>#}
 
-                            <input class="btn_day" type="submit" value="Regénérer un Menu">
+                            <input class="btn_day btn" type="submit" value="Regénérer un Menu">
                         </div>
                     </div>
                 </form>
@@ -32,7 +32,7 @@
                     <input type="hidden" name="id_menu" value="{{ id_menu }}">
                     <input type="hidden" name="nb_jour" value="{{ nb_jour }}">
                     <textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
-                    <button type="submit" id="save_menu" class="btn_day">
+                    <button type="submit" id="save_menu" class="btn_day btn">
                         <i class="bi bi-file-earmark-arrow-down-fill"></i>
                         Sauvegarder le menu
                     </button>
@@ -41,7 +41,7 @@
                 <!-- EXPORTER LE MENU PAR MAIL -->
                 <form class="col-2" method="post" action="#">
                     <input type="hidden" name="ingredient" value="1">
-                    <button type="submit" class="col-12 btn_day">Envoi des ingrédients par mail</button>
+                    <button type="submit" class="col-12 btn_day btn">Envoi des ingrédients par mail</button>
                 </form>
             </div>
         {% endif %}
@@ -49,13 +49,13 @@
     </div>
 
     <div id="main_table">
-        <div class="row justify-content-center">
-            <div class="row">
-                <button class="col-6 btn_day" id="btn-jour">
+        <div class="row justify-content-center mt-3">
+            <div class="row justify-content-between align-items-center mb-3">
+                <button class="col-5 btn_day btn" id="btn-jour">
                     <i class="bi bi-brightness-high"></i>
                     Midi
                 </button>
-                <button class="col-6 btn_day" id="btn-nuit">
+                <button class="col-5 btn_day btn" id="btn-nuit">
                     <i class="bi bi-cloud-moon"></i>
                     Soir
                 </button>
@@ -64,12 +64,12 @@
                 <h1 id="test" class="text-center">Menu du Midi</h1>
             </div>
         </div>
-        <div class="row">
+        <div class="row w-100 mt-3">
             <div class="col-md-12 col-sm-12 col-lg-12 d-flex flex-column">
 
                 <!-- JOUR -->
                 <div class="jour" id="jour">
-                    <div class="menu_content row">
+                    <div class="row justify-content-between">
                         {% for i in range(0,nb_jour-1) %}
                             <div class="col">
                             {% include 'generation_menu/card_menu.html.twig' with {index: i+nb_jour, entree: entrees[i], plat: plats[i], dessert: desserts[i]} %}
