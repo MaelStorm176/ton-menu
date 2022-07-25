@@ -3,9 +3,13 @@
 namespace App\Form;
 
 use App\Entity\Recipe;
+use App\Entity\RecipeSteps;
 use phpDocumentor\Reflection\Types\Integer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -27,6 +31,7 @@ class RecetteType extends AbstractType
             ])
             ->add('type',ChoiceType::class,[
                 'label' => 'Type de recette',
+                'required' => true,
                 'choices'  => [
                     '-- Selectionnez un type de recette --' => null,
                     'Entrée' => "ENTREE",
@@ -53,17 +58,48 @@ class RecetteType extends AbstractType
                     'Difficile' => 4,
                 ],
             ])
-            ->add('preparation_time', IntegerType::class,[
-                'label' => 'Temps de préparation',
-                'attr' => ['maxlength' => 4, 'min' => 0]
+            ->add('budget', ChoiceType::class,[
+                'label' => 'Budget',
+                'choices'  => [
+                    '-- Selectionnez un budget --' => null,
+                    'Cheap' => 1,
+                    'Moyen' => 2,
+                    'Chère' => 4,
+                ],
             ])
-            ->add('total_time',IntegerType::class,[
-                'label' => 'Temps total pour effectuer la recette',
-                'attr' => ['maxlength' => 4, 'min' => 0]
+            ->add('preparationTime', TimeType::class,[
+                'label' => 'Temps de prépapation (HH:MM)',
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+                'html5' => false,
+                'attr' => ['placeholder' => 'Temps de prépapation'],
             ])
-            ->add('save', SubmitType::class)
+            ->add('totalTime',TimeType::class,[
+                'label' => 'Temps total pour effectuer la recette (HH:MM)',
+                'required' => true,
+                'input' => 'datetime',
+                'widget' => 'choice',
+                'html5' => false,
+                'attr' => ['placeholder' => 'Temps total pour effectuer la recette']
+            ])
+            ->add('recipeSteps', CollectionType::class,[
+                'entry_type' => StepType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
+            ->add('Enregistrer', SubmitType::class)
         ;
     }
+
+    /*
+            ->add('recipeImages', FileType::class,[
+                'label' => 'Images de la recette',
+                'multiple' => true,
+                'required' => false,
+                'attr' => ['placeholder' => 'Images de la recette']
+            ])*/
 
     public function configureOptions(OptionsResolver $resolver): void
     {

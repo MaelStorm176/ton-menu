@@ -28,6 +28,11 @@ class RecipeSteps
      */
     private $recipe;
 
+    /**
+     * @ORM\Column(type="smallint")
+     */
+    private $ordre;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +58,18 @@ class RecipeSteps
     public function setRecipe(?Recipe $recipe): self
     {
         $this->recipe = $recipe;
+
+        return $this;
+    }
+
+    public function getOrdre(): ?int
+    {
+        return $this->ordre;
+    }
+
+    public function setOrdre(int $ordre): self
+    {
+        $this->ordre = $ordre;
 
         return $this;
     }

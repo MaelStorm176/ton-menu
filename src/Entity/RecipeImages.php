@@ -39,6 +39,9 @@ class RecipeImages
 
     public function getUrl(): ?string
     {
+        if ($this->path) {
+            return $this->path;
+        }
         return $this->url;
     }
 

@@ -9,6 +9,11 @@ use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\RecetteType;
+use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use App\Entity\Ingredient;
 use App\Entity\RecipeTags;
 use App\Entity\RecipeSteps;
@@ -18,9 +23,6 @@ use App\Repository\RatingRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\CommentRepository;
 use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -32,52 +34,60 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RecipeController extends AbstractController
 {
+
+
     /**
      * @Route("/recipe/add", name="recipe_add")
      */
-    public function add_recette(Request $request, SluggerInterface $slugger): Response
-    {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+    public function add_recette(Request $request): Response {
+        $manager = $this->getDoctrine()->getManager();
+        $ingredientRepository = $this->getDoctrine()->getRepository(Ingredient::class);
+        $tagRepository = $this->getDoctrine()->getRepository(RecipeTags::class);
         $recette = new Recipe();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
         $requete = $request->request->all();
+        if ($request->isMethod('POST')) {
+           // $form->submit($request->request->get($form->getName()));
+            if ($form->isSubmitted() && $form->isValid()) {
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $today = new DateTimeImmutable();
-            $recette->setUserId($user);
-            $recette->setCreatedAt($today);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($recette);
-
-            /** AJOUT DES INGREDIENTS A LA RECETTE **/
-            if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
-                foreach ($requete["choosen_ingredient"] as $ingredient_id) {
-                    $ingredient = $this->getDoctrine()->getRepository(Ingredient::class)->find($ingredient_id);
-                    $recipeIngredient = new RecipeIngredients();
-                    $recipeIngredient->setIngredient($ingredient);
-                    $recipeIngredient->setRecipe($recette);
-                    $entityManager->persist($recipeIngredient);
+                /** AJOUT DES INGREDIENTS A LA RECETTE **/
+                if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
+                    foreach ($requete["choosen_ingredient"] as $item) {
+                        $ingredient = $ingredientRepository->find($item);
+                        $recipeIngredient = new RecipeIngredients();
+                        $recipeIngredient->setIngredient($ingredient);
+                        $recipeIngredient->setRecipe($recette);
+                        $manager->persist($recipeIngredient);
+                    }
                 }
-            }
 
-            /** AJOUT DES TAGS A LA RECETTE **/
-            if (isset($requete["choosen_tag"]) && !empty($requete["choosen_tag"])) {
-                foreach ($requete["choosen_tag"] as $tag_id) {
-                    $tag = $this->getDoctrine()->getRepository(RecipeTags::class)->find($tag_id);
-                    $recipeTagLink = new RecipeTagsLinks();
-                    $recipeTagLink->setRecipeTag($tag);
-                    $recipeTagLink->setRecipe($recette);
-                    $entityManager->persist($recipeTagLink);
+                /** AJOUT DES TAGS A LA RECETTE **/
+                if (isset($requete["choosen_tag"]) && !empty($requete["choosen_tag"])) {
+                    foreach ($requete["choosen_tag"] as $item) {
+                        $tag = $tagRepository->find($item);
+                        $recette->addRecipeTag($tag);
+                    }
                 }
+
+                /** AJOUT DES ETAPES A LA RECETTE **/
+                $i = 1;
+                foreach ($recette->getRecipeSteps() as $step) {
+                    $step->setRecipe($recette);
+                    $step->setOrdre($i);
+                    $i++;
+                }
+
+                $recette->setCreatedAt(new DateTimeImmutable());
+                $recette->setUserId($this->getUser());
+                $manager->persist($recette);
+                $manager->flush();
+
+                return $this->redirectToRoute('recipe_show', [
+                    'id' => $recette->getId()
+                ]);
             }
-
-            $entityManager->flush();
-
-            return $this->redirectToRoute('recipe_show', [
-                'id' => $recette->getId()
-            ]);
         }
 
         return $this->render('new_recette/create.html.twig', [

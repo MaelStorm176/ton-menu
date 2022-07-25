@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Rating;
 use App\Entity\Recipe;
+use App\Repository\RatingRepository;
+use App\Repository\RecipeRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,47 +14,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RatingController extends AbstractController
 {
-    #[Route('/rate/{id}/{value}', name: 'rate')]
-    public function index(Request $request, $id, $value)
+    private $ratingRepository;
+    private $recipeRepository;
+    public function __construct(RatingRepository $ratingRepository, RecipeRepository $recipeRepository){
+        $this->ratingRepository = $ratingRepository;
+        $this->recipeRepository = $recipeRepository;
+    }
+
+    #[Route('/rate/{id}', name: 'rate', methods: ['POST'])]
+    public function index(Request $request, $id): JsonResponse|Response
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $repository = $this->getDoctrine()->getRepository(Recipe::class);
-        $recipe = $repository->find($id);
+        $user = $this->getUser();
+        $rateInput = $request->request->get('rating');
+        $recipe = $this->recipeRepository->find($id);
+        $rate = $this->ratingRepository->findBy([
+            "recette" => $recipe,
+            "user" => $user
+        ]);
 
-        $rating = $this->getDoctrine()->getRepository(Rating::class);
-        $rate = $rating->findBy([
-            "recette" => $recipe, 
-            "user" => $user]);
-
-        //var_dump($liked);
-        if ($request->isXmlHttpRequest() && $rate == []) {
+        if ($request->isXmlHttpRequest() && $recipe && $rateInput) {
+            if (!empty($rate))
+                return new JsonResponse(["error" => "Vous avez déjà noté cette recette"], Response::HTTP_BAD_REQUEST);
+            if ($rateInput < 0 || $rateInput > 5) {
+                return new JsonResponse(["error" => "Valeur invalide"], 400);
+            }
             $rate = new Rating();
     
             $rate->setUser($user);
             $rate->setRecette($recipe);
-            $rate->setRate($value);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($rate);
-            $entityManager->flush();
-
-            return new JsonResponse($rating);
-        }else{
-            //$id_like = $liked[0]->getId();
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($rate[0]);
-            $entityManager->flush();
-
-            $rate = new Rating();
-            $rate->setUser($user);
-            $rate->setRecette($recipe);
-            $rate->setRate($value);
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($rate);
-            $entityManager->flush();
-
-            return new JsonResponse($rating);
+            $rate->setRate($rateInput);
+            $this->ratingRepository->save($rate);
+            return new JsonResponse($rate);
         }
-
-        return $this->redirectToRoute('/');
+        //return bad method request
+        return new Response('Bad Request', 400);
     }
 }

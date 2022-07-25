@@ -45,12 +45,12 @@ class Recipe
     private $difficulty;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="time")
      */
     private $preparation_time;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="time")
      */
     private $total_time;
 
@@ -76,7 +76,7 @@ class Recipe
     private $updated_at;
 
     /**
-     * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      */
     private $recipeSteps;
 
@@ -268,12 +268,12 @@ class Recipe
         return $this->secondsToTime($this->preparation_time*60);
     }
 
-    public function getPreparationTime(): int
+    public function getPreparationTime(): \DateTime
     {
         return $this->preparation_time;
     }
 
-    public function setPreparationTime(int $preparation_time): self
+    public function setPreparationTime(\DateTime $preparation_time): self
     {
       $this->preparation_time = $preparation_time;
 
@@ -292,17 +292,12 @@ class Recipe
         return $this;
     }
 
-    public function getTotalTimeToTime(): ?string
-    {
-        return $this->secondsToTime($this->total_time*60);
-    }
-
-    public function getTotalTime(): ?string
+    public function getTotalTime(): ?\DateTime
     {
         return $this->total_time;
     }
 
-    public function setTotalTime(int $total_time): self
+    public function setTotalTime(\DateTime $total_time): self
     {
         $this->total_time = $total_time;
 
