@@ -6,10 +6,11 @@ use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeImages;
 use App\Entity\RecipeIngredients;
+use App\Entity\RecipeQuantities;
 use App\Entity\RecipeSteps;
 use App\Entity\RecipeTags;
-use App\Entity\RecipeTagsLinks;
 use App\Entity\User;
+use App\Services\MarmitonManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -21,6 +22,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
         $user_entity = $manager->getRepository(User::class)->findOneBy(['email'=>'admin@gmail.com']);
         $types_recettes = ["ENTREE","PLAT","DESSERT"];
         $ingredient_name_list = [];
+        $marmitonManager = new MarmitonManager($manager->getRepository(Ingredient::class));
 
         /**** LECTURE DU JSON ****/
         $t0 = microtime(true);
@@ -61,6 +63,15 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setCreatedAt(new \DateTimeImmutable());
                 $manager->persist($recipe);
                 /******************************************************/
+
+                /********* QUANTITIES *********/
+                $quantities = $recipe_json["ingredients"];
+                foreach ($quantities as $quantity) {
+                    $quantityObj = new RecipeQuantities();
+                    $quantityObj->setContent($quantity);
+                    $quantityObj->setRecipe($recipe);
+                    $manager->persist($quantityObj);
+                }
 
                 /********* TAGS **********/
                 $tags_json = $recipe_json["tags"];
@@ -130,6 +141,8 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                 /******************************************************/
                 $manager->flush();
             }
+
+            //$marmitonManager->updateIngredientsImage();
         }
     }
 

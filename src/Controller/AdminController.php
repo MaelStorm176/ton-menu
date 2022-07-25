@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\User;
+use App\Services\MarmitonManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,6 +16,8 @@ class AdminController extends AbstractController
     #[Route("/", name: 'index')]
     public function index(): Response
     {
+        $marmitonManager = new MarmitonManager($this->getDoctrine()->getRepository(Ingredient::class));
+        $marmitonManager->updateIngredientsImage();
         return $this->render('admin/index.html.twig');
     }
 

@@ -62,7 +62,17 @@ class Ingredient
 
     public function getName(): ?string
     {
-        return utf8_decode($this->name);
+        return str_replace("®","",utf8_decode($this->name));
+    }
+
+    public function getNameEncoded(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getSluggedName(): ?string
+    {
+        return \Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')->transliterate(str_replace([' ', "'", '"'], '-', strtolower($this->getName())));
     }
 
     public function setName(string $name): self

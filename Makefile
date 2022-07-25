@@ -83,6 +83,14 @@ migrate:
 new-entity:
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) make:entity
 
+## Run fixtures
+fixtures:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:fixtures:load -n
+
+## Crawler marmiton to update database ingredient images
+get-images:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) marmiton:get-images
+
 ## Build la DB en fonction des migrations et execute le script marmiton
 marmiton-check:
 	make build-db
@@ -91,5 +99,5 @@ marmiton-check:
 ## Execute le script marmiton
 marmiton:
 	@$(DOCKER_RUN) encore $(NPM) run marmiton
-	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:fixtures:load -n
+	make fixtures
 
