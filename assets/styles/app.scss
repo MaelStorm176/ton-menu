@@ -9,8 +9,8 @@
 --------------------------------------------------------------*/
 body {
   font-family: "Filson Soft";
-  background: #0c0b09;
-  color: #fff;
+  background: white;
+  color: black;
 }
 
 a {
@@ -583,8 +583,12 @@ section {
   }
 }
 /*--------------------------------------------------------------
-# main Us
+# our best
 --------------------------------------------------------------*/
+.why-us{
+  background-color: black;
+}
+
 .why-us .box {
   padding: 50px 30px;
   box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
