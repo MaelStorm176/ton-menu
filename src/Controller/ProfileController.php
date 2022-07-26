@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Entity\SavedMenus;
 use App\Form\ProfileType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,6 +43,8 @@ class ProfileController extends AbstractController
                     );
                 } catch (FileException $e) {
                     // ... handle exception if something happens during file upload
+                    $fileUploadError = new FormError("Une erreur est survenue lors de l'upload de l'image");
+                    $form->get('profile_picture')->addError($fileUploadError);
                 }
 
                 // updates the 'brochureFilename' property to store the PDF file name
@@ -55,6 +59,7 @@ class ProfileController extends AbstractController
         return $this->render('profile/index.html.twig', [
             'user' => $user,
             'form' => $form->createView(),
+            'generated_menus' => $this->getDoctrine()->getRepository(SavedMenus::class)->findBy(['user' => $user], ['createdAt' => 'DESC'], 5),
         ]);
     }
     // nouvelle route profile/menu

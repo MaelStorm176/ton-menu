@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -14,13 +15,28 @@ class ProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('password')
+            ->add('password', PasswordType::class, [
+                'label' => 'Mot de passe',
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Nouveau mot de passe',
+                    'class' => 'form-control'
+                ]
+            ])
             ->add('profile_picture', FileType::class, [
                 'label' => 'Photo de profil',
                 'required' => false,
-                'data_class' => null,
+                'attr' => [
+                    'class' => 'form-control'
+                ],
+                'data_class' => null
             ])
-            ->add("validate", SubmitType::class)
+            ->add("validate", SubmitType::class, [
+                'label' => 'Valider',
+                'attr' => [
+                    'class' => 'btn btn-secondary profile-button'
+                ]
+            ])
         ;
     }
 
