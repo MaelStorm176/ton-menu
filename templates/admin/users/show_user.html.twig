@@ -43,13 +43,13 @@
                     <h4 class="text-right">Statistiques</h4>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="firstname">Nombre de recettes</label>
                             <input type="text" class="form-control disabled" id="firstname" value="{{ user.recette.count }}" disabled>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="lastname">Nombre de commentaires</label>
                             <input type="text" class="form-control disabled" id="lastname" value="{{ comments|length }}" disabled>
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="row mt-2">
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="firstname">Meilleures recettes
                             <small class="text-muted">(par note)</small>
@@ -72,7 +72,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="firstname">Pires recettes
                                 <small class="text-muted">(par note)</small>
@@ -147,7 +147,7 @@
                 {% endfor %}
             </table>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12 mt-sm-2">
             <h4>Liste des ingrédients créés</h4>
             <table id="ingredientsTable" class="table table-bordered table-striped">
                 <thead>
@@ -174,7 +174,7 @@
     <hr class="dropdown-divider mb-4"/>
     <div class="row">
         <!-- liste des commentaires -->
-        <div class="col-md-6">
+        <div class="col-md-6 col-sm-12">
             <h4>Liste des commentaires postés</h4>
             <table id="commentsTable" class="table table-bordered table-striped">
                 <thead>

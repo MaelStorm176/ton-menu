@@ -8,11 +8,14 @@
           
           {% if is_granted('IS_ANONYMOUS') %} 
           <div class="btns">
-            <a href="/login" class="btn-menu animated fadeInUp ">Générer mon menu</a>
+            <a href="{{ path('login') }}" class="btn-menu animated fadeInUp ">Générer mon menu</a>
           </div>
           {% else %}
           <div class="btns">
-            <a href="/generation-menu/7" class="btn-menu animated fadeInUp ">Générer mon menu</a>
+            <a href="{{ path('generation_menu',{nb_jour: 7}) }}" class="btn-menu animated fadeInUp ">Générer mon menu</a>
+          </div>
+          <div class="btns">
+            <a href="{{ path('recipe_all') }}" class="btn-menu animated fadeInUp ">Rechercher une recette</a>
           </div>
           {% endif %}
         </div>
