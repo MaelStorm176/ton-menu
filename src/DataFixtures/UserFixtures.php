@@ -22,11 +22,13 @@ class UserFixtures extends Fixture {
         $password = "pass_1234";
         $password_encoded = $this->encoder->hashPassword($user,$password);
 
-        $user->setEmail("admin@gmail.com");
-        $user->setPassword($password_encoded);
-        $user->setRoles(["ROLE_ADMIN"]);
-        $user->setIsVerify(true);
-        $user->setProfilePicture("/blank.png");
+        $user->setEmail("admin@gmail.com")
+            ->setFirstname("Administrateur")
+            ->setLastname(null)
+            ->setPassword($password_encoded)
+            ->setRoles(["ROLE_ADMIN"])
+            ->setIsVerify(true)
+            ->setProfilePicture("/blank.png");
         $manager->persist($user);
         $manager->flush();
     }
