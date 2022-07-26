@@ -9,8 +9,7 @@
                 <tr>
                     <th>Créateur</th>
                     <th>Nom</th>
-                    <th>Type primaire</th>
-                    <th>Type secondaire</th>
+                    <th>Image</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -19,8 +18,7 @@
                 <tr>
                     <td>{{ ingredient.userId.email }}</td>
                     <td>{{ingredient.name}}</td>
-                    <td>{{ingredient.primaryType}}</td>
-                    <td>{{ingredient.secondaryType}}</td>
+                    <td><img src="{{ ingredient.image }}" loading="lazy" alt="{{ingredient.name}}" width="100" height="100"></td>
                     <td>
                         <button type="button" class="btn btn-secondary"><i class="fs-4 bi-pen"></i> </button>
                         <button type="button" class="btn btn-secondary"><i class="fs-4 bi-trash"></i></button>

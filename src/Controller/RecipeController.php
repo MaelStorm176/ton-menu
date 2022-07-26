@@ -49,7 +49,6 @@ class RecipeController extends AbstractController
 
         $requete = $request->request->all();
         if ($request->isMethod('POST')) {
-           // $form->submit($request->request->get($form->getName()));
             if ($form->isSubmitted() && $form->isValid()) {
 
                 /** AJOUT DES INGREDIENTS A LA RECETTE **/
