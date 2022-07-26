@@ -4,46 +4,89 @@
 
 {% block body %}
 
-<a href="/recipe/all">Retour a la liste des recettes</a>
-    <p>{{recette.name}}</p>
-    <div>
-        {% for ingredients in ingredient %}
-            <p>- {{ingredients.ingredient.name}}</p>
-        {% endfor %}
+<section class="recipe" id="recipe">
+    <div class="btn-titlemenu">
+        <a class="btn-menu animated fadeInUp " href="/generation-menu/7">Retour à ma génération de menu</a>
+        <a class="btn-menu animated fadeInUp " href="/recipe/all">Retour a la liste des recettes</a>
     </div>
-    <div>
+
+    <div class="container d-flex justify-content-between">
+        <img class="w-50 recipe-img" src="{{ recette.recipeImages[0].url }} " alt="">
+        <div class="col recipe-content ">
+            <p class="title">{{recette.name}}</p>
+            <hr class="solid">
+            <div>
+                <p class="description_recipe">"Téma la description du bestio"</p>
+                </div>
+            <hr class="solid">
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description"><i class="icon bi bi-clock"></i>Cuisiné en : 15 minutes</p>
+                </div>
+                <div class="col">
+                    <p class="description"><i class="icon bi bi-bar-chart"></i>Difficulté : Simple</p>
+                </div>
+            </div>
+            <hr class="solid">
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    {% for ingredients in ingredient %}
+                        <p class="description">{{ingredients.ingredient.name}} : 20mg</p>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr class="solid">
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description"><i class="icon bi bi-award"></i>Crée par : El Cheffé</p>
+                </div>
+                <div class="col">
+                    <p class="description"><i class="icon bi bi-calendar2-week"></i>Ajouté  le : 06/07/199</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="steps text">
         {% for steps in step %}
-            <p>{{steps.step}}</p>
+            <p>- {{steps.step}}</p>
        {% endfor %}
     </div>
-    <div class="rating">
-        {% for i in (1..5) %}
-            {% if rating != [] and rating.rate == i %}
-                <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
-            {% else %}
-                <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
-            {% endif %}
-                <label for="rating_{{ i }}">☆</label>
-        {% endfor %}
+
+
+
+    <div class="comment">
+        <div class="rating">
+            {% for i in (1..5) %}
+                {% if rating != [] and rating.rate == i %}
+                    <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
+                {% else %}
+                    <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
+                {% endif %}
+                    <label for="rating_{{ i }}">☆</label>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form_start(recetteForm) }}
+                {{ form_row(recetteForm.content) }}
+                {{ form_row(recetteForm.save) }}
+            {{ form_end(recetteForm) }}
+        </div>
+        <div>
+            <h2>Commentaires</h2>
+            {% for comments in comment %}
+                {% if comments.recette == recette %}
+                    <div>
+                        <p>{{comments.user.email}}</p>
+                        <p>{{comments.content}}</p>
+                        <p>{{comments.createdAt | date("d/m/Y h:i:s")}}</p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
-    <div>
-        {{ form_start(recetteForm) }}
-            {{ form_row(recetteForm.content) }}
-            {{ form_row(recetteForm.save) }}
-        {{ form_end(recetteForm) }}
-    </div>
-    <div>
-        <h2>Commentaires</h2>
-        {% for comments in comment %}
-            {% if comments.recette == recette %}
-                <div>
-                    <p>{{comments.user.email}}</p>
-                    <p>{{comments.content}}</p>
-                    <p>{{comments.createdAt | date("d/m/Y h:i:s")}}</p>
-                </div>
-            {% endif %}
-        {% endfor %}
-    </div>
+</section>    
 {% endblock %}
 
 {% block javascripts %}

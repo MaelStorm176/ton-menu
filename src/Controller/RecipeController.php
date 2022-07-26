@@ -102,7 +102,7 @@ class RecipeController extends AbstractController
      */
     public function show_all(RecipeRepository $recipeRepository, RatingRepository $ratingRepository, CommentRepository $commentRepository): Response
     {
-        $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 10);
+        $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 12);
         return $this->render('new_recette/home.html.twig', [
             'recettes' => $recettes,
         ]);
@@ -205,9 +205,9 @@ class RecipeController extends AbstractController
                     'placeholder' => 'Entrez un mot-clé'
                 ]
             ])
-            ->add('recherche', SubmitType::class, [
+            ->add('rechercher', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-primary '
                 ]
             ])
             ->getForm();

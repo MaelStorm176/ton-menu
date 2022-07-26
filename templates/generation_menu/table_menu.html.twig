@@ -1,10 +1,10 @@
-<section class="mt-3">
+<div class="mt-3">
     <div id="filter" class="">
         {% if is_granted('ROLE_USER') %}
             <div class="row align-items-center">
                 <form class="col-8" method="get" action="#">
                     <div class="d-flex col-12 justify-content-around align-items-center">
-                        <div class="form-group d-flex justify-content-around align-items-center col-9">
+                        <div class="form-group d-flex justify-content-center align-items-center col-9">
                             <label for="nb_jour" class="">
                                 Nombre de jours :
                             </label>
@@ -60,6 +60,9 @@
                     Soir
                 </button>
             </div>
+            
+            <hr class="solid">
+
             <div class="row">
                 <h1 id="test" class="text-center">Menu du Midi</h1>
             </div>
@@ -91,7 +94,7 @@
             </div>
         </div>
     </div>
-</section>
+</div>
 
 <script type="application/javascript">
   /**
