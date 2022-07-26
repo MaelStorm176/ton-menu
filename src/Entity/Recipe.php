@@ -252,7 +252,7 @@ class Recipe
             $sum += $rating->getRate();
         }
         if (count($ratings) > 0) {
-            return floatval($sum / count($ratings));
+            return round(floatval($sum / count($ratings)), 1);
         } else {
             return null;
         }
