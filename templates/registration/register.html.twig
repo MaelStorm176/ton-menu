@@ -2,7 +2,7 @@
 
 {% block title %}Register{% endblock %}
 {% block body %} 
-<form class="login_content text-center d-flex flex-column" action="{{ path('login') }}" method="post">
+<div class="login_content text-center d-flex flex-column">
   <div class="container-fluid login_form rounded">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-md-9 col-lg-6 col-xl-5">
@@ -10,7 +10,6 @@
           class="img-fluid" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form action="{{ path('login') }}" method="post">
         <p class="text-center fw-bold mx-3 mb-0 login_title">Créer mon compte</p>
         {{ form_start(registrationForm) }}
           <!-- Email input -->
@@ -34,17 +33,15 @@
           <div class="text-center text-lg-start mt-4 pt-2">
             {# If you want to control the URL the user is redirected to on success #}
             {# <input type="hidden" name="_target_path" value="/account"/>  #}
-            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Créer mon compte</button>
+            <input type="hidden" name="_target_path" value="/login"/>
+            {{ form_row(registrationForm.save) }}
             {{ form_end(registrationForm) }}
-            <input type="hidden" name="_target_path" value="/login"/> 
             <p class="small fw-bold mt-2 pt-1 mb-0">Vous avez déjà un compte ?
-            <a type="" href="/login">Se Connecter</a></p>
+            <a href="{{ path('login') }}">Se Connecter</a></p>
           </div>
-
-        </form>
       </div>
     </div>
   </div>
-</form>
+</div>
 
 {% endblock %}
