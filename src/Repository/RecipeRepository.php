@@ -56,14 +56,14 @@ class RecipeRepository extends ServiceEntityRepository
                 ->andWhere('r.id NOT IN (:notIn)')
                 ->setParameter('type', $type)
                 ->setParameter('notIn', $notIn)
-                ->orderBy('r.id', 'DESC')
+                ->orderBy('RAND()')
                 ->setMaxResults($max)
                 ->getQuery();
         } else {
             $qb = $this->createQueryBuilder('r')
                 ->where('r.type = :type')
                 ->setParameter('type', $type)
-                ->orderBy('r.id', 'DESC')
+                ->orderBy('RAND()')
                 ->setMaxResults($max)
                 ->getQuery();
         }

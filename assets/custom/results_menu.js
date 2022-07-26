@@ -10,6 +10,8 @@ $(document).ready(function (){
     show_jour.addClass("d-block");
     hide_jour.removeClass("d-block");
     hide_jour.addClass("d-none");
+    $(this).addClass("active");
+    $("p[id^='jour_']").not(this).removeClass("active");
   });
 
   /*

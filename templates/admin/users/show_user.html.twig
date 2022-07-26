@@ -46,7 +46,7 @@
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
                             <label for="firstname">Nombre de recettes</label>
-                            <input type="text" class="form-control disabled" id="firstname" value="{{ user.recette.count }}" disabled>
+                            <input type="text" class="form-control disabled" id="firstname" value="{{ user.recipes.count }}" disabled>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
@@ -66,7 +66,7 @@
                             <ul class="list-group">
                                 {% for recipe in bestRecipes %}
                                     <li class="list-group-item">
-                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  {{ recipe.getAverageRating }}/5</a>
+                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  <span class="fw-bold">{{ recipe.getAverageRating }}/5</span></a>
                                     </li>
                                 {% endfor %}
                             </ul>

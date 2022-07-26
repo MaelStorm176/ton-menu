@@ -43,6 +43,7 @@ class UserFixtures extends Fixture {
         $user->setFirstName($this->faker->firstName);
         $user->setLastName($this->faker->lastName);
         $user->setIsVerify(true);
+        $user->setProfilePicture("/blank.png");
         $user->setRoles(['ROLE_USER']);
         return $user;
     }
