@@ -28,12 +28,15 @@ class ProfileController extends AbstractController
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $oldHash = $user->getPassword();
-
+        $oldPicture = $user->getProfilePicture();
 
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($user->getProfilePicture() == null) {
+                $user->setProfilePicture($oldPicture);
+            }
             if ($form->get('password')->getData() != null && $form->get('password')->getData() != "") {
                 //hash the new password
                 $newHash = $this->passwordEncoder->encodePassword($user, $form->get('password')->getData());

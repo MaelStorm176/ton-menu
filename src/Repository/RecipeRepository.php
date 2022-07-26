@@ -131,20 +131,26 @@ class RecipeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    // Find/search articles by title/content
-    public function findArticlesByName(string $query)
+    public function findBestRatedRecipesMadeByAUser($userId)
     {
-        $qb = $this->createQueryBuilder('p');
-        $qb
-            ->where(
-                $qb->expr()->andX(
-                    $qb->expr()->orX(
-                        $qb->expr()->like('p.name', ':query'),
-                    ),
-                )
-            )
-            ->setParameter('query', '%' . $query . '%');
-        return $qb
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+            ->where('r.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('r2.rate', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findWorstRatedRecipesMadeByAUser($userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+            ->where('r.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('r2.rate', 'ASC')
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
     }

@@ -1,56 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ProfileController!{% endblock %}
+{% block title %}Personnalisation du profil{% endblock %}
 
 {% block body %}
-<style>
-	.form-control:focus {
-		box-shadow: none;
-		border-color: #BA68C8
-	}
-
-	.profile-button {
-		background: rgb(99, 39, 120);
-		box-shadow: none;
-		border: none
-	}
-
-	.profile-button:hover {
-		background: #682773
-	}
-
-	.profile-button:focus {
-		background: #682773;
-		box-shadow: none
-	}
-
-	.profile-button:active {
-		background: #682773;
-		box-shadow: none
-	}
-
-	.back:hover {
-		color: #682773;
-		cursor: pointer
-	}
-
-	.labels {
-		font-size: 11px
-	}
-
-	.add-experience:hover {
-		background: #BA68C8;
-		color: #fff;
-		cursor: pointer;
-		border: solid 1px #BA68C8
-	}
-</style>
 	<div class="container rounded bg-white mt-5 mb-5">
 		<div class="row">
 			<div class="col-md-3 border-right">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
 					<img  class="rounded-circle mt-5" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
-					<span class="font-weight-bold">Edogaru</span>
+					<span class="font-weight-bold">{{ user.firstname }} {{ user.lastname }}</span>
 					<span class="text-black-50">{{ user.email }}</span>
 					<span> </span>
 				</div>
@@ -60,24 +18,46 @@
 					<div class="d-flex justify-content-between align-items-center mb-3">
 						<h4 class="text-right">Paramètres du profil</h4>
 					</div>
+					{{ form_start(form) }}
 					<div class="row mt-2">
-						<div class="col-md-6"><label class="labels" for="prenom">Prénom</label><input id="prenom" type="text" class="form-control" placeholder="Prénom" value=""></div>
-						<div class="col-md-6"><label class="labels" for="nom">Nom</label><input id="nom" type="text" class="form-control" value="" placeholder="Nom"></div>
+						<div class="col-md-6">
+							{{ form_label(form.firstname, 'Prénom', {
+								'label_attr': {'class': 'labels', 'placeholder': 'Nouveau prénom'}
+							}) }}
+							{{ form_widget(form.firstname, {
+								'attr': {'class': 'form-control'}
+							}) }}
+						</div>
+						<div class="col-md-6">
+							{{ form_label(form.lastname, 'Nom', {
+								'label_attr': {'class': 'labels', 'placeholder': 'Nouveau nom'}
+							}) }}
+							{{ form_widget(form.lastname, {
+								'attr': {'class': 'form-control'}
+							}) }}
+						</div>
 					</div>
 					<div class="row mt-3">
-						<div class="col-md-12"><label class="labels">Email</label><input type="text" class="form-control disabled" value="{{ user.email }}" disabled></div>
-						{{ form_start(form) }}
-
-						{{ form_label(form.password, 'Mot de passe', {
-							'label_attr': {'class': 'labels', 'for': 'password', 'placeholder': 'Nouveau mot de passe'}
-						}) }}
-						{{ form_widget(form.password) }}
-
-						{{ form_label(form.profile_picture, 'Photo de profil', {
-							'label_attr': {'class': 'labels'}
-						}) }}
-						{{ form_widget(form.profile_picture) }}
-
+						<div class="col-md-12">
+							<label for="email" class="labels">Email</label>
+							<input name="email" type="text" class="form-control disabled" value="{{ user.email }}" disabled>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-12">
+							{{ form_label(form.password, 'Mot de passe', {
+								'label_attr': {'class': 'labels', 'for': 'password', 'placeholder': 'Nouveau mot de passe'}
+							}) }}
+							{{ form_widget(form.password) }}
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col-md-12">
+							{{ form_label(form.profile_picture, 'Photo de profil', {
+								'label_attr': {'class': 'labels', 'for': 'profile_picture', 'placeholder': 'Nouvelle photo de profil'}
+							}) }}
+							{{ form_widget(form.profile_picture) }}
+						</div>
 					</div>
 					<div class="mt-5 text-center">
 						{{ form_widget(form.validate) }}
@@ -85,13 +65,13 @@
 					{{ form_end(form) }}
 				</div>
 			</div>
+			{% if generated_menus %}
 			<div class="col-md-4">
 				<div class="p-3 py-5">
 					<div class="d-flex justify-content-between align-items-center mb-3">
 						<h4 class="text-right">Derniers menus sauvegardés</h4>
 					</div>
 					<div class="row mt-2">
-						{% if generated_menus %}
 							<table class="table table-striped table-bordered">
 								<thead>
 									<tr>
@@ -110,10 +90,10 @@
 								{% endfor %}
 								</tbody>
 							</table>
-						{% endif %}
 					</div>
 				</div>
 			</div>
+			{% endif %}
 		</div>
 	</div>
 
