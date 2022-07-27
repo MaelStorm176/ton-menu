@@ -14,6 +14,17 @@ $(document).ready(function (){
     $("p[id^='jour_']").not(this).removeClass("active");
   });
 
+  $("#select_nb_jour").change(function(){
+    const nb_jours = $(this).val();
+    const id_menu = $("#id_menu");
+    if (id_menu != null && id_menu.val() != "" && id_menu.val() != "0"){
+      const url = "/generation-menu/"+nb_jours+"?id_menu="+id_menu.val();
+      document.location.href = url;
+    }else{
+      document.location.href = '/generation-menu/'+nb_jours;
+    }
+  });
+
   /*
   $("#save_menu").click(function(){
     if (generatedMenu == null || generatedMenu === "") {
@@ -41,6 +52,39 @@ $(document).ready(function (){
     }
   });
   */
+
+  $("#send_menu").submit(function(e){
+    e.preventDefault();
+    const generatedMenu = $("#menu").val();
+    if (generatedMenu == null || generatedMenu === "") {
+      alert("Veuillez générer un menu avant de l'envoyer");
+    }else{
+      $.ajax({
+        url: "/ajax/generation-menu/send",
+        type: "POST",
+        dataType: "json",
+        data: {
+          menu: generatedMenu,
+          nb_jours: $("input[name='nb_jour']").val()
+        },
+        success: function(data){
+          if (data.success === true && data.msg !== "") {
+            console.log(data);
+            alert(data.msg);
+          }else if (data.success === false && data.msg !== "") {
+            alert(data.msg);
+          } else{
+            alert("Une erreur est survenue");
+          }
+        },
+        error: function(data){
+          console.log(data);
+          alert("Une erreur est survenue");
+        }
+      });
+    }
+  });
+
 
   $("button[id^='refresh_day_']").click(function(){
     const day = $(this).data("day");
