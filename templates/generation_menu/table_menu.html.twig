@@ -1,52 +1,35 @@
 <div class="mt-3">
-    <div id="filter" class="">
-        {% if is_granted('ROLE_USER') %}
-            <div class="row align-items-center">
-                <form class="col-8" method="get" action="#">
-                    <div class="d-flex col-12 justify-content-around align-items-center">
-                        <div class="form-group d-flex justify-content-center align-items-center col-9">
-                            <label for="nb_jour" class="">
-                                Nombre de jours :
-                            </label>
-                            <select class="form-select w-50" name="nb_jour" id="nb_jour">
-                                {% for i in range(2,7) %}
-                                    <option value="{{ i }}">{{ i }} jours</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-3">
-
-                            {# <select name="tag">
-                                {% for tag in tags %}
-                                    <option value="{{tag.id}}">{{tag.name}}</option>
-                                {% endfor %}
-                            </select>#}
-
-                            <input class="btn_day btn" type="submit" value="Regénérer un Menu">
-                        </div>
-                    </div>
-                </form>
-
-                <!-- SAUVEGARDER LE MENU -->
-                <form class="col-2" method="post" action="{{ path('save_menu') }}">
-                    <input type="hidden" name="id_menu" value="{{ id_menu }}">
-                    <input type="hidden" name="nb_jour" value="{{ nb_jour }}">
-                    <textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
-                    <button type="submit" id="save_menu" class="btn_day btn">
-                        <i class="bi bi-file-earmark-arrow-down-fill"></i>
-                        Sauvegarder le menu
-                    </button>
-                </form>
-
-                <!-- EXPORTER LE MENU PAR MAIL -->
-                <form class="col-2" method="post" action="#">
-                    <input type="hidden" name="ingredient" value="1">
-                    <button type="submit" class="col-12 btn_day btn">Envoi des ingrédients par mail</button>
-                </form>
+    {% if is_granted('ROLE_USER') %}
+        <div class="row mb-3">
+            <div class="form-group d-flex align-items-center col-4">
+                <select class="form-select w-50" name="select_nb_jour" id="select_nb_jour">
+                    {% for i in range(2,7) %}
+                        <option value="{{ i }}" {% if i is same as nb_jour %} selected {% endif %}>{{ i }} jours</option>
+                    {% endfor %}
+                </select>
             </div>
-        {% endif %}
-        <!-- <p class="msgsend">{{msg}}</p> -->
-    </div>
+
+            <a class="btn btn-outline-primary col-2" href="{{ path('generation_menu',{nb_jour: nb_jour}) }}">Générer un nouveau menu</a>
+
+            <!-- SAUVEGARDER LE MENU -->
+            <form class="col-4" method="post" action="{{ path('save_menu') }}">
+                <input type="hidden" id="id_menu" name="id_menu" value="{{ id_menu }}">
+                <input type="hidden" name="nb_jour" value="{{ nb_jour }}">
+                <textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
+                <button type="submit" id="save_menu" class="btn btn-outline-primary">
+                    <i class="bi bi-file-earmark-arrow-down-fill"></i>
+                    Sauvegarder le menu
+                </button>
+            </form>
+
+            <!-- EXPORTER LE MENU PAR MAIL -->
+            <form id="send_menu" name="send_menu" class="col-2" method="post" action="#">
+                <button type="submit" class="btn btn-outline-primary">Envoi des ingrédients par mail</button>
+            </form>
+        </div>
+        <hr class="dropdown-divider">
+    {% endif %}
+    <!-- <p class="msgsend">{{msg}}</p> -->
 
     <div class="row m-0">
         <div class="col-md-12 col-sm-12 col-lg-12">
