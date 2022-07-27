@@ -7,3 +7,8 @@
     {{ form_start(ingredientForm) }}
     {{ form_end(ingredientForm) }}
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('add_ingredient') }}
+{% endblock %}

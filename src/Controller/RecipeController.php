@@ -49,7 +49,6 @@ class RecipeController extends AbstractController
 
         $requete = $request->request->all();
         if ($request->isMethod('POST')) {
-           // $form->submit($request->request->get($form->getName()));
             if ($form->isSubmitted() && $form->isValid()) {
 
                 /** AJOUT DES INGREDIENTS A LA RECETTE **/
@@ -166,7 +165,7 @@ class RecipeController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function show_ingredients(Recipe $recipe, Request $request)
+    public function show_ingredients(Recipe $recipe, Request $request): Response
     {
         $ingredients = $recipe->getIngredients();
         $array_ingredients = [];
@@ -183,14 +182,14 @@ class RecipeController extends AbstractController
      * @Route("/handleSearch", name="handleSearch")
      * @param Request $request
      */
-    public function handleSearch(Request $request, RecipeRepository $repo)
+    public function handleSearch(Request $request, RecipeRepository $repo): Response
     {
         $query = $request->request->get('form')['query'];
         if($query) {
-            $articles = $repo->findArticlesByName($query);
+            $recettes = $repo->findArticlesByName($query);
         }
         return $this->render('new_recette/mySearch.html.twig', [
-            'articles' => $articles
+            'recettes' => $recettes
         ]);
     } 
 

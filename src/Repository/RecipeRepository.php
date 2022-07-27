@@ -56,14 +56,14 @@ class RecipeRepository extends ServiceEntityRepository
                 ->andWhere('r.id NOT IN (:notIn)')
                 ->setParameter('type', $type)
                 ->setParameter('notIn', $notIn)
-                ->orderBy('r.id', 'DESC')
+                ->orderBy('RAND()')
                 ->setMaxResults($max)
                 ->getQuery();
         } else {
             $qb = $this->createQueryBuilder('r')
                 ->where('r.type = :type')
                 ->setParameter('type', $type)
-                ->orderBy('r.id', 'DESC')
+                ->orderBy('RAND()')
                 ->setMaxResults($max)
                 ->getQuery();
         }
@@ -127,6 +127,30 @@ class RecipeRepository extends ServiceEntityRepository
             ->setParameter('query', "%" . $value . "%")
             // ->orderBy('c.id', 'ASC')
             // ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findBestRatedRecipesMadeByAUser($userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+            ->where('r.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('r2.rate', 'DESC')
+            ->setMaxResults(3)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findWorstRatedRecipesMadeByAUser($userId)
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+            ->where('r.user_id = :userId')
+            ->setParameter('userId', $userId)
+            ->orderBy('r2.rate', 'ASC')
+            ->setMaxResults(3)
             ->getQuery()
             ->getResult();
     }

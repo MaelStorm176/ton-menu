@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Ingredient;
+use App\Entity\Rating;
 use App\Entity\Recipe;
 use App\Entity\User;
 use App\Services\MarmitonManager;
@@ -29,6 +31,20 @@ class AdminController extends AbstractController
 
         return $this->render('admin/users/show_users.html.twig', [
             'users' => $users,
+        ]);
+    }
+
+    #[Route("/users/{id}", name: 'user_show')]
+    public function show_user(User $user): Response
+    {
+        $comments = $this->getDoctrine()->getRepository(Comment::class)->findBy(['user' => $user]);
+        $bestRecipes = $this->getDoctrine()->getRepository(Recipe::class)->findBestRatedRecipesMadeByAUser($user);
+        $worstRecipes = $this->getDoctrine()->getRepository(Recipe::class)->findWorstRatedRecipesMadeByAUser($user);
+        return $this->render('admin/users/show_user.html.twig', [
+            'user' => $user,
+            'bestRecipes' => $bestRecipes,
+            'worstRecipes' => $worstRecipes,
+            'comments' => $comments,
         ]);
     }
 
@@ -64,7 +80,7 @@ class AdminController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
         // do anything else you need here, like send an email
-        return $this->redirectToRoute('admin');
+        return $this->redirectToRoute('admin_index');
     }
 
     #[Route('/role/{id}', name: 'set_chief')]

@@ -1,76 +1,32 @@
-<div class="menu_unit rounded h-100">
-    <div class="card-header">
-        <h4 class="card-title text-center">
-            <i class="fas fa-chart-pie mr-1"></i>
-            {{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}
-        </h4>
-    </div>
+<!-- Gallery item -->
+<div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+    <div class="bg-white rounded shadow h-100">
+        <img src="{{ recette.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+        <div class="p-4">
+            <h5>
+                {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a>
+                {% else %}
+                <p class="text-dark">{{ recette.name }}</p>
+                {% endif %}
+            </h5>
 
-    {% if is_granted('ROLE_USER') %}
-        <div class="list_content d-flex flex-column justify-content-around">
-            <div id="entree_{{ index }}" class="text-center mb-3">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: entree.id, name: entree.name, img: entree.recipeImages} %}
-            </div>
-            <div id="plat_{{ index }}" class="text-center mb-3">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: plat.id, name: plat.name, img: plat.recipeImages} %}
-            </div>
-            <div id="dessert_{{ index }}" class="text-center">
-                {% include 'generation_menu/paragraph_menu.html.twig' with {id: dessert.id, name: dessert.name, img: dessert.recipeImages} %}
-            </div>
-        </div>
-    {% else %}
-        <div class="list_content d-flex flex-column justify-content-around">
-            <div id="entree_{{ index }}" class="text-center mb-3">
-                <p>{{entree.name}}</p>
-            </div>
-            <div id="plat_{{ index }}" class="text-center mb-3">
-                <p>{{plat.name}}</p>
-            </div>
-            <div id="dessert_{{ index }}" class="text-center">
-                <p>{{dessert.name}}</p>
-            </div>
-        </div>
-    {% endif %}
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-<div class="col-md-4">
-    <div class="card">
-        <div class="card-header d-flex justify-content-around">
-            <h4 class="card-title">{{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}</h4>
-            <button id="refresh_day_{{ index }}" class="btn btn-outline-primary mr-auto" data-day="{{ index }}">
-                <i class="fs-4 bi-arrow-clockwise"></i>
-            </button>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-12" id="entree_{{ index }}">
-                    <b>Entrée : </b>{{ entree.name }}
+            {% if is_granted('ROLE_USER') %}
+            <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
+                <!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
+                <div class="d-flex flex-row justify-content-center">
+                    {% for i in 1..5 %}
+                        {% if i <= recette.getAverageRating %}
+                            <i class="bi bi-star-fill" style="color: yellow"></i>
+                        {% else %}
+                            <i class="bi bi-star" style="color: yellow"></i>
+                        {% endif %}
+                    {% endfor %}
                 </div>
+                <div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">{{ recette.averageRating }}/5</div>
             </div>
-            <div class="row">
-                <div class="col-md-12" id="plat_{{ index }}">
-                    <b>Plat : </b>{{ plat.name }}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12" id="dessert_{{ index }}">
-                    <b>Dessert : </b>{{ dessert.name }}
-                </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </div>
--->
+<!-- End -->

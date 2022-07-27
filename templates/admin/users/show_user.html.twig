@@ -1,0 +1,210 @@
+{% extends 'admin/admin.html.twig' %}
+
+{% block content %}
+    <h3>Informations utilisateur</h3>
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img  class="rounded-circle mt-5 mb-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
+                <span class="font-weight-bold">{{ user.firstname }} {{ user.lastname }}</span>
+                <span class="text-black-50">{{ user.email }}</span>
+            </div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Informations</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="firstname">Prénom</label>
+                            <input type="text" class="form-control disabled" id="firstname" value="{{ user.firstname }}" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="lastname">Nom</label>
+                            <input type="text" class="form-control disabled" id="lastname" value="{{ user.lastname }}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <label for="email">Email</label>
+                        <input name="email" id="email" type="text" class="form-control disabled" value="{{ user.email }}" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right">Statistiques</h4>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="firstname">Nombre de recettes</label>
+                            <input type="text" class="form-control disabled" id="firstname" value="{{ user.recipes.count }}" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="lastname">Nombre de commentaires</label>
+                            <input type="text" class="form-control disabled" id="lastname" value="{{ comments|length }}" disabled>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="firstname">Meilleures recettes
+                            <small class="text-muted">(par note)</small>
+                            </label>
+                            <ul class="list-group">
+                                {% for recipe in bestRecipes %}
+                                    <li class="list-group-item">
+                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  <span class="fw-bold">{{ recipe.getAverageRating }}/5</span></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-sm-12">
+                        <div class="form-group">
+                            <label for="firstname">Pires recettes
+                                <small class="text-muted">(par note)</small>
+                            </label>
+                            <ul class="list-group">
+                                {% for recipe in worstRecipes %}
+                                    <li class="list-group-item">
+                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  <span class="fw-bold">{{ recipe.getAverageRating }}/5</span></a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if generated_menus is defined and generated_menus %}
+            <div class="col-md-4">
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Derniers menus sauvegardés</h4>
+                    </div>
+                    <div class="row mt-2">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th class="text-center">Généré le</th>
+                                <th class="text-center">Nb Jours</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for menu in generated_menus %}
+                                <tr>
+                                    <td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
+                                    <td class="text-center">{{ menu.nbJours }}</td>
+                                    <td class="text-center"><a href="{{ path('generation_menu', {'id': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    {% if "ROLE_CHIEF" in user.roles or "ROLE_ADMIN" in user.roles %}
+    <hr class="dropdown-divider mb-4"/>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Liste des recettes créées</h4>
+            <table id="recipesTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Type</th>
+                        <th>Créée le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for recipe in user.recipes %}
+                    <tr>
+                        <td>
+                            <span class="d-block text-truncate" style="max-width: 200px;">
+                                <a href="{{ path('recipe_show',{id: recipe.id}) }}" target="_blank"> {{ recipe.name }} </a>
+                            </span>
+                        </td>
+                        <td>{{ recipe.type }}</td>
+                        <td>{{ recipe.createdAt|date("d/m/Y H:i") }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <div class="col-md-6 col-sm-12 mt-sm-2">
+            <h4>Liste des ingrédients créés</h4>
+            <table id="ingredientsTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Créée le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for ingredient in user.ingredients %}
+                    <tr>
+                        <td>
+                            <span class="d-block text-truncate" style="max-width: 200px;">
+                                <a href="{{ path('ingredient_show',{id: ingredient.id}) }}" target="_blank"> {{ ingredient.name }} </a>
+                            </span>
+                        </td>
+                        <td>{{ ingredient.createdAt|date("d/m/Y H:i") }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    {% endif %}
+    <hr class="dropdown-divider mb-4"/>
+    <div class="row">
+        <!-- liste des commentaires -->
+        <div class="col-md-6 col-sm-12">
+            <h4>Liste des commentaires postés</h4>
+            <table id="commentsTable" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Commentaire</th>
+                        <th>Recette</th>
+                        <th>Créé le</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for comment in comments %}
+                    <tr>
+                        <td>
+                            <span class="d-block text-truncate" style="max-width: 200px;">
+                             {{ comment.content }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="d-block text-truncate" style="max-width: 200px;">
+                                <a href="{{ path('recipe_show',{id: comment.recette.id}) }}" target="_blank"> {{ comment.recette.name }} </a>
+                            </span>
+                        </td>
+                        <td>{{ comment.createdAt|date("d/m/Y H:i") }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_user') }}
+{% endblock %}

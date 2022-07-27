@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
-{% block title %}Hello NewrecetteController!{% endblock %}
+{% block title %}Recherche de recettes{% endblock %}
 
 {% block body %}
 {% if app.request.method == 'POST' %}
-    <div class="recipepage" id="recipepage">
-        {% if articles | length == 0 %}
+        {% if recettes | length == 0 %}
             <div class="recipe d-flex justify-content-between" id="recipe"> 
                 <h4 class="title">Résultats de votre recherche </h4>
                 <div class="btn-titlemenu">
@@ -26,30 +25,39 @@
             }}
             </div>
                <div class="row">
-                    {% for article in articles %}
+                    {% for recette in recettes %}
+                        <!-- Gallery item -->
                         <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
-                            <div class="bg-white rounded shadow-sm"><img src="{{ article.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+                            <div class="bg-white rounded shadow h-100">
+                                <img src="{{ recette.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
                                 <div class="p-4">
-                                    <h5> <a href="{{ path('recipe_show',{id: article.id}) }}" class="text-dark">{{ article.name }}</a> </h5>
-                                    {% for tag in article.recipeTags %}
-                                        <small class="text-muted">{{ tag.name }}</small>
-                                    {% endfor %}
-                                    <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-4">
-                                        <!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
-                                        <div class="d-flex flex-row-reverse justify-content-center">
-                                            {% for i in 1..5 %}
-                                                {% if i <= article.getAverageRating %}
-                                                    <i class="bi bi-star-fill"></i>
-                                                {% else %}
-                                                    <i class="bi bi-star"></i>
-                                                {% endif %}
-                                            {% endfor %}
+                                    <h5>
+                                        {% if is_granted('ROLE_USER') %}
+                                            <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a>
+                                        {% else %}
+                                            <p class="text-dark">{{ recette.name }}</p>
+                                        {% endif %}
+                                    </h5>
+
+                                    {% if is_granted('ROLE_USER') %}
+                                        <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
+                                            <!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
+                                            <div class="d-flex flex-row justify-content-center">
+                                                {% for i in 1..5 %}
+                                                    {% if i <= recette.getAverageRating %}
+                                                        <i class="bi bi-star-fill" style="color: yellow"></i>
+                                                    {% else %}
+                                                        <i class="bi bi-star" style="color: yellow"></i>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                            <div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">{{ recette.averageRating }}/5</div>
                                         </div>
-                                        <div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">Featured</div>
-                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
+                        <!-- End -->
                     {% endfor %}
               </div>
           {% endif %}

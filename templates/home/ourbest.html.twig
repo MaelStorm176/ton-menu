@@ -3,17 +3,19 @@
       <div class="container" data-aos="fade-up">
 
         <div class="section-title">
-          <h2>Nos Meilleurs recettes</h2>
+          <h2>Nos Meilleures recettes</h2>
           <p>Recettes du Moments</p>
         </div>
 
         <div class="row">
           {% for recipe in recipes %}
             <div class="col-lg-4">
-              <div class="box" data-aos="zoom-in" data-aos-delay="100">
-                <h4>{{recipe.name}}</h4> 
-                <img src="{{ recipe.recipeImages[0].url }}" alt="" class="img-fluid rounded">
-              </div>
+                <a href="{{ path('recipe_show',{id: recipe.id}) }}">
+                  <div class="box" data-aos="zoom-in" data-aos-delay="100">
+                    <h4>{{recipe.name}}</h4>
+                    <img src="{{ recipe.recipeImages[0].url }}" alt="recette" class="img-fluid rounded">
+                  </div>
+                </a>
             </div>
           {% endfor %}
         </div>

@@ -1,6 +1,6 @@
 <!-- Login -->
 
-<form class="login_content text-center d-flex flex-column" action="{{ path('login') }}" method="post">
+<form class="login_content d-flex flex-column" action="{{ path('login') }}" method="post">
   <div class="container-fluid login_form rounded">
     <div class="row d-flex justify-content-center align-items-center h-100">
       <div class="col-md-9 col-lg-6 col-xl-5">
@@ -13,14 +13,14 @@
 
           <!-- Email input -->
           <div class="form-outline mb-4">
-            <label class="form-label" for="username">Email address</label>
+            <label class="form-label" for="username">Email</label>
             <input type="email" class="form-control form-control-lg" placeholder="Enter a valid email address" id="username" name="_username" value="{{ last_username }}"/>
           </div>
 
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <label class="form-label" for="form3Example4">Password</label>
-            <input type="password" class="form-control form-control-lg" placeholder="Enter password" id="password" name="_password"/>
+            <label class="form-label" for="form3Example4">Mot de passe</label>
+            <input type="password" class="form-control form-control-lg" placeholder="Entrez un mot de passe (min: 8 car.)" id="password" name="_password"/>
           </div>
 
           <div class="d-flex justify-content-between align-items-center">
@@ -28,14 +28,14 @@
             <div class="form-check mb-0">
               <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3" />
               <label class="form-check-label" for="form2Example3">
-                Remember me
+                Se souvenir de moi
               </label>
             </div>
           </div>
           <div class="text-center text-lg-start mt-4 pt-2">
             {# If you want to control the URL the user is redirected to on success #}
             {# <input type="hidden" name="_target_path" value="/account"/>  #}
-            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
+            <button type="submit" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;">Connexion</button>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <p class="small fw-bold mt-2 pt-1 mb-0">Vous n'avez pas de compte ? 
             <a type="" href="/register">Se Créer un compte</a></p>
