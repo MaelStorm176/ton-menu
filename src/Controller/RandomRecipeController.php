@@ -386,7 +386,6 @@ class RandomRecipeController extends AbstractController
     public function menu(Request $request): Response
     {
         //Si l'utilisateur est connecté
-        if ($this->isGranted('ROLE_USER')) {
             $user = $this->getUser();
             $nb_jour = (int) $request->get('nb_jour');
 
@@ -476,8 +475,6 @@ class RandomRecipeController extends AbstractController
             }
             //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
             return $this->redirectToRoute('home');
-        }
-        throw new NotFoundHttpException('Not logged');
     }
 
     private function randomEntrees($nb_matin_soir = 1,$not_in = []){
