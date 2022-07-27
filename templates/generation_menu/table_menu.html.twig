@@ -48,56 +48,69 @@
         <!-- <p class="msgsend">{{msg}}</p> -->
     </div>
 
-    <div id="main_table">
-        <div class="row justify-content-center mt-3">
-            <div class="row justify-content-between align-items-center mb-3">
-                <button class="col-5 btn_day btn" id="btn-jour">
-                    <i class="bi bi-brightness-high"></i>
-                    Midi
-                </button>
-                <button class="col-5 btn_day btn" id="btn-nuit">
-                    <i class="bi bi-cloud-moon"></i>
-                    Soir
-                </button>
-            </div>
-            <div class="row">
-                <h1 id="test" class="text-center">Menu du Midi</h1>
+    <div class="row m-0">
+        <div class="col-md-12 col-sm-12 col-lg-12">
+            <div class="d-flex flex-row justify-content-center justify-content-around align-items-center">
+                {% for i in range(0,nb_jour-1) %}
+                    <p id="jour_{{ i }}" class="my-auto d-flex flex-column align-items-center btn btn-outline-primary {% if i is same as 0 %} active {% endif %} rounded shadow-sm" style="width: 150px">
+                        <span>{{ "now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris") }}</span>
+                        <span class="fw-bold">{{ "now"| date_modify("+" ~ i ~ " day") | date("d/m","Europe/Paris") }}</span>
+                    </p>
+                {% endfor %}
             </div>
         </div>
-        <div class="row w-100 mt-3">
-            <div class="col-md-12 col-sm-12 col-lg-12 d-flex flex-column">
+    </div>
 
-                <!-- JOUR -->
-                <div class="jour" id="jour">
-                    <div class="row justify-content-between">
-                        {% for i in range(0,nb_jour-1) %}
-                            <div class="col">
-                            {% include 'generation_menu/card_menu.html.twig' with {index: i+nb_jour, entree: entrees[i], plat: plats[i], dessert: desserts[i]} %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-lg-12" id="midi">
+            {% for i in range(0,nb_jour-1) %}
+                <div class="bg-light row {% if i is same as 0 %} d-block {% else %} d-none {% endif %}" id="show_jour_{{ i }}">
+                    <div id="carouselExampleControls_{{ i }}" class="carousel slide carousel-animation">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="row p-3 justify-content-center">
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: entrees[i]} %}
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: plats[i]} %}
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: desserts[i]} %}
+                                </div>
+                                <div class="carousel-caption d-none d-md-block position-static">
+                                    <h5>Midi</h5>
+                                </div>
                             </div>
-                        {% endfor %}
+                            <div class="carousel-item">
+                                <div class="row p-3 justify-content-center">
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: entrees[i+nb_jour]} %}
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: plats[i+nb_jour]} %}
+                                    {% include 'generation_menu/card_menu.html.twig' with {recette: desserts[i+nb_jour]} %}
+                                </div>
+                                <div class="carousel-caption d-none d-md-block position-static">
+                                    <h5>Soir</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleControls_{{ i }}" role="button" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleControls_{{ i }}" role="button" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
                     </div>
                 </div>
-
-                <!-- NUIT -->
-                <div class="nuit d-none" id="nuit">
-                    <div class="menu_content row">
-                        {% for i in range(0,nb_jour-1) %}
-                            <div class="col">
-                            {% include 'generation_menu/card_menu.html.twig' with {index: i+nb_jour, entree: entrees[i+nb_jour], plat: plats[i+nb_jour], dessert: desserts[i+nb_jour]} %}
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
+            {% endfor %}
             </div>
         </div>
     </div>
 </section>
 
+
 <script type="application/javascript">
   /**
    * @param {Boolean} isDay - Is day or night
    * @param {String} message - Title
-   */
+
   const menu_day = (isDay, message) => {
     const object = document.querySelector('#test');
     object.innerText = message;
@@ -119,5 +132,5 @@
   second.addEventListener('click', function() {
     menu_day(false, 'Menu du Soir');
   });
-
+   */
 </script>

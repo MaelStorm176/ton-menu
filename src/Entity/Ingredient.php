@@ -144,7 +144,12 @@ class Ingredient
 
     public function getImage(): ?string
     {
-        return $this->image;
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }else if (file_exists(__DIR__ . '/../../public/images/ingredients/' . $this->image)) {
+            return '/images/ingredients/' . $this->image;
+        }
+        return "";
     }
 
     public function setImage(?string $image): self

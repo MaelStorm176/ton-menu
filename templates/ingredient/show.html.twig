@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ingredient.name }}{% endblock %}
+
+{% block body %}
+
+{% if ingredient.image %}
+<img src="{{ asset('uploads/' ~ ingredient.image) }}" alt="{{ ingredient.name }}" class="img-fluid">
+{% endif %}
+
+{% endblock %}

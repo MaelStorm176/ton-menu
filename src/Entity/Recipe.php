@@ -252,10 +252,22 @@ class Recipe
             $sum += $rating->getRate();
         }
         if (count($ratings) > 0) {
-            return floatval($sum / count($ratings), 1);
+            return round(floatval($sum / count($ratings)), 1);
         } else {
             return null;
         }
+    }
+
+    public function getMaxRating(): ?float
+    {
+        $ratings = $this->getRatings();
+        $max = 0;
+        foreach ($ratings as $rating) {
+            if ($rating->getRate() > $max) {
+                $max = $rating->getRate();
+            }
+        }
+        return $max;
     }
 
     public function getNumberOfRating(): ?int
