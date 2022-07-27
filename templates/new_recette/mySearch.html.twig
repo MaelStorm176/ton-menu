@@ -3,11 +3,27 @@
 
 {% block body %}
 {% if app.request.method == 'POST' %}
-    <div>
         {% if recettes | length == 0 %}
-            <h4>Aucun résulat pour votre recherche.</h4>
+            <div class="recipe d-flex justify-content-between" id="recipe"> 
+                <h4 class="title">Résultats de votre recherche </h4>
+                <div class="btn-titlemenu">
+                    <a class="btn-menu animated fadeInUp" href="/recipe/all">Retour a la liste des recettes</a>
+                </div>
+           </div>
            {% else %}
-               <h3 class="mt-3">Vos résulats de recherche :</h3>
+           <div class="recipe d-flex justify-content-between" id="recipe"> 
+                <h4 class="title">Résultats de votre recherche </h4>
+                <div class="btn-titlemenu">
+                    <a class="btn-menu animated fadeInUp" href="/recipe/all">Retour a la liste des recettes</a>
+                </div>
+           </div>
+           <div class="recipe">
+            {{ 
+                render(
+                    controller('App\\Controller\\RecipeController::searchBar')
+                )
+            }}
+            </div>
                <div class="row">
                     {% for recette in recettes %}
                         <!-- Gallery item -->

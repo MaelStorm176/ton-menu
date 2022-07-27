@@ -222,31 +222,165 @@ padding-bottom: 6rem;
   }
 }
 
-///////////////RECIPE/////////////////
-.recipe_content{
-  margin: 3% 10%;
-  box-shadow: 15px 15px 15px rgb(26 188 156 / 90%);
-  border: 3px solid #00bf8a
+/*--------------------------------------------------------------
+# RecipePage
+--------------------------------------------------------------*/
+
+.recipepage {
+  padding: 5% 10%
 }
 
-.components_content {
-  text-align: left;
-  margin-left: 20%;
+#recipepage .title{
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  color: #cda45e;
+  padding-bottom: 20px;
 }
 
-.task_content {
-  text-align: left;
-  margin-left: 20%;
+
+
+
+/*--------------------------------------------------------------
+# Recipe
+--------------------------------------------------------------*/
+
+#recipe .btns {
+  margin-top: 30px;
 }
 
-.compo_title{
+#recipe .btn-titlemenu {
+ text-align: center;
+}
+
+#recipe .container {
+  margin: 3% 3%;
+}
+
+#recipe .solid {
+  border-top: 3px solid #cda45e;
+}
+
+#recipe .icon {
+  color: #cda45e;
+  padding-right: 5px;
+}
+
+#recipe .description_recipe{
+  font-style: italic;
+}
+
+#recipe .btn-menu, #recipe .btn-book {
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 12px 30px;
+  border-radius: 50px;
+  transition: 0.3s;
+  line-height: 1;
+  color: black;
+  border: 2px solid #cda45e;
+}
+#recipe .btn-menu:hover, #recipe .btn-book:hover {
+  background: #cda45e;
+  color: #fff;
+}
+#recipe .btn-book {
+  margin-left: 15px;
+}
+#recipe .play-btn {
+  width: 94px;
+  height: 94px;
+  background: radial-gradient(#cda45e 50%, rgba(205, 164, 94, 0.4) 52%);
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+#recipe .play-btn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-40%) translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 15px solid #fff;
+  z-index: 100;
+  transition: all 400ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+#recipe .play-btn::before {
+  content: "";
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+  -webkit-animation: pulsate-btn 2s;
+  animation: pulsate-btn 2s;
+  -webkit-animation-direction: forwards;
+  animation-direction: forwards;
+  -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  -webkit-animation-timing-function: steps;
+  animation-timing-function: steps;
+  opacity: 1;
+  border-radius: 50%;
+  border: 5px solid rgba(205, 164, 94, 0.7);
+  top: -15%;
+  left: -15%;
+  background: rgba(198, 16, 0, 0);
+}
+#recipe .play-btn:hover::after {
+  border-left: 15px solid #cda45e;
+  transform: scale(20);
+}
+#recipe .play-btn:hover::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-40%) translateY(-50%);
+  width: 0;
+  height: 0;
+  border: none;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 15px solid #fff;
+  z-index: 200;
+  -webkit-animation: none;
+  animation: none;
+  border-radius: 0;
+}
+
+#recipe .text{
+  font-size: 1.3rem;
+}
+
+#recipe .steps{
+  margin-left: 7%;
+}
+
+#recipe .title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 2.5rem;
   margin-bottom: 20px;
 }
 
-.comp_list{ 
-  margin-left: 5%;
+#recipe .comment{
+  margin: 0 5%;
 }
 
+#recipe .recipe-content {
+  text-align: center;
+  padding-left: 5%;
+}
 /////////////////LOGIN//////////////////
 
 .login_content{
@@ -270,12 +404,16 @@ padding-bottom: 6rem;
   background-color: #00bedd;
 }
 
+#filter .hr{
+  padding: 5%;
+}
+
 .menu_content{
   margin: 2% 3%;
 }
 
 .btn_day {
-  border: 3px solid #00bf8a;
+  border: 3px solid #cda45e;
 }
 
 .change_menubutton {
@@ -288,8 +426,8 @@ padding-bottom: 6rem;
 
 
 .menu_unit {
-  box-shadow: 5px 5px 5px rgba(26, 188, 156, 0.9);
-  border: 3px solid #00bf8a;
+  box-shadow: 5px 5px 5px #cda45e;
+  border: 3px solid #cda45e;
 }
 
 
@@ -303,7 +441,7 @@ padding-bottom: 6rem;
 }
 
 .img_menu {
-  background-color: rgba(26, 188, 156, 0.9);
+  background-color: #cda45e;
   padding: 1% 0;
 }
 

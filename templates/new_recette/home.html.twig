@@ -3,6 +3,9 @@
 {% block title %}Liste des recettes{% endblock %}
 
 {% block body %}
+
+<div class="recipepage" id="recipepage">
+        
             {{ 
                 render(
                     controller('App\\Controller\\RecipeController::searchBar')
@@ -17,7 +20,6 @@
                         <img src="{{ recette.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
                         <div class="p-4">
                             <h5> <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a> </h5>
-
                             <div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
                                 <!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
                                 <div class="d-flex flex-row justify-content-center">
