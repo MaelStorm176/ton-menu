@@ -3,89 +3,162 @@
 {% block title %}{{ recette.name }}{% endblock %}
 
 {% block body %}
+{% set difficulty = {
+    '0': 'Très facile',
+    '1': 'Facile',
+    '2': 'Moyen',
+    '3': 'Difficile'
+} %}
+    <style>
+        .comment-wrapper .panel-body {
+            max-height:650px;
+            overflow:auto;
+        }
+
+        .comment-wrapper .media-list .media img {
+            width:64px;
+            height:64px;
+            border:2px solid #e5e7e8;
+        }
+
+        .comment-wrapper .media-list .media {
+            border-bottom:1px dashed #efefef;
+            margin-bottom:25px;
+        }
+    </style>
 
 <section class="recipe" id="recipe">
     <div class="btn-titlemenu">
-        <a class="btn-menu animated fadeInUp " href="/generation-menu/7">Retour à ma génération de menu</a>
-        <a class="btn-menu animated fadeInUp " href="/recipe/all">Retour a la liste des recettes</a>
+        <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
+        <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
     </div>
 
     <div class="container d-flex justify-content-between">
-        <img class="w-50 recipe-img" src="{{ recette.recipeImages[0].url }} " alt="">
+        <img class="w-50 recipe-img rounded shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
         <div class="col recipe-content ">
             <p class="title">{{recette.name}}</p>
             <hr class="solid">
-            <div>
-                <p class="description_recipe">"Téma la description du bestio"</p>
-                </div>
+            <p class="description_recipe text-center">"Téma la description du bestio"</p>
             <hr class="solid">
             <div class="d-flex justify-content-between">
                 <div class="col">
-                    <p class="description"><i class="icon bi bi-clock"></i>Cuisiné en : 15 minutes</p>
+                    <p class="description">
+                        <i class="icon bi bi-clock"></i>
+                        Cuisiné en : <span class="fw-bold">{{ recette.preparationTime|date('H:i') }}</span>
+                    </p>
                 </div>
                 <div class="col">
-                    <p class="description"><i class="icon bi bi-bar-chart"></i>Difficulté : Simple</p>
+                    <p class="description">
+                        <i class="icon bi bi-check-circle"></i>
+                        Prêt en : <span class="fw-bold">{{ recette.totalTime|date('H:i') }}</span>
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-bar-chart"></i>
+                        Difficulté : <span class="fw-bold">{{ difficulty[recette.difficulty] }}</span>
+                    </p>
+                </div>
+            </div>
+            <hr class="solid">
+            <div class="row">
+                <div class="col-md-6">
+
+                    {% for quantitie in recette.recipeQuantities %}
+                        <p class="description">{{quantitie.content}}</p>
+                    {% endfor %}
+                </div>
+                <div class="col-md-6">
+                    <div class="grid row">
+                    {% for ingredient in recette.ingredients %}
+                        <div class="col-md-4 mb-2">
+                            <div class="rounded shadow-sm border">
+                                <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.ingredient.image }}">
+                                <p class="fw-bold text-center text-wrap">{{ingredient.ingredient.name}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
                 </div>
             </div>
             <hr class="solid">
             <div class="d-flex justify-content-between">
                 <div class="col">
-                    {% for ingredients in ingredient %}
-                        <p class="description">{{ingredients.ingredient.name}} : 20mg</p>
+                    <p class="description">
+                        <i class="icon bi bi-award"></i>
+                        Crée par : <span class="fw-bold">{{ recette.userId.firstName }} {{ recette.userId.lastName }}</span>
+                    </p>
+                </div>
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-calendar2-week"></i>
+                        Ajouté le : <span class="fw-bold">{{ recette.createdAt|date('d/m/Y') }}</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+        {% set i = 1 %}
+        {% for step in recette.recipeSteps %}
+            <div class="col-md-12">
+                <p class="description">
+                    <span class="fw-bold">Etape {{ i }} : </span> {{step.step}}
+                </p>
+            </div>
+            {% set i = i+1 %}
+        {% endfor %}
+        </div>
+        <hr class="solid">
+    </div>
+
+
+    <div class="container comment-wrapper">
+        <div class="panel panel-info">
+            <div class="panel-header">
+                <div class="rating">
+                    {% for i in (1..5) %}
+                        {% if rating != [] and rating.rate == i %}
+                            <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
+                        {% else %}
+                            <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
+                        {% endif %}
+                        <label for="rating_{{ i }}">☆</label>
                     {% endfor %}
                 </div>
             </div>
-            <hr class="solid">
-            <div class="d-flex justify-content-between">
-                <div class="col">
-                    <p class="description"><i class="icon bi bi-award"></i>Crée par : El Cheffé</p>
-                </div>
-                <div class="col">
-                    <p class="description"><i class="icon bi bi-calendar2-week"></i>Ajouté  le : 06/07/199</p>
-                </div>
+            <div class="panel-body">
+                {{ form_start(recetteForm) }}
+                    {{ form_row(recetteForm.content) }}
+                    {{ form_row(recetteForm.save) }}
+                {{ form_end(recetteForm) }}
+                <div class="clearfix"></div>
+                <hr>
+                <ul class="media-list">
+                    {% for comment in recette.comments %}
+                    <li class="media">
+                        <a href="#" class="left">
+                            <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="" class="img-circle">
+                        </a>
+                        <div class="media-body">
+                            <span class="text-muted right">
+                                <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
+                            </span>
+                            <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
+                            <p>
+                                {{comment.content}}
+                            </p>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
-
         </div>
     </div>
 
-    <div class="steps text">
-        {% for steps in step %}
-            <p>- {{steps.step}}</p>
-       {% endfor %}
-    </div>
-
-
-
-    <div class="comment">
-        <div class="rating">
-            {% for i in (1..5) %}
-                {% if rating != [] and rating.rate == i %}
-                    <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
-                {% else %}
-                    <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
-                {% endif %}
-                    <label for="rating_{{ i }}">☆</label>
-            {% endfor %}
-        </div>
-        <div>
-            {{ form_start(recetteForm) }}
-                {{ form_row(recetteForm.content) }}
-                {{ form_row(recetteForm.save) }}
-            {{ form_end(recetteForm) }}
-        </div>
-        <div>
-            <h2>Commentaires</h2>
-            {% for comments in comment %}
-                {% if comments.recette == recette %}
-                    <div>
-                        <p>{{comments.user.email}}</p>
-                        <p>{{comments.content}}</p>
-                        <p>{{comments.createdAt | date("d/m/Y h:i:s")}}</p>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
 </section>    
 {% endblock %}
 

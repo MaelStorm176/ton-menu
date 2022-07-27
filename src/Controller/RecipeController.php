@@ -120,15 +120,6 @@ class RecipeController extends AbstractController
             ['user' => $user, 'recette' => $recette],
         );
 
-        $repository2 = $this->getDoctrine()->getRepository(Comment::class);
-        $commentary = $repository2->findAll();
-
-        $repository3 = $this->getDoctrine()->getRepository(RecipeSteps::class);
-        $step = $repository3->findBy(['recipe' => $recette->getId()]);
-
-        $repository4 = $this->getDoctrine()->getRepository(RecipeIngredients::class);
-        $ingredient = $repository4->findBy(['recipe' => $recette->getId()]);
-
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -153,9 +144,6 @@ class RecipeController extends AbstractController
             'recetteForm' => $form->createView(),
             'recette' => $recette,
             'rating' => $rating,
-            'comment' => $commentary,
-            'step' => $step,
-            'ingredient' => $ingredient,
         ]);
     }
 
@@ -206,7 +194,7 @@ class RecipeController extends AbstractController
             ])
             ->add('rechercher', SubmitType::class, [
                 'attr' => [
-                    'class' => 'btn btn-primary '
+                    'class' => 'btn btn-secondary'
                 ]
             ])
             ->getForm();

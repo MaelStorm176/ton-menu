@@ -10,9 +10,11 @@ use App\Entity\RecipeIngredients;
 use App\Repository\RecipeRepository;
 use App\Entity\Ingredients;
 use App\Repository\SavedMenusRepository;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -379,6 +381,43 @@ class RandomRecipeController extends AbstractController
                 'success' => false,
                 'msg' => 'Erreur lors de la récupération des recettes'
             ));
+        }
+    }
+
+    #[Route('/ajax/generation-menu/send', name: 'send_to_mail', methods: ['POST'])]
+    public function send_to_mail(Request $request, MailerInterface $mailer): JsonResponse{
+        if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jours")) {
+            $menuJson = json_decode($request->get("menu"), true);
+            $user = $this->getUser();
+            if ($user->getEmail() == null) {
+                return new JsonResponse(["error" => "Vous n'avez pas d'email"]);
+            }
+            if (is_array($menuJson)) {
+                $menus = $menuJson;
+                $entrees = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["entrees"]]);
+                $plats = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["plats"]]);
+                $desserts = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["desserts"]]);
+                $nb_jours = $request->get("nb_jours");
+                $email = (new TemplatedEmail())
+                    ->from('tonmenu@mange.fr')
+                    ->to($user->getEmail())
+                    ->subject("Votre liste d'ingrédients pour votre menu de la semaine")
+                    ->htmlTemplate('ingredient/send.html.twig')
+                    ->context([
+                        'nb_jours' => $nb_jours,
+                        'entrees' => $entrees,
+                        'plats' => $plats,
+                        'desserts' => $desserts,
+                    ]);
+                try {
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                }
+            }
+            return new JsonResponse(["success" => true, "msg" => "Votre menu a été envoyé à votre adresse email"]);
+        }else{
+            return new JsonResponse(["error" => "Erreur"]);
         }
     }
 
