@@ -80,7 +80,7 @@
                             <ul class="list-group">
                                 {% for recipe in worstRecipes %}
                                     <li class="list-group-item">
-                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  {{ recipe.getAverageRating }}/5</a>
+                                        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}  <span class="fw-bold">{{ recipe.getAverageRating }}/5</span></a>
                                     </li>
                                 {% endfor %}
                             </ul>
