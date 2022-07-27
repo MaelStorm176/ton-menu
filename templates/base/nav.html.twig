@@ -35,7 +35,7 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
                     <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
-                    <li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>
+                    {% if is_granted('ROLE_CHIEF') %}<li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>{% endif %}
                     <li>
                         <hr class="dropdown-divider">
                     </li>
