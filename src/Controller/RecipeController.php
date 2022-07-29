@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\SearchRecipeType;
 use DateTime;
 use App\Entity\Rating;
 use App\Entity\Recipe;
@@ -35,6 +36,11 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 class RecipeController extends AbstractController
 {
 
+    private $recipeRepository;
+    public function __construct(RecipeRepository $recipeRepository)
+    {
+        $this->recipeRepository = $recipeRepository;
+    }
 
     /**
      * @Route("/recipe/add", name="recipe_add")
@@ -99,11 +105,22 @@ class RecipeController extends AbstractController
     /**
      * @Route("/recipe/all", name="recipe_all")
      */
-    public function show_all(RecipeRepository $recipeRepository, RatingRepository $ratingRepository, CommentRepository $commentRepository): Response
+    public function show_all(RecipeRepository $recipeRepository, Request $request): Response
     {
-        $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 12);
+        $form = $this->createForm(SearchRecipeType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
+            $data = $form->getData();
+            $recettes = $this->recipeRepository->findBySearch($data);
+        }
+        else
+            $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 12);
+
+
         return $this->render('new_recette/home.html.twig', [
             'recettes' => $recettes,
+            'form' => $form->createView()
         ]);
     }
     
@@ -150,10 +167,9 @@ class RecipeController extends AbstractController
     /**
      * @Route ("/recipe/{id}/ingredients", name="recipe_show_ingredients")
      * @param Recipe $recipe
-     * @param Request $request
      * @return Response
      */
-    public function show_ingredients(Recipe $recipe, Request $request): Response
+    public function show_ingredients(Recipe $recipe): Response
     {
         $ingredients = $recipe->getIngredients();
         $array_ingredients = [];
@@ -169,37 +185,15 @@ class RecipeController extends AbstractController
     /**
      * @Route("/handleSearch", name="handleSearch")
      * @param Request $request
+     * @param RecipeRepository $repo
+     * @return Response
      */
     public function handleSearch(Request $request, RecipeRepository $repo): Response
     {
-        $query = $request->request->get('form')['query'];
-        if($query) {
-            $recettes = $repo->findArticlesByName($query);
-        }
-        return $this->render('new_recette/mySearch.html.twig', [
-            'recettes' => $recettes
-        ]);
-    } 
 
-    public function searchBar()
-    {
-        $form = $this->createFormBuilder()
-            ->setAction($this->generateUrl('handleSearch'))
-            ->add('query', TextType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'form-control',
-                    'placeholder' => 'Entrez un mot-clé'
-                ]
-            ])
-            ->add('rechercher', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-secondary'
-                ]
-            ])
-            ->getForm();
-        return $this->render('new_recette/search.html.twig', [
-            'form' => $form->createView()
+
+        return $this->render('new_recette/home.html.twig', [
+            'recettes' => $recettes
         ]);
     }
 }

@@ -53,9 +53,9 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div class="row p-3 justify-content-center">
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: entrees[i]} %}
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: plats[i]} %}
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: desserts[i]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i]} %}
                                 </div>
                                 <div class="carousel-caption d-none d-md-block position-static">
                                     <h5>Midi</h5>
@@ -63,9 +63,9 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="row p-3 justify-content-center">
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: entrees[i+nb_jour]} %}
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: plats[i+nb_jour]} %}
-                                    {% include 'generation_menu/card_menu.html.twig' with {recette: desserts[i+nb_jour]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i+nb_jour]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i+nb_jour]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i+nb_jour]} %}
                                 </div>
                                 <div class="carousel-caption d-none d-md-block position-static">
                                     <h5>Soir</h5>
