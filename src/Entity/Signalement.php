@@ -42,6 +42,11 @@ class Signalement
      */
     private $update_at;
 
+    /**
+     * @ORM\Column(type="array")
+     */
+    private $user_signalement = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -103,6 +108,18 @@ class Signalement
     public function setUpdateAt(\DateTimeImmutable $update_at): self
     {
         $this->update_at = $update_at;
+
+        return $this;
+    }
+
+    public function getUserSignalement(): ?array
+    {
+        return $this->user_signalement;
+    }
+
+    public function setUserSignalement(array $user_signalement): self
+    {
+        $this->user_signalement = $user_signalement;
 
         return $this;
     }

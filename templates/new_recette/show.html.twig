@@ -110,7 +110,6 @@
         <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
     </div>
-
     <div class="container d-flex justify-content-between">
         <img class="w-50 recipe-img rounded shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
         <div class="col recipe-content ">
@@ -241,7 +240,7 @@
                                     </ul>
                                     <!-- menu -->
                                     <div id="myDropdown" class="dropdown-content">
-                                        <a href="#">Signaler le message</a>
+                                        <a href="{{ path('send_signalement', {'id': comment.id}) }}">Signaler le message</a>
                                         {% if comment.user.id == app.user.id or is_granted("ROLE_ADMIN") %}
                                             <a href="{{ path('delete_comment', {'id': comment.id}) }}">Supprimer le message</a>
                                         {% endif %}
