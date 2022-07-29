@@ -25,6 +25,84 @@
             border-bottom:1px dashed #efefef;
             margin-bottom:25px;
         }
+
+        .showLeft {
+            background-color: white !important;
+            border: 1px solid white !important;
+            text-shadow: white !important;
+            color: black !important;
+            padding: 10px;
+        }
+
+        .icons li {
+            background: none repeat scroll 0 0 black;
+            height: 7px;
+            width: 7px;
+            line-height: 0;
+            list-style: none outside none;
+            margin-right: 15px;
+            margin-top: 3px;
+            vertical-align: top;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .btn-left {
+            left: 0.4em;
+        }
+
+/*        .btn-right {
+            right: 0.4em;
+        }
+
+        .btn-left,
+        .btn-right {
+            position: absolute;
+            top: 0.24em;
+        }
+        .dropbtn {
+            background-color: #4caf50;
+            position: fixed;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }*/
+        .dropbtn:hover,
+        .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+        /*.dropdown {
+            position: absolute;
+            display: inline-block;
+            right: 0.4em;
+        }*/
+        .dropdown-content {
+            display: none;
+            position: relative;
+            margin-top: 60px;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
     </style>
 
 <section class="recipe" id="recipe">
@@ -32,7 +110,6 @@
         <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
     </div>
-
     <div class="container d-flex justify-content-between">
         <img class="w-50 recipe-img rounded shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
         <div class="col recipe-content ">
@@ -143,14 +220,33 @@
                         <a href="#" class="left">
                             <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="" class="img-circle">
                         </a>
-                        <div class="media-body">
-                            <span class="text-muted right">
-                                <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
-                            </span>
-                            <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
-                            <p>
-                                {{comment.content}}
-                            </p>
+                        <div class="media-body d-flex justify-content-between">
+                            <div>
+                                <span class="text-muted right">
+                                    <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
+                                </span>
+                                <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
+                                <p>
+                                    {{comment.content}}
+                                </p>
+                            </div>
+                            <div>
+                                <div class="dropdown">
+                                    <!-- three dots -->
+                                    <ul class="dropbtn icons btn-right showLeft" onclick="showDropdown()">
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                    </ul>
+                                    <!-- menu -->
+                                    <div id="myDropdown" class="dropdown-content">
+                                        <a href="{{ path('send_signalement', {'id': comment.id}) }}">Signaler le message</a>
+                                        {% if comment.user.id == app.user.id or is_granted("ROLE_ADMIN") %}
+                                            <a href="{{ path('delete_comment', {'id': comment.id}) }}">Supprimer le message</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </li>
                     {% endfor %}
@@ -160,6 +256,25 @@
     </div>
 
 </section>    
+<script>
+    function showDropdown() {
+    document.getElementById("myDropdown").classList.toggle("show");
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+    if (!event.target.matches(".dropbtn")) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+        var openDropdown = dropdowns[i];
+        if (openDropdown.classList.contains("show")) {
+            openDropdown.classList.remove("show");
+        }
+        }
+    }
+    };
+</script>
 {% endblock %}
 
 {% block javascripts %}

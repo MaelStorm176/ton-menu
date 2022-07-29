@@ -6,6 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Ingredient;
 use App\Entity\Rating;
 use App\Entity\Recipe;
+use App\Entity\Signalement;
 use App\Entity\User;
 use App\Services\MarmitonManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,5 +98,26 @@ class AdminController extends AbstractController
         // do anything else you need here, like send an email
     
         return $this->redirectToRoute('admin_users');
+    }
+
+    #[Route('/report', name: 'report_comment')]
+    public function reportComment(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Signalement::class);
+        $comments = $repository->findAll();
+
+        return $this->render('admin/comments/report_comment.html.twig', [
+            'comments' => $comments,
+        ]);
+    }
+
+    #[Route('/delete-comment/{id}', name: 'delete_report')]
+    public function deleteReport(Signalement $signalement): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($signalement->getMessage());
+        $entityManager->remove($signalement);
+        $entityManager->flush();
+        return $this->redirectToRoute('admin_report_comment');
     }
 }
