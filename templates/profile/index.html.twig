@@ -85,7 +85,7 @@
 									<tr>
 										<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
 										<td class="text-center">{{ menu.nbJours }}</td>
-										<td class="text-center"><a href="{{ path('generation_menu', {'id': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a></td>
+										<td class="text-center"><a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a></td>
 									</tr>
 								{% endfor %}
 								</tbody>

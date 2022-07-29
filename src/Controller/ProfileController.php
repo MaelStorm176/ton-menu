@@ -29,6 +29,7 @@ class ProfileController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $oldHash = $user->getPassword();
         $oldPicture = $user->getProfilePicture();
+        $manager = $this->getDoctrine()->getManager();
 
         $form = $this->createForm(ProfileType::class, $user);
         $form->handleRequest($request);
@@ -73,10 +74,11 @@ class ProfileController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $user->setProfilePicture($newFilename);
-                $this->getDoctrine()->getManager()->flush();
 
                 $this->addFlash('success', 'Your profile picture has been updated!');
             }
+            $manager->persist($user);
+            $manager->flush();
         }
 
         return $this->render('profile/index.html.twig', [
