@@ -3,35 +3,22 @@
 namespace App\Controller;
 
 use App\Form\SearchRecipeType;
-use DateTime;
 use App\Entity\Rating;
 use App\Entity\Recipe;
 use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\RecetteType;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use App\Entity\Ingredient;
 use App\Entity\RecipeTags;
-use App\Entity\RecipeSteps;
 use App\Entity\RecipeTagsLinks;
 use App\Entity\RecipeIngredients;
-use App\Repository\RatingRepository;
 use App\Repository\RecipeRepository;
-use App\Repository\CommentRepository;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\String\Slugger\SluggerInterface;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class RecipeController extends AbstractController
 {
@@ -103,20 +90,25 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/all", name="recipe_all")
+     * @Route("/recipe/all", name="recipe_all", methods={"GET"})
      */
-    public function show_all(RecipeRepository $recipeRepository, Request $request): Response
+    public function show_all(RecipeRepository $recipeRepository, Request $request, PaginatorInterface $paginator): Response
     {
-        $form = $this->createForm(SearchRecipeType::class);
+        $form = $this->createForm(SearchRecipeType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
-            $recettes = $this->recipeRepository->findBySearch($data);
+            $recettesResults = $this->recipeRepository->findBySearch($data);
         }
         else
-            $recettes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 12);
+            $recettesResults = $recipeRepository->findBy([], ['created_at' => 'DESC']);
 
+        $recettes = $paginator->paginate(
+            $recettesResults,
+            $request->query->getInt('page', 1),
+            6
+        );
 
         return $this->render('new_recette/home.html.twig', [
             'recettes' => $recettes,

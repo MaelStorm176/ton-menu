@@ -15,5 +15,8 @@
             {% endfor %}
 
         </div>
+        <div class="row offset-6">
+            {{ knp_pagination_render(recettes, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
+        </div>
     </div>
 {% endblock %}

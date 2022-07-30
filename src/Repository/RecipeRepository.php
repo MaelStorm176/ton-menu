@@ -226,13 +226,12 @@ class RecipeRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function findBySearch($filters, $page=1)
+    public function findBySearch($filters)
     {
         //Paginate the results of the query
         $qb = $this->getBySearchQueryBuilder($filters);
-        $qb->setFirstResult(($page - 1) * 10)->setMaxResults(10);
-        $query = $qb->getQuery();
-        return $query->getResult();
+        //$qb->setFirstResult(($page - 1) * 10)->setMaxResults(10);
+        return $qb->getQuery()->getResult();
     }
 
     // Find/search articles by title/content
