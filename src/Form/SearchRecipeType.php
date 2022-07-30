@@ -17,6 +17,10 @@ class SearchRecipeType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom de la recette',
+                'attr' => [
+                    'placeholder' => 'Nom de la recette',
+                    'class' => 'form-control'
+                ],
                 'required' => false
             ])
             ->add('type', ChoiceType::class, [
@@ -59,12 +63,12 @@ class SearchRecipeType extends AbstractType
             ->add('maxRate', IntegerType::class, [
                 'label' => 'Note max',
                 'required' => false,
-                'attr' => ['maxlength' => 1, 'min' => 0, 'max' => 5]
+                'attr' => ['maxlength' => 1, 'min' => 0, 'max' => 5, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Note maximale de la recette (0-5)'],
             ])
             ->add('minRate', IntegerType::class, [
                 'label' => 'Note min',
                 'required' => false,
-                'attr' => ['maxlength' => 1, 'min' => 0, 'max' => 5]
+                'attr' => ['maxlength' => 1, 'min' => 0, 'max' => 5, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Note minimale de la recette (0-5)']
             ])
             ->add('maxDuration', ChoiceType::class, [
                 'label' => 'Temps passé en cuisine',
@@ -79,7 +83,7 @@ class SearchRecipeType extends AbstractType
             ->add('number_of_persons', IntegerType::class, [
                 'label' => 'Nombre de personnes',
                 'required' => false,
-                'attr' => ['maxlength' => 4, 'min' => 1]
+                'attr' => ['maxlength' => 4, 'min' => 1, 'max' => 100, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Nombre de personnes']
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Rechercher',

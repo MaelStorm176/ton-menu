@@ -4,9 +4,57 @@
 
 {% block body %}
 
-<div class="recipepage" id="recipepage">
+    <div class="recipepage" id="recipepage">
         <div class="row">
-            {{ form(form) }}
+            {{ form_start(form) }}
+
+            {{ form_widget(form.name) }}
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header1',
+                    headerContent: form_label(form.type),
+                    bodyId: 'body1',
+                    bodyContent: form_widget(form.type)
+                } %}
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header2',
+                    headerContent: form_label(form.difficulty),
+                    bodyId: 'body2',
+                    bodyContent: form_widget(form.difficulty)
+                } %}
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header3',
+                    headerContent: form_label(form.budget),
+                    bodyId: 'body3',
+                    bodyContent: form_widget(form.budget)
+                } %}
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header4',
+                    headerContent: form_label(form.minRate) ~ '/' ~ form_label(form.maxRate),
+                    bodyId: 'body4',
+                    bodyContent: form_widget(form.minRate) ~ '<br>' ~ form_widget(form.maxRate)
+                } %}
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header5',
+                    headerContent: form_label(form.maxDuration),
+                    bodyId: 'body5',
+                    bodyContent: form_widget(form.maxDuration)
+                } %}
+                {% include "components/accordion_item.html.twig" with {
+                    accordionId: 'accordionFlushExample',
+                    headerId: 'header6',
+                    headerContent: form_label(form.number_of_persons),
+                    bodyId: 'body6',
+                    bodyContent: form_widget(form.number_of_persons)
+                } %}
+            </div>
+            {{ form_end(form) }}
+
         </div>
         <div class="row">
 
