@@ -75,6 +75,8 @@ build-db:
 
 migration:
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) make:migration --no-interaction
+migration-diff:
+	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:migrations:diff
 
 migrate:
 	@$(DOCKER_RUN) php $(SYMFONY_CONSOLE) doctrine:migrations:migrate --no-interaction

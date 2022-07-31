@@ -18,16 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route("/ingredient", name: "ingredient_")]
 class IngredientController extends AbstractController
 {
-    /*
-    #[Route('/ingredient', name: 'ingredient')]
-    public function index(): Response
-    {
-        return $this->render('ingredient/index.html.twig', [
-            'controller_name' => 'IngredientController',
-        ]);
-    }
-    */
-
     #[Route('/add', name: 'add')]
     public function add(Request $request): Response{
         $user = $this->get('security.token_storage')->getToken()->getUser();
@@ -91,10 +81,8 @@ class IngredientController extends AbstractController
 
     #[Route('/{id}', name: 'show')]
     public function show(Ingredient $ingredient): Response{
-        $recipesWhithIngredient = $this->getDoctrine()->getRepository(RecipeIngredients::class)->findBy(['ingredient' => $ingredient->getId()]);
         return $this->render('ingredient/show.html.twig', [
             'ingredient' => $ingredient,
-            'recipes' => $recipesWhithIngredient,
         ]);
     }
 

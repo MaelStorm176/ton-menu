@@ -228,9 +228,15 @@ class RecipeRepository extends ServiceEntityRepository
 
     public function findBySearch($filters)
     {
-        //Paginate the results of the query
-        $qb = $this->getBySearchQueryBuilder($filters);
-        //$qb->setFirstResult(($page - 1) * 10)->setMaxResults(10);
+        $qb = $this->getBySearchQueryBuilder($filters);;
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByIngredients($ingredients)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->where(':ingredients MEMBER OF r.ingredients')->setParameter('ingredients', $ingredients);
+        //dd($qb->getQuery()->getSQL(), $qb->getParameters());
         return $qb->getQuery()->getResult();
     }
 

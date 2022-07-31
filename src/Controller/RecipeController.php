@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Ingredient;
 use App\Entity\RecipeTags;
-use App\Entity\RecipeTagsLinks;
-use App\Entity\RecipeIngredients;
 use App\Repository\RecipeRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,10 +46,7 @@ class RecipeController extends AbstractController
                 if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
                     foreach ($requete["choosen_ingredient"] as $item) {
                         $ingredient = $ingredientRepository->find($item);
-                        $recipeIngredient = new RecipeIngredients();
-                        $recipeIngredient->setIngredient($ingredient);
-                        $recipeIngredient->setRecipe($recette);
-                        $manager->persist($recipeIngredient);
+                        $recette->addIngredient($ingredient);
                     }
                 }
 
@@ -157,35 +152,17 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route ("/recipe/{id}/ingredients", name="recipe_show_ingredients")
-     * @param Recipe $recipe
-     * @return Response
+     * @Route ("/recipe/{id}/ingredients", name="recipe_show_ingredients", methods={"POST"})
      */
-    public function show_ingredients(Recipe $recipe): Response
+    public function show_ingredients(Recipe $recipe, Request $request): Response
     {
-        $ingredients = $recipe->getIngredients();
-        $array_ingredients = [];
-        foreach ($ingredients as $ingredient) {
-            $array_ingredients[] = $ingredient->getIngredient();
+        if ($request->isXmlHttpRequest()){
+            $ingredients = $recipe->getIngredients();
+            return $this->render('admin/recipes/table_ingredients.html.twig', [
+                'ingredients' => $ingredients
+            ]);
+        }else{
+            return new Response('This is not ajax!', 400);
         }
-
-        return $this->render('admin/recipes/table_ingredients.html.twig', [
-            'ingredients' => $array_ingredients
-        ]);
-    }
-
-    /**
-     * @Route("/handleSearch", name="handleSearch")
-     * @param Request $request
-     * @param RecipeRepository $repo
-     * @return Response
-     */
-    public function handleSearch(Request $request, RecipeRepository $repo): Response
-    {
-
-
-        return $this->render('new_recette/home.html.twig', [
-            'recettes' => $recettes
-        ]);
     }
 }
