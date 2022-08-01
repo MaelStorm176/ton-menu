@@ -235,8 +235,13 @@ class RecipeRepository extends ServiceEntityRepository
     public function findByIngredients($ingredients)
     {
         $qb = $this->createQueryBuilder('r');
-        $qb->where(':ingredients MEMBER OF r.ingredients')->setParameter('ingredients', $ingredients);
-        //dd($qb->getQuery()->getSQL(), $qb->getParameters());
+        $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
+            ->groupBy('r.id')
+            ->having('COUNT(i.id) = :count')
+            ->setParameters([
+                'ingredients' => $ingredients,
+                'count' => count($ingredients)
+            ]);
         return $qb->getQuery()->getResult();
     }
 

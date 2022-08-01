@@ -110,7 +110,6 @@ class RecipeController extends AbstractController
             'form' => $form->createView()
         ]);
     }
-    
 
     /**
      * @Route("/recipe/{id}", name="recipe_show")
