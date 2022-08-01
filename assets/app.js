@@ -12,14 +12,14 @@ import '@popperjs/core';
 
 // start the Stimulus application
 //import './bootstrap';
-
+import * as $ from 'jquery';
 import 'bootstrap';
 import 'datatables.net';
 import 'datatables.net-bs5';
 import 'datatables.net-responsive-bs5';
 
 //import $ from 'jquery';
-const $ = require('jquery');
+//const $ = require('jquery');
 window.bootstrap = require("bootstrap")
 
 //Définition des paramètres par défaut de datatable

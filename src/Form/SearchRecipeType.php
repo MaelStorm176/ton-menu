@@ -19,7 +19,6 @@ class SearchRecipeType extends AbstractType
                 'label' => 'Nom de la recette',
                 'attr' => [
                     'placeholder' => 'Nom de la recette',
-                    'class' => 'form-control'
                 ],
                 'required' => false
             ])
