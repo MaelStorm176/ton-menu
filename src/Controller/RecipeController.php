@@ -179,7 +179,7 @@ class RecipeController extends AbstractController
         return $this->render('new_recette/mySearch.html.twig', [
             'recettes' => $recettes
         ]);
-    } 
+    }
 
     public function searchBar()
     {

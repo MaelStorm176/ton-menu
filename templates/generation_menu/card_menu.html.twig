@@ -5,9 +5,14 @@
         <div class="p-4">
             <h5>
                 {% if is_granted('ROLE_USER') %}
-                <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a>
+                        <div>
+                            <a href="#"><i class="bi bi-arrow-clockwise"></i></a>
+                        </div>
+                    </div>
                 {% else %}
-                <p class="text-dark">{{ recette.name }}</p>
+                    <p class="text-dark">{{ recette.name }}</p>
                 {% endif %}
             </h5>
 

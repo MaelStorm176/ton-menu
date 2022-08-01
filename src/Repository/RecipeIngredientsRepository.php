@@ -47,4 +47,19 @@ class RecipeIngredientsRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findRecipeByIngredientArray($ingredientArray)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->where('r.ingredient IN (:ingredientArray)')
+            ->setParameter('ingredientArray', $ingredientArray)
+            ->orderBy('RAND()')
+            //having
+            ->groupBy('r.recipe')
+            ->having('COUNT(r.recipe) > 2')
+            ->setMaxResults(3)
+            ->getQuery();
+
+        return $qb->getResult();
+    }
 }

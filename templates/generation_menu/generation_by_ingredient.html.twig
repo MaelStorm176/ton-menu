@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Personnalisation d'une recette{% endblock %}
+
+{% block body %}
+	<div class="col-md-6">
+		<h3>Liste des ingrédients</h3>
+		<table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
+			<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Choisir</th>
+				</tr>
+			</thead>
+			<tbody>
+				<form method="post" action="{{ path('generation_by_ingredient') }}">
+					{% for ingredient in ingredients %}
+						<tr>
+							<td>{{ ingredient.name }}</td>
+							<td class="text-center">
+								<input type="checkbox" name="choosen_ingredient[]" value="{{ ingredient.id }}"/>
+							</td>
+						</tr>
+					{% endfor %}
+					<input type="submit" class="btn btn-primary" value="Ajouter"/>
+				</form>
+			</tbody>
+		</table>
+	</div>
+    <script>
+          $("#ingredientsTable").DataTable(dataTableOptions);
+    </script>
+{% endblock %}
