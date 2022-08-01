@@ -4,8 +4,15 @@
 
 {% block body %}
 
-{% if ingredient.image %}
-<img src="{{ asset('uploads/' ~ ingredient.image) }}" alt="{{ ingredient.name }}" class="img-fluid">
-{% endif %}
+    {% if ingredient.image %}
+    <img src="{{ ingredient.image }}" alt="{{ ingredient.name }}" class="img-fluid">
+    {% endif %}
+
+    <h1>{{ ingredient.name }}</h1>
+    {% for recipe in ingredient.recipes %}
+    <p>
+        <a href="{{ path('recipe_show', {'id': recipe.id}) }}">{{ recipe.name }}</a>
+    </p>
+    {% endfor %}
 
 {% endblock %}

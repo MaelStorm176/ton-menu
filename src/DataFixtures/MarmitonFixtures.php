@@ -5,7 +5,6 @@ namespace App\DataFixtures;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Entity\RecipeImages;
-use App\Entity\RecipeIngredients;
 use App\Entity\RecipeQuantities;
 use App\Entity\RecipeSteps;
 use App\Entity\RecipeTags;
@@ -46,9 +45,6 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
         for ($i=0;$i<3;$i++){
             foreach ($json_a[$i] as $recipe_json) {
                 /**** RECIPE ****/
-                //$total_time = intdiv($recipe_json["totalTime"], 60).':'. ($recipe_json["totalTime"] % 60);
-                //$preparation_time = intdiv($recipe_json["prepTime"], 60).':'. ($recipe_json["prepTime"] % 60);
-
                 $recipe = new Recipe();
                 $recipe
                     ->setUserId($user_entity)
@@ -117,14 +113,13 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                             ->setPrimaryType("marmiton")
                             ->setSecondaryType("marmiton")
                             ->setCreatedAt(new \DateTimeImmutable());
+                        $ingredient->addRecipe($recipe);
                         $manager->persist($ingredient);
                         $ingredient_name_list[$ingredient_name] = $ingredient;
                     }
-                    //On créer le lien ingrédient → recette
-                    $recipe_ingredient = new RecipeIngredients();
-                    $recipe_ingredient->setRecipe($recipe);
-                    $recipe_ingredient->setIngredient($ingredient_name_list[$ingredient_name]);
-                    $manager->persist($recipe_ingredient);
+                    else{
+                        $ingredient_name_list[$ingredient_name]->addRecipe($recipe);
+                    }
                 }
                 /******************************************************/
 

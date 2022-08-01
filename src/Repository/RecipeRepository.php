@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -153,6 +154,95 @@ class RecipeRepository extends ServiceEntityRepository
             ->setMaxResults(3)
             ->getQuery()
             ->getResult();
+    }
+
+    public function getBySearchQueryBuilder($filters)
+    {
+        $qb = $this->createQueryBuilder('r');
+        if (isset($filters['type']) && !empty($filters['type'])) {
+            $qb->andWhere('r.type IN (:type)')->setParameter('type', $filters['type']);
+        }
+        if (isset($filters['name'])) {
+            $qb->andWhere('r.name like :name')->setParameter('name', "%" . $filters['name'] . "%");
+        }
+        if (isset($filters['difficulty']) && !empty($filters['difficulty'])) {
+            $qb->andWhere('r.difficulty IN (:difficulty)')->setParameter('difficulty', $filters['difficulty']);
+        }
+        if (isset($filters['ingredients']) && !empty($filters['ingredients'])) {
+            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id = :ingredients')
+                ->setParameter('ingredients', $filters['ingredients']);
+        }
+        if (isset($filters['tags']) && !empty($filters['tags'])) {
+            $qb->innerJoin('r.tags', 't', 'WITH', 't.id = :tags')
+                ->setParameter('tags', $filters['tags']);
+        }
+        if (isset($filters['user'])) {
+            $qb->andWhere('r.user_id = :user')->setParameter('user', $filters['user']);
+        }
+        if (isset($filters['minRate'])) {
+            $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+                ->andWhere('r2.rate >= :minRate')
+                ->setParameter('minRate', $filters['minRate']);
+        }
+        if (isset($filters['maxRate'])) {
+            $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
+                ->andWhere('r2.rate <= :maxRate')
+                ->setParameter('maxRate', $filters['maxRate']);
+        }
+        if (isset($filters['maxDuration'])){
+            switch ($filters['maxDuration']){
+                case 1:
+                    $qb->andWhere('r.preparation_time <= :maxDuration')->setParameter('maxDuration', new \DateTimeImmutable("01:00:00"));
+                    break;
+                case 2:
+                    $qb->andWhere('r.preparation_time BETWEEN :maxDuration1 AND :maxDuration2')
+                        ->setParameter('maxDuration1', new \DateTimeImmutable("01:00:00"))
+                        ->setParameter('maxDuration2', new \DateTimeImmutable("02:00:00"));
+                    break;
+                case 3:
+                    $qb->andWhere('r.preparation_time <= :maxDuration')->setParameter('maxDuration', new \DateTimeImmutable("00:30:00"));
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (isset($filters['budget']) && !empty($filters['budget'])) {
+            $qb->andWhere('r.budget IN (:budget)')->setParameter('budget', $filters['budget']);
+        }
+        if (isset($filters['number_of_persons']) && !empty($filters['number_of_persons'])) {
+            $qb->andWhere('r.number_of_persons = :number_of_persons')->setParameter('number_of_persons', $filters['number_of_persons']);
+        }
+        if (isset($filters['orderBy'])) {
+            $qb->orderBy('r.' . $filters['orderBy'], 'ASC');
+        }else{
+            $qb->orderBy('r.created_at', 'DESC')
+                ->addOrderBy('r.name', 'ASC');
+        }
+        if (isset($filters['limit'])) {
+            $qb->setMaxResults($filters['limit']);
+        }
+        //dd($qb->getQuery()->getDQL(), $qb->getParameters());
+
+        return $qb;
+    }
+
+    public function findBySearch($filters)
+    {
+        $qb = $this->getBySearchQueryBuilder($filters);;
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByIngredients($ingredients)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
+            ->groupBy('r.id')
+            ->having('COUNT(i.id) = :count')
+            ->setParameters([
+                'ingredients' => $ingredients,
+                'count' => count($ingredients)
+            ]);
+        return $qb->getQuery()->getResult();
     }
 
     // Find/search articles by title/content

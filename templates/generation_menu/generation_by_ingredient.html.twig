@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Personnalisation d'une recette{% endblock %}
+{% block title %}Personnalisation d'une recette
+{% endblock %}
 
 {% block body %}
 	<div class="col-md-6">
@@ -27,7 +28,43 @@
 			</tbody>
 		</table>
 	</div>
-    <script>
-          $("#ingredientsTable").DataTable(dataTableOptions);
-    </script>
+	<div class="col-md-6">
+		{% if myRecipes %}
+			{% for myRecipe in myRecipes %}
+				<div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+					<div class="bg-white rounded shadow-sm h-100">
+						<img src="{{ myRecipe.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+						<div class="p-4">
+							<h5 class="text-truncate">
+								<a href="{{ path('recipe_show',{id: myRecipe.id}) }}" class="text-dark ">{{ myRecipe.name }}</a>
+							</h5>
+							<div
+								class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
+								<!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
+								<div class="d-flex flex-row justify-content-center">
+									{% for i in 1..5 %}
+										{% if i <= myRecipe.getAverageRating %}
+											<i class="bi bi-star-fill" style="color: yellow"></i>
+										{% else %}
+											<i class="bi bi-star" style="color: yellow"></i>
+										{% endif %}
+									{% endfor %}
+								</div>
+								<div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">
+									{% if myRecipe.averageRating %}
+										{{ myRecipe.averageRating }}/5
+									{% else %}
+										Aucune note
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		{% endif %}
+	</div>
+	<script>
+		$("#ingredientsTable").DataTable(dataTableOptions);
+	</script>
 {% endblock %}

@@ -16,6 +16,7 @@
         "doctrine/orm": "^2.10",
         "fabpot/goutte": "^4.0",
         "fakerphp/faker": "^1.20",
+        "knplabs/knp-paginator-bundle": "^5.8",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sensio/framework-extra-bundle": "^6.2",
         "symfony/apache-pack": "^1.0",

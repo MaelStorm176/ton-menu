@@ -31,4 +31,5 @@ yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 marmiton_results.json
+package-lock.json
 /datavolume/

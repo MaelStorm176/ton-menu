@@ -536,14 +536,16 @@ class RandomRecipeController extends AbstractController
         if ($request->isMethod('POST')) {
             /** AJOUT DES INGREDIENTS A LA RECETTE **/
             if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
-                $myRecipe = $this->getDoctrine()->getRepository(RecipeIngredients::class)->findRecipeByIngredientArray($requete["choosen_ingredient"]);
-                foreach ($myRecipe as $r) {
-                    var_dump($r->getRecipe()->getId());
-                }
+                $myRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($requete["choosen_ingredient"]);
+                return $this->render('generation_menu/generation_by_ingredient.html.twig', [
+                    'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+                    'myRecipes' => $myRecipe,
+                ]);
             }
         }
         return $this->render('generation_menu/generation_by_ingredient.html.twig', [
             'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+            'myRecipes' => null,
         ]);
     }
 
