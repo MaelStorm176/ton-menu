@@ -17,9 +17,7 @@ import 'bootstrap';
 import 'datatables.net';
 import 'datatables.net-bs5';
 import 'datatables.net-responsive-bs5';
-
-//import $ from 'jquery';
-//const $ = require('jquery');
+import 'select2';
 window.bootstrap = require("bootstrap")
 
 //Définition des paramètres par défaut de datatable

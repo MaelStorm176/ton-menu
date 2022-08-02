@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use Doctrine\DBAL\Types\TimeType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -83,6 +85,14 @@ class SearchRecipeType extends AbstractType
                 'label' => 'Nombre de personnes',
                 'required' => false,
                 'attr' => ['maxlength' => 4, 'min' => 1, 'max' => 100, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Nombre de personnes']
+            ])
+            ->add('tags', EntityType::class, [
+                'label' => 'Tags',
+                'required' => false,
+                'class' => 'App\Entity\RecipeTags',
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Rechercher',

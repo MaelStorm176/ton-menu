@@ -22,6 +22,13 @@
                                 } %}
                                 {% include "components/accordion_item.html.twig" with {
                                     accordionId: 'accordionFlushExample',
+                                    headerId: 'headerTags',
+                                    headerContent: form_label(form.tags),
+                                    bodyId: 'bodyTags',
+                                    bodyContent: form_widget(form.tags)
+                                } %}
+                                {% include "components/accordion_item.html.twig" with {
+                                    accordionId: 'accordionFlushExample',
                                     headerId: 'header2',
                                     headerContent: form_label(form.difficulty),
                                     bodyId: 'body2',
@@ -67,13 +74,12 @@
             {{ form_end(form) }}
         </div>
         <div class="row">
-
             {% for recette in recettes %}
                 {% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
             {% endfor %}
-
         </div>
-        <div class="row offset-6">
+
+        <div class="row offset-4">
             {{ knp_pagination_render(recettes, '@KnpPaginator/Pagination/bootstrap_v5_pagination.html.twig') }}
         </div>
     </div>
