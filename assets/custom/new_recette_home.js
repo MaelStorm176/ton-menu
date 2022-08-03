@@ -1,14 +1,18 @@
 $(document).ready(function() {
-  $('.input-group-prepend').on('click', 'button[data-bs-toggle="collapse"]', function (event) {
-    $($(this).attr('data-bs-target')).show();
-    event.stopPropagation();
+
+  $(".dropdown-toggle").on("click", function() {
+    const dropdown = $("#cascade");
+    dropdown.is(":visible") ? dropdown.hide() : dropdown.show();
   });
 
   $('#search_recipe_tags').select2({
     placeholder: "Sélectionner un ou plusieurs tags",
     allowClear: true,
     multiple: true,
-    theme: "classic"
+    theme: "classic",
+    closeOnSelect: true,
+    width: "100%"
+
     /*
     ajax: {
       url: '/api/tags',
@@ -21,5 +25,14 @@ $(document).ready(function() {
         };
       }
     }*/
+  });
+
+  $('#search_recipe_ingredients').select2({
+    placeholder: "Sélectionner un ou plusieurs ingrédients",
+    allowClear: true,
+    multiple: true,
+    theme: "classic",
+    closeOnSelect: true,
+    width: "100%"
   });
 });

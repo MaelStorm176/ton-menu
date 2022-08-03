@@ -90,6 +90,16 @@ class SearchRecipeType extends AbstractType
                 'label' => 'Tags',
                 'required' => false,
                 'class' => 'App\Entity\RecipeTags',
+                'attr' => ['class' => 'form-control w-100'],
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
+            ])
+            ->add('ingredients', EntityType::class, [
+                'label' => 'Ingredients',
+                'required' => false,
+                'class' => 'App\Entity\Ingredient',
+                'attr' => ['class' => 'form-control w-100'],
                 'choice_label' => 'name',
                 'multiple' => true,
                 'expanded' => false,

@@ -168,13 +168,20 @@ class RecipeRepository extends ServiceEntityRepository
         if (isset($filters['difficulty']) && !empty($filters['difficulty'])) {
             $qb->andWhere('r.difficulty IN (:difficulty)')->setParameter('difficulty', $filters['difficulty']);
         }
-        if (isset($filters['ingredients']) && !empty($filters['ingredients'])) {
-            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id = :ingredients')
-                ->setParameter('ingredients', $filters['ingredients']);
+        if (isset($filters['ingredients']) && !$filters['ingredients']->isEmpty()) {
+            $qb->innerJoin('r.recipeTags', 'i', 'WITH', 'i.id IN (:ingredients)')
+                ->groupBy('r.id')
+                ->having('COUNT(i.id) = :count')
+                ->setParameter('ingredients', $filters['ingredients'])
+                ->setParameter('count', count($filters['ingredients']));
         }
-        if (isset($filters['tags']) && !empty($filters['tags'])) {
-            $qb->innerJoin('r.tags', 't', 'WITH', 't.id = :tags')
-                ->setParameter('tags', $filters['tags']);
+
+        if (isset($filters['tags']) && !$filters['tags']->isEmpty()) {
+            $qb->innerJoin('r.recipeTags', 't', 'WITH', 't.id IN (:tags)')
+                ->groupBy('r.id')
+                ->having('COUNT(t.id) = :count')
+                ->setParameter('tags', $filters['tags'])
+                ->setParameter('count', count($filters['tags']));
         }
         if (isset($filters['user'])) {
             $qb->andWhere('r.user_id = :user')->setParameter('user', $filters['user']);

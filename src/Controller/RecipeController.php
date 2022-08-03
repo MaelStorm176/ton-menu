@@ -106,6 +106,7 @@ class RecipeController extends AbstractController
         );
 
         return $this->render('new_recette/home.html.twig', [
+            'countRecettes' => count($recettesResults),
             'recettes' => $recettes,
             'form' => $form->createView()
         ]);
