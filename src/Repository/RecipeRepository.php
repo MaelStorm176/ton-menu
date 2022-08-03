@@ -186,15 +186,17 @@ class RecipeRepository extends ServiceEntityRepository
         if (isset($filters['user'])) {
             $qb->andWhere('r.user_id = :user')->setParameter('user', $filters['user']);
         }
-        if (isset($filters['minRate'])) {
+        if (isset($filters['minRate']) || isset($filters['maxRate'])) {
             $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
-                ->andWhere('r2.rate >= :minRate')
-                ->setParameter('minRate', $filters['minRate']);
-        }
-        if (isset($filters['maxRate'])) {
-            $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
-                ->andWhere('r2.rate <= :maxRate')
-                ->setParameter('maxRate', $filters['maxRate']);
+                ->groupBy('r.id');
+            if (isset($filters['minRate'])) {
+                $qb->having('AVG(r2.rate) >= :minRate');
+                $qb->setParameter('minRate', $filters['minRate']);
+            }
+            if (isset($filters['maxRate'])) {
+                $qb->andHaving('AVG(r2.rate) <= :maxRate');
+                $qb->setParameter('maxRate', $filters['maxRate']);
+            }
         }
         if (isset($filters['maxDuration'])){
             switch ($filters['maxDuration']){
@@ -235,7 +237,7 @@ class RecipeRepository extends ServiceEntityRepository
 
     public function findBySearch($filters)
     {
-        $qb = $this->getBySearchQueryBuilder($filters);;
+        $qb = $this->getBySearchQueryBuilder($filters);
         return $qb->getQuery()->getResult();
     }
 
