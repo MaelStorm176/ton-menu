@@ -4,10 +4,10 @@
 
 {% block body %}
 {% set difficulty = {
-    '0': 'Très facile',
-    '1': 'Facile',
-    '2': 'Moyen',
-    '3': 'Difficile'
+    '1': 'Très facile',
+    '2': 'Facile',
+    '3': 'Moyen',
+    '4': 'Difficile'
 } %}
     <style>
         .comment-wrapper .panel-body {
@@ -140,7 +140,6 @@
             <hr class="solid">
             <div class="row">
                 <div class="col-md-6">
-
                     {% for quantitie in recette.recipeQuantities %}
                         <p class="description">{{quantitie.content}}</p>
                     {% endfor %}
@@ -150,8 +149,8 @@
                     {% for ingredient in recette.ingredients %}
                         <div class="col-md-4 mb-2">
                             <div class="rounded shadow-sm border">
-                                <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.ingredient.image }}">
-                                <p class="fw-bold text-center text-wrap">{{ingredient.ingredient.name}}</p>
+                                <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
+                                <p class="fw-bold text-center text-wrap">{{ingredient.name}}</p>
                             </div>
                         </div>
                     {% endfor %}

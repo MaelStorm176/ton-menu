@@ -46,7 +46,8 @@
         "jquery.ui.widget": "^1.10.3",
         "marmiton-api": "^2.3.0",
         "node-sass": "^7.0.1",
-        "postcss-loader": "^6.2.1"
+        "postcss-loader": "^6.2.1",
+        "select2": "^4.1.0-rc.0"
     },
     "repository": {
         "type": "git",

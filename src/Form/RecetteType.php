@@ -64,7 +64,7 @@ class RecetteType extends AbstractType
                     '-- Selectionnez un budget --' => null,
                     'Cheap' => 1,
                     'Moyen' => 2,
-                    'Chère' => 4,
+                    'Chère' => 3,
                 ],
             ])
             ->add('preparationTime', TimeType::class,[

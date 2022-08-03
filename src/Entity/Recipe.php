@@ -81,11 +81,6 @@ class Recipe
     private $recipeSteps;
 
     /**
-     * @ORM\OneToMany(targetEntity=RecipeIngredients::class, mappedBy="recipe", orphanRemoval=true)
-     */
-    private $ingredients;
-
-    /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
      */
     private $comments;
@@ -109,16 +104,21 @@ class Recipe
      * @ORM\OneToMany(targetEntity=RecipeQuantities::class, mappedBy="recipe", orphanRemoval=true)
      */
     private $recipeQuantities;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Ingredient::class, inversedBy="recipes")
+     */
+    private $ingredients;
   
     public function __construct()
     {
         $this->recipeSteps = new ArrayCollection();
-        $this->ingredients = new ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->recipeImages = new ArrayCollection();
         $this->recipeTags = new ArrayCollection();
         $this->recipeQuantities = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -376,36 +376,6 @@ class Recipe
         return $this;
     }
 
-    /**
-     * @return Collection|RecipeIngredients[]
-     */
-    public function getIngredients(): Collection
-    {
-        return $this->ingredients;
-    }
-
-    public function addIngredient(RecipeIngredients $ingredient): self
-    {
-        if (!$this->ingredients->contains($ingredient)) {
-            $this->ingredients[] = $ingredient;
-            $ingredient->setRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIngredient(RecipeIngredients $ingredient): self
-    {
-        if ($this->ingredients->removeElement($ingredient)) {
-            // set the owning side to null (unless already changed)
-            if ($ingredient->getRecipe() === $this) {
-                $ingredient->setRecipe(null);
-            }
-        }
-
-        return $this;
-    }
-
     private function secondsToTime($seconds) {
         $dtF = new \DateTime('@0');
         $dtT = new \DateTime("@$seconds");
@@ -511,6 +481,30 @@ class Recipe
                 $recipeQuantity->setRecipe(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ingredient>
+     */
+    public function getIngredients(): Collection
+    {
+        return $this->ingredients;
+    }
+
+    public function addIngredient(Ingredient $ingredient): self
+    {
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients[] = $ingredient;
+        }
+
+        return $this;
+    }
+
+    public function removeIngredient(Ingredient $ingredient): self
+    {
+        $this->ingredients->removeElement($ingredient);
 
         return $this;
     }

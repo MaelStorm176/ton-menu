@@ -5,12 +5,14 @@
 @import "~bootstrap-icons/font/bootstrap-icons";
 @import "~datatables.net-bs5/css/dataTables.bootstrap5.min";
 @import "~datatables.net-responsive-bs5/css/responsive.bootstrap5.min";
+@import "select2";
+@import "pagination";
 
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Filson Soft";
+  font-family: Calisto MT, Bookman Old Style, Bookman, Goudy Old Style, Garamond, Hoefler Text, Bitstream Charter, Georgia, serif;
   background: white;
   color: black;
 }
