@@ -86,6 +86,26 @@ class RecipeController extends AbstractController
     }
 
     /**
+     * @Route("/recipe/{id}/edit", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
+     */
+    public function edit(Request $request, Recipe $recipe): Response
+    {
+        $form = $this->createForm(RecetteType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('recipe_show', [
+                'id' => $recipe->getId()
+            ]);
+        }
+        return $this->render('new_recette/create.html.twig', [
+            'recetteForm' => $form->createView(),
+            'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+            'tags' => $this->getDoctrine()->getRepository(RecipeTags::class)->findAll()
+        ]);
+    }
+
+    /**
      * @Route("/recipe/all", name="recipe_all", methods={"GET"})
      */
     public function show_all(RecipeRepository $recipeRepository, Request $request, PaginatorInterface $paginator): Response
