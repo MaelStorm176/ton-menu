@@ -4,8 +4,12 @@ namespace App\Controller;
 
 use Error;
 use Stripe\Price;
+use DateImmutable;
 use Stripe\Stripe;
+use DateTimeImmutable;
+use App\Entity\Transaction;
 use Stripe\BillingPortal\Session;
+use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Stripe\Checkout\Session as SessionCheckout;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,17 +28,17 @@ class TransactionController extends AbstractController
         $priceId = 'price_1LT52FFE8xx5Qn4ZoIATO3nm';
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741/';
+        $YOUR_DOMAIN = 'http://localhost:8741';
 
         try {
-            $checkout_session = Session::create([
+            $checkout_session = SessionCheckout::create([
                 'line_items' => [[
                     'price' => "price_1LT52FFE8xx5Qn4ZoIATO3nm",
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
                 'success_url' => $YOUR_DOMAIN . '/success/{CHECKOUT_SESSION_ID}',
-                'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
+                'cancel_url' => $YOUR_DOMAIN . '/cancel',
             ]);
 
             header("HTTP/1.1 303 See Other");
@@ -50,11 +54,22 @@ class TransactionController extends AbstractController
     #[Route('/success/{session_id}', name: 'app_payment_success')]
     public function success($session_id): Response
     {
+        $manager = $this->getDoctrine()->getManager();
+
+        $transaction = new Transaction();
+        $user = $this->getUser();
+        $transaction->setUser($user);
+        $transaction->setValidate(true);
+        $transaction->setCreatedAt(new DateTimeImmutable());
+        $transaction->setValidateAt(new DateTimeImmutable());
+
+        $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);
+
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741/profile/';
+        $YOUR_DOMAIN = 'http://localhost:8741/profile';
 
         try {
             $checkout_session = SessionCheckout::retrieve($session_id);
@@ -63,10 +78,14 @@ class TransactionController extends AbstractController
             // Authenticate your user.
             $session = Session::create([
                 'customer' => $checkout_session->customer,
-                'return_url' => 'http://localhost:8741/success',
+                'return_url' => $return_url,
             ]);
             header("HTTP/1.1 303 See Other");
             header("Location: " . $session->url);
+
+            $manager->persist($transaction);
+            $manager->persist($user);
+            $manager->flush();
         } catch (Error $e) {
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);

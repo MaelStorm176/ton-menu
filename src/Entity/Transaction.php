@@ -37,6 +37,11 @@ class Transaction
      */
     private $validate_at;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $session_id;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Transaction
     public function setValidateAt(\DateTimeImmutable $validate_at): self
     {
         $this->validate_at = $validate_at;
+
+        return $this;
+    }
+
+    public function getSessionId(): ?string
+    {
+        return $this->session_id;
+    }
+
+    public function setSessionId(string $session_id): self
+    {
+        $this->session_id = $session_id;
 
         return $this;
     }

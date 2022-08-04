@@ -44,3 +44,4 @@ security:
     - { path: ^/rate, roles: ROLE_USER }
     - { path: ^/logout, roles: ROLE_USER }
     - { path: ^/ingredient, roles: ROLE_ADMIN }
+    - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
