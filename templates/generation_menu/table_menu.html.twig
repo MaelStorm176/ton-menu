@@ -63,9 +63,9 @@
                         <div class="carousel-inner">
                             <div class="carousel-item active">
                                 <div class="row p-3 justify-content-center">
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i]} %}
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i]} %}
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i], reload: true} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i], reload: true} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i], reload: true} %}
                                 </div>
                                 <div class="carousel-caption d-none d-md-block position-static">
                                     <h5>Midi</h5>
@@ -73,9 +73,9 @@
                             </div>
                             <div class="carousel-item">
                                 <div class="row p-3 justify-content-center">
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i+nb_jour]} %}
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i+nb_jour]} %}
-                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i+nb_jour]} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i+nb_jour], reload: true} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i+nb_jour], reload: true} %}
+                                    {% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i+nb_jour], reload: true} %}
                                 </div>
                                 <div class="carousel-caption d-none d-md-block position-static">
                                     <h5>Soir</h5>

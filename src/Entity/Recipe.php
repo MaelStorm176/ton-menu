@@ -525,4 +525,17 @@ class Recipe
 
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'description' => $this->getDescription(),
+            'preparation_time' => $this->getPreparationTime(),
+            'total_time' => $this->getTotalTime()->format('H:i'),
+            'budget' => $this->getBudget(),
+            'image' => $this->getRecipeImages()->getValues()[0]->getUrl(),
+        ];
+    }
 }
