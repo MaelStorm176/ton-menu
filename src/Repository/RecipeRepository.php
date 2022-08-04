@@ -168,26 +168,35 @@ class RecipeRepository extends ServiceEntityRepository
         if (isset($filters['difficulty']) && !empty($filters['difficulty'])) {
             $qb->andWhere('r.difficulty IN (:difficulty)')->setParameter('difficulty', $filters['difficulty']);
         }
-        if (isset($filters['ingredients']) && !empty($filters['ingredients'])) {
-            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id = :ingredients')
-                ->setParameter('ingredients', $filters['ingredients']);
+        if (isset($filters['ingredients']) && !$filters['ingredients']->isEmpty()) {
+            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
+                ->groupBy('r.id')
+                ->having('COUNT(i.id) = :count')
+                ->setParameter('ingredients', $filters['ingredients'])
+                ->setParameter('count', count($filters['ingredients']));
         }
-        if (isset($filters['tags']) && !empty($filters['tags'])) {
-            $qb->innerJoin('r.tags', 't', 'WITH', 't.id = :tags')
-                ->setParameter('tags', $filters['tags']);
+
+        if (isset($filters['tags']) && !$filters['tags']->isEmpty()) {
+            $qb->innerJoin('r.recipeTags', 't', 'WITH', 't.id IN (:tags)')
+                ->groupBy('r.id')
+                ->having('COUNT(t.id) = :count')
+                ->setParameter('tags', $filters['tags'])
+                ->setParameter('count', count($filters['tags']));
         }
         if (isset($filters['user'])) {
             $qb->andWhere('r.user_id = :user')->setParameter('user', $filters['user']);
         }
-        if (isset($filters['minRate'])) {
+        if (isset($filters['minRate']) || isset($filters['maxRate'])) {
             $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
-                ->andWhere('r2.rate >= :minRate')
-                ->setParameter('minRate', $filters['minRate']);
-        }
-        if (isset($filters['maxRate'])) {
-            $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
-                ->andWhere('r2.rate <= :maxRate')
-                ->setParameter('maxRate', $filters['maxRate']);
+                ->groupBy('r.id');
+            if (isset($filters['minRate'])) {
+                $qb->having('AVG(r2.rate) >= :minRate');
+                $qb->setParameter('minRate', $filters['minRate']);
+            }
+            if (isset($filters['maxRate'])) {
+                $qb->andHaving('AVG(r2.rate) <= :maxRate');
+                $qb->setParameter('maxRate', $filters['maxRate']);
+            }
         }
         if (isset($filters['maxDuration'])){
             switch ($filters['maxDuration']){
@@ -228,7 +237,7 @@ class RecipeRepository extends ServiceEntityRepository
 
     public function findBySearch($filters)
     {
-        $qb = $this->getBySearchQueryBuilder($filters);;
+        $qb = $this->getBySearchQueryBuilder($filters);
         return $qb->getQuery()->getResult();
     }
 

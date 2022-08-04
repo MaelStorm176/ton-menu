@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Form;
 
 use App\Entity\Recipe;
@@ -39,9 +40,18 @@ class RecetteType extends AbstractType
                     'Dessert' => "DESSERT",
                 ],
             ])
+            ->add('description', TextType::class,[
+                'label' => 'Note de l\'auteur',
+                'required' => true,
+                'attr' => [
+                    'placeholder' => 'Ajoutez une note / citation à votre recette (100 car. max)',
+                    'maxlength' => '100',
+                ]
+            ])
             ->add('url', UrlType::class,[
                 'label' => 'URL',
-                'attr' => ['placeholder' => 'Lien vers la source de la recette']
+                'attr' => ['placeholder' => 'Lien vers la source de la recette'],
+                'required' => false
             ])
             ->add('number_of_persons',IntegerType::class,[
                 'label' => 'Nombre de personnes',
@@ -89,22 +99,50 @@ class RecetteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
             ])
+            ->add('recipeQuantities', CollectionType::class,[
+                'entry_type' => QuantityType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
+            ->add('recipeTags', EntityType::class, [
+                'label' => 'Tags',
+                'required' => false,
+                'class' => 'App\Entity\RecipeTags',
+                'attr' => ['class' => 'form-control w-100'],
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
+            ])
+            ->add('ingredients', EntityType::class, [
+                'label' => 'Ingredients',
+                'required' => false,
+                'class' => 'App\Entity\Ingredient',
+                'attr' => ['class' => 'form-control w-100'],
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
+            ])
             ->add('Enregistrer', SubmitType::class)
         ;
     }
 
-    /*
-            ->add('recipeImages', FileType::class,[
+/* ->add('recipeImages', FileType::class,[
                 'label' => 'Images de la recette',
                 'multiple' => true,
                 'required' => false,
                 'attr' => ['placeholder' => 'Images de la recette']
-            ])*/
+            ])
+*/
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
+            'attr' => [
+                'enctype' => 'multipart/form-data'
+            ]
         ]);
     }
 }

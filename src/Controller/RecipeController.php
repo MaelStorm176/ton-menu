@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\RecipeImages;
 use App\Form\SearchRecipeType;
 use App\Entity\Rating;
 use App\Entity\Recipe;
@@ -32,29 +33,25 @@ class RecipeController extends AbstractController
      */
     public function add_recette(Request $request): Response {
         $manager = $this->getDoctrine()->getManager();
-        $ingredientRepository = $this->getDoctrine()->getRepository(Ingredient::class);
-        $tagRepository = $this->getDoctrine()->getRepository(RecipeTags::class);
         $recette = new Recipe();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
 
-        $requete = $request->request->all();
         if ($request->isMethod('POST')) {
             if ($form->isSubmitted() && $form->isValid()) {
 
-                /** AJOUT DES INGREDIENTS A LA RECETTE **/
-                if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
-                    foreach ($requete["choosen_ingredient"] as $item) {
-                        $ingredient = $ingredientRepository->find($item);
-                        $recette->addIngredient($ingredient);
-                    }
-                }
-
-                /** AJOUT DES TAGS A LA RECETTE **/
-                if (isset($requete["choosen_tag"]) && !empty($requete["choosen_tag"])) {
-                    foreach ($requete["choosen_tag"] as $item) {
-                        $tag = $tagRepository->find($item);
-                        $recette->addRecipeTag($tag);
+                if ($request->files->get('images') != null) {
+                    $images = $request->files->get('images');
+                    foreach ($images as $image) {
+                        $fichier = uniqid() . '.' . $image->guessExtension();
+                        $image->move(
+                            $this->getParameter('recipe_image_directory'),
+                            $fichier
+                        );
+                        $recipeImage = new RecipeImages();
+                        $recipeImage->setPath('/img/recipes/'.$fichier);
+                        $recipeImage->setRecipe($recette);
+                        $manager->persist($recipeImage);
                     }
                 }
 
@@ -64,6 +61,10 @@ class RecipeController extends AbstractController
                     $step->setRecipe($recette);
                     $step->setOrdre($i);
                     $i++;
+                }
+
+                foreach ($recette->getRecipeQuantities() as $recipeQuantity) {
+                    $recipeQuantity->setRecipe($recette);
                 }
 
                 $recette->setCreatedAt(new DateTimeImmutable());
@@ -77,6 +78,26 @@ class RecipeController extends AbstractController
             }
         }
 
+        return $this->render('new_recette/create.html.twig', [
+            'recetteForm' => $form->createView(),
+            'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
+            'tags' => $this->getDoctrine()->getRepository(RecipeTags::class)->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/recipe/{id}/edit", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
+     */
+    public function edit(Request $request, Recipe $recipe): Response
+    {
+        $form = $this->createForm(RecetteType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            return $this->redirectToRoute('recipe_show', [
+                'id' => $recipe->getId()
+            ]);
+        }
         return $this->render('new_recette/create.html.twig', [
             'recetteForm' => $form->createView(),
             'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
@@ -102,10 +123,11 @@ class RecipeController extends AbstractController
         $recettes = $paginator->paginate(
             $recettesResults,
             $request->query->getInt('page', 1),
-            6
+            8
         );
 
         return $this->render('new_recette/home.html.twig', [
+            'countRecettes' => count($recettesResults),
             'recettes' => $recettes,
             'form' => $form->createView()
         ]);

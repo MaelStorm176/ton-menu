@@ -12,7 +12,7 @@ const qbMain = new marmiton.MarmitonQueryBuilder();
 const qbDessert = new marmiton.MarmitonQueryBuilder();
 
 //Nombre d'entrées, plats, dessert | Si limit_number = 50, on requetera 50 entrees, 50 plats, 50 desserts
-const limit_number = Number(50);
+const limit_number = Number(100);
 
 //On sélectionne les entrées
 const queryStarter = qbStarter

@@ -27,9 +27,11 @@ Encore
 .addEntry('show_tags', './assets/custom/show_tags.js')
 .addEntry('results_menu', './assets/custom/results_menu.js')
 .addEntry('new_recette_show', './assets/custom/new_recette_show.js')
+.addEntry('new_recette_home', './assets/custom/new_recette_home.js')
 .addEntry('add_recipe', './assets/custom/add_recipe.js')
 .addEntry('add_ingredient', './assets/custom/add_ingredient.js')
 .addEntry('file_uploader', './assets/custom/image-uploader.min.js')
+.addEntry('profile_index', './assets/custom/profile_index.js')
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge('./assets/controllers.json')
