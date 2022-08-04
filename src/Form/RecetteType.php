@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Form;
 
 use App\Entity\Recipe;
@@ -98,6 +99,12 @@ class RecetteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
             ])
+            ->add('recipeQuantities', CollectionType::class,[
+                'entry_type' => QuantityType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+            ])
             ->add('recipeTags', EntityType::class, [
                 'label' => 'Tags',
                 'required' => false,
@@ -120,18 +127,22 @@ class RecetteType extends AbstractType
         ;
     }
 
-    /*
-            ->add('recipeImages', FileType::class,[
+/* ->add('recipeImages', FileType::class,[
                 'label' => 'Images de la recette',
                 'multiple' => true,
                 'required' => false,
                 'attr' => ['placeholder' => 'Images de la recette']
-            ])*/
+            ])
+*/
+
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
+            'attr' => [
+                'enctype' => 'multipart/form-data'
+            ]
         ]);
     }
 }

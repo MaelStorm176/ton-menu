@@ -102,7 +102,7 @@
 
 		</div>
 
-		{% if is_granted("ROLE_CHIEF") %}
+		{% if is_granted("ROLE_CHIEF") or is_granted("ROLE_ADMIN") %}
 		<div class="row">
 			<div class="col-md-12">
 				<div class="d-flex justify-content-between align-items-center mb-3">
@@ -133,11 +133,9 @@
 		{% endif %}
 
 	</div>
+{% endblock %}
 
-    <script>
-        const loadFile = function (event) {
-            const image = document.getElementById("output");
-            image.src = URL.createObjectURL(event.target.files[0]);
-        };
-    </script>
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('profile_index') }}
 {% endblock %}

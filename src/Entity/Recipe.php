@@ -101,7 +101,7 @@ class Recipe
     private $recipeTags;
 
     /**
-     * @ORM\OneToMany(targetEntity=RecipeQuantities::class, mappedBy="recipe", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=RecipeQuantities::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
      */
     private $recipeQuantities;
 

@@ -91,7 +91,6 @@
     </div>
     <div class="container mt-5">
         <div class="col">
-            <!--<img class="w-50 recipe-img rounded shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">-->
             <p class="title">{{recette.name}}</p>
             <div class="d-flex flex-row justify-content-center">
                 {% for i in 1..5 %}
@@ -106,9 +105,11 @@
             </div>
 
 
+            {% if recette.recipeImages is not empty %}
             <div class="p-3 d-flex justify-content-center">
                 <img class="w-50 rounded-2 shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
             </div>
+            {% endif %}
             <!--
             <div class="row">
                 {% for image in recette.recipeImages %}

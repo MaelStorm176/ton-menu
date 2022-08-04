@@ -5,16 +5,19 @@
 {% block body %}
 
     <div class="container">
-    {{ form_start(recetteForm) }}
 
+        {{ form_start(recetteForm) }}
         <div class="row mt-5 mb-5">
+            <div class="col-md-12">
+                <h1>Personnalisation d'une recette</h1>
+            </div>
+        </div>
+        <div class="row mb-2">
             <div class="col-md-6">
-                <h3>Liste des ingrédients</h3>
                 {{ form_row(recetteForm.ingredients) }}
             </div>
 
             <div class="col-md-6">
-                <h3>Liste des tags</h3>
                 {{ form_row(recetteForm.recipeTags) }}
             </div>
         </div>
@@ -28,6 +31,9 @@
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="etapes-tab" data-bs-toggle="tab" data-bs-target="#etapes" type="button" role="tab" aria-controls="etapes" aria-selected="false">Etapes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quantites-tab" data-bs-toggle="tab" data-bs-target="#quantites" type="button" role="tab" aria-controls="quantites" aria-selected="false">Quantités</button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
@@ -64,7 +70,12 @@
                     <div class="col-md-6">
                         {{ form_row(recetteForm.totalTime) }}
                     </div>
+                </div>
 
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(recetteForm.description) }}
+                    </div>
                 </div>
             </div>
             <!-- PHOTOS -->
@@ -91,6 +102,23 @@
                     </div>
                 </div>
             </div>
+
+            <!-- QUANTITE -->
+            <div class="tab-pane fade" id="quantites" role="tabpanel" aria-labelledby="quantites-tab">
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <ul class="quantites list-group"
+                            data-index="{{ recetteForm.recipeQuantities|length > 0 ? recetteForm.recipeQuantities|last.vars.name + 1 : 0 }}"
+                            data-prototype="{{ form_widget(recetteForm.recipeQuantities.vars.prototype)|e('html_attr') }}"
+                        >
+                            {% for quantity in recetteForm.recipeQuantities %}
+                                <li class="list-group-item">{{ form_row(quantity.content) }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
 

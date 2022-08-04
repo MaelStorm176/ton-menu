@@ -1,7 +1,11 @@
 <!-- Gallery item -->
 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
     <div class="bg-white rounded shadow-sm h-100">
-        <img src="{{ recipe.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+        {% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
+        <img src="{{ recipe.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top" style="width: 300px; height: 225px">
+        {% else %}
+        <img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid card-img-top" style="width: 300px; height: 225px">
+        {% endif %}
         <div class="p-4">
             <h5 class="text-truncate">
                 <a href="{{ path('recipe_show',{id: recipe.id}) }}" class="text-dark ">{{ recipe.name }}</a>
