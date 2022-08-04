@@ -13,9 +13,16 @@ use App\Services\MarmitonManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class MarmitonFixtures extends Fixture implements DependentFixtureInterface
 {
+    private $faker;
+    public function __construct()
+    {
+        $this->faker = Factory::create('fr_FR');
+    }
+
     public function load(ObjectManager $manager): void
     {
         $user_entity = $manager->getRepository(User::class)->findOneBy(['email'=>'admin@gmail.com']);
@@ -53,6 +60,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                     ->setType($types_recettes[$i])
                     ->setNumberOfPersons($recipe_json["people"])
                     ->setDifficulty($recipe_json["difficulty"])
+                    ->setDescription(substr($this->faker->text,0,100))
                     ->setPreparationTime((new \DateTime)->setTime(0,$recipe_json["prepTime"]))
                     ->setTotalTime((new \DateTime)->setTime(0,$recipe_json["totalTime"]))
                     ->setBudget($recipe_json["budget"])
@@ -92,6 +100,13 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
 
                 /********* IMAGES **********/
                 $images_json = $recipe_json["images"];
+                if (!empty($images_json) && filter_var($images_json[1], FILTER_VALIDATE_URL)){
+                    $image = new RecipeImages();
+                    $image->setUrl($images_json[1]);
+                    $image->setRecipe($recipe);
+                    $manager->persist($image);
+                }
+                /*
                 foreach ($images_json as $image_element){
                     if (!empty($image_element) && filter_var($image_element, FILTER_VALIDATE_URL)){
                         $image = new RecipeImages();
@@ -100,6 +115,7 @@ class MarmitonFixtures extends Fixture implements DependentFixtureInterface
                         $manager->persist($image);
                     }
                 }
+                */
 
                 /**** INGREDIENTS ****/
                 $ingredient_liste = explode(",",$recipe_json["description"]);

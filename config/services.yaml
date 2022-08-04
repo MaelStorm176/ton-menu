@@ -11,6 +11,7 @@ parameters:
     database_password: symfony
     profile_picture: '%kernel.project_dir%/public/profile_picture'
     ingredient_image_directory: '%kernel.project_dir%/public/img/ingredients'
+    recipe_image_directory: '%kernel.project_dir%/public/img/recipes'
 
 services:
     # default configuration for services in *this* file

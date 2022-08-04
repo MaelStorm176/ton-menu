@@ -9,6 +9,14 @@
     '3': 'Moyen',
     '4': 'Difficile'
 } %}
+
+{% set budget = {
+    '1': '€',
+    '2': '€€',
+    '3': '€€€',
+} %}
+
+{% set i = 1 %}
     <style>
         .comment-wrapper .panel-body {
             max-height:650px;
@@ -19,11 +27,6 @@
             width:64px;
             height:64px;
             border:2px solid #e5e7e8;
-        }
-
-        .comment-wrapper .media-list .media {
-            border-bottom:1px dashed #efefef;
-            margin-bottom:25px;
         }
 
         .showLeft {
@@ -47,36 +50,10 @@
             pointer-events: none;
         }
 
-        .btn-left {
-            left: 0.4em;
-        }
-
-/*        .btn-right {
-            right: 0.4em;
-        }
-
-        .btn-left,
-        .btn-right {
-            position: absolute;
-            top: 0.24em;
-        }
-        .dropbtn {
-            background-color: #4caf50;
-            position: fixed;
-            color: white;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
-        }*/
         .dropbtn:hover,
         .dropbtn:focus {
             background-color: #3e8e41;
         }
-        /*.dropdown {
-            position: absolute;
-            display: inline-block;
-            right: 0.4em;
-        }*/
         .dropdown-content {
             display: none;
             position: relative;
@@ -99,63 +76,127 @@
             background-color: #f1f1f1;
         }
 
-        .show {
-            display: block;
+        .recipe-img {
+            width: auto;
+            height: 225px;
+            max-height: 225px;
         }
 
     </style>
 
-<section class="recipe" id="recipe">
+<section id="recipe">
     <div class="btn-titlemenu">
         <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
     </div>
-    <div class="container d-flex justify-content-between">
-        <img class="w-50 recipe-img rounded shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
-        <div class="col recipe-content ">
+    <div class="container mt-5">
+        <div class="col">
             <p class="title">{{recette.name}}</p>
+            <div class="d-flex flex-row justify-content-center">
+                {% for i in 1..5 %}
+                    {% if i <= recette.averageRating %}
+                        <i class="bi bi-star-fill" style="color: black"></i>
+                    {% else %}
+                        <i class="bi bi-star" style="color: black"></i>
+                    {% endif %}
+                {% endfor %}
+
+                <span class="ml-3">({{recette.numberOfRating}} avis)</span>
+            </div>
+
+
+            {% if recette.recipeImages is not empty %}
+            <div class="p-3 d-flex justify-content-center">
+                <img class="w-50 rounded-2 shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
+            </div>
+            {% endif %}
+            <!--
+            <div class="row">
+                {% for image in recette.recipeImages %}
+                    <div class="col-md-3 mt-2">
+                        <img class="w-100 recipe-img rounded-2 shadow-sm" src="{{ image.url }}" loading="lazy" alt="{{ recette.name }}">
+                    </div>
+                {% endfor %}
+            </div>
+            -->
+
+            {% if recette.description %}
+                <hr class="solid">
+                <p class="description_recipe text-center">"{{ recette.description }}"</p>
+            {% endif %}
             <hr class="solid">
-            <p class="description_recipe text-center">"Téma la description du bestio"</p>
-            <hr class="solid">
-            <div class="d-flex justify-content-between">
-                <div class="col">
-                    <p class="description">
-                        <i class="icon bi bi-clock"></i>
-                        Cuisiné en : <span class="fw-bold">{{ recette.preparationTime|date('H:i') }}</span>
-                    </p>
-                </div>
-                <div class="col">
-                    <p class="description">
-                        <i class="icon bi bi-check-circle"></i>
-                        Prêt en : <span class="fw-bold">{{ recette.totalTime|date('H:i') }}</span>
-                    </p>
-                </div>
-                <div class="col">
-                    <p class="description">
-                        <i class="icon bi bi-bar-chart"></i>
-                        Difficulté : <span class="fw-bold">{{ difficulty[recette.difficulty] }}</span>
-                    </p>
-                </div>
+            <div class="d-flex justify-content-around align-items-center">
+                <span>
+                    <i class="icon bi bi-clock"></i>
+                    Cuisiné en : <span class="fw-bold">{{ recette.preparationTime|date('H:i') }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-check-circle"></i>
+                    Prêt en : <span class="fw-bold">{{ recette.totalTime|date('H:i') }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-bar-chart"></i>
+                    Difficulté : <span class="fw-bold">{{ difficulty[recette.difficulty] }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-currency-euro"></i>
+                    Budget : <span class="fw-bold">{{ budget[recette.budget] }}</span>
+                </span>
             </div>
             <hr class="solid">
             <div class="row">
                 <div class="col-md-6">
-                    {% for quantitie in recette.recipeQuantities %}
-                        <p class="description">{{quantitie.content}}</p>
-                    {% endfor %}
+                    <!-- INGREDIENTS + ETAPES -->
+                    <div class="row h-100">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <h5 class="card-header">Ingrédients</h5>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        {% for quantitie in recette.recipeQuantities %}
+                                            <span class="fw-bold">{{quantitie.content}}</span>
+                                            <br />
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="card">
+                                <h5 class="card-header">Etapes</h5>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        {% set i = 0 %}
+                                        {% for step in recette.recipeSteps %}
+                                            <span class="fw-bold">Etape {{ i }} : </span>{{step.step}}
+                                            <br />
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6">
+                <!-- FIN INGREDIENTS + ETAPES -->
+
+                <!-- IMAGES INGREDIENTS -->
+                <div class="col-md-6 mt-sm-3 mt-md-0">
                     <div class="grid row">
                     {% for ingredient in recette.ingredients %}
-                        <div class="col-md-4 mb-2">
+                        <div class="col-md-4 col-sm-4 mb-2">
                             <div class="rounded shadow-sm border">
-                                <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
-                                <p class="fw-bold text-center text-wrap">{{ingredient.name}}</p>
+                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}">
+                                    <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
+                                    <p class="fw-bold text-center text-wrap">{{ingredient.name}}</p>
+                                </a>
                             </div>
                         </div>
                     {% endfor %}
                     </div>
                 </div>
+                <!-- FIN IMAGES INGREDIENTS -->
             </div>
             <hr class="solid">
             <div class="d-flex justify-content-between">
@@ -165,34 +206,23 @@
                         Crée par : <span class="fw-bold">{{ recette.userId.firstName }} {{ recette.userId.lastName }}</span>
                     </p>
                 </div>
-                <div class="col">
-                    <p class="description">
+                <div class="col ">
+                    <p class="float-end">
                         <i class="icon bi bi-calendar2-week"></i>
                         Ajouté le : <span class="fw-bold">{{ recette.createdAt|date('d/m/Y') }}</span>
                     </p>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <div class="container">
+
+    <div class="container comment-wrapper mt-5">
         <div class="row">
-        {% set i = 1 %}
-        {% for step in recette.recipeSteps %}
             <div class="col-md-12">
-                <p class="description">
-                    <span class="fw-bold">Etape {{ i }} : </span> {{step.step}}
-                </p>
+                <h3 class="text-center">Avis et commentaires</h3>
             </div>
-            {% set i = i+1 %}
-        {% endfor %}
         </div>
-        <hr class="solid">
-    </div>
-
-
-    <div class="container comment-wrapper">
         <div class="panel panel-info">
             <div class="panel-header">
                 <div class="rating">
@@ -211,69 +241,42 @@
                     {{ form_row(recetteForm.content) }}
                     {{ form_row(recetteForm.save) }}
                 {{ form_end(recetteForm) }}
-                <div class="clearfix"></div>
-                <hr>
-                <ul class="media-list">
+
+                <h3 class="panel-title">Commentaires ({{ recette.comments.count }})</h3>
+                <ul class="media-list list-group">
                     {% for comment in recette.comments %}
-                    <li class="media">
-                        <a href="#" class="left">
-                            <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="" class="img-circle">
-                        </a>
-                        <div class="media-body d-flex justify-content-between">
-                            <div>
-                                <span class="text-muted right">
-                                    <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
-                                </span>
+                    <li class="media list-group-item">
+                        <div class="d-flex align-items-center">
+                            <a href="#">
+                                <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="profile_picture" class="rounded-circle">
+                            </a>
+                            <div class="p-2">
                                 <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
-                                <p>
-                                    {{comment.content}}
-                                </p>
+                                <br/>
+                                <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
                             </div>
-                            <div>
-                                <div class="dropdown">
-                                    <!-- three dots -->
-                                    <ul class="dropbtn icons btn-right showLeft" onclick="showDropdown()">
-                                    <li></li>
-                                    <li></li>
-                                    <li></li>
-                                    </ul>
-                                    <!-- menu -->
-                                    <div id="myDropdown" class="dropdown-content">
-                                        <a href="{{ path('send_signalement', {'id': comment.id}) }}">Signaler le message</a>
-                                        {% if comment.user.id == app.user.id or is_granted("ROLE_ADMIN") %}
-                                            <a href="{{ path('delete_comment', {'id': comment.id}) }}">Supprimer le message</a>
-                                        {% endif %}
-                                    </div>
-                                </div>
+                            <div class="align-self-baseline ms-auto btn-group">
+                                <button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton{{ comment.id }}" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ comment.id }}">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('send_signalement', {'id': comment.id}) }}">Signaler ce message</a>
+                                    </li>
+                                    {% if comment.user.id == app.user.id or is_granted("ROLE_ADMIN") %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('delete_comment', {'id': comment.id}) }}">Supprimer le message</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
                             </div>
                         </div>
+                        <p class="mt-2">{{comment.content}}</p>
                     </li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
     </div>
-
-</section>    
-<script>
-    function showDropdown() {
-    document.getElementById("myDropdown").classList.toggle("show");
-    }
-
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-    if (!event.target.matches(".dropbtn")) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains("show")) {
-            openDropdown.classList.remove("show");
-        }
-        }
-    }
-    };
-</script>
+</section>
 {% endblock %}
 
 {% block javascripts %}

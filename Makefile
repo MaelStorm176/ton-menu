@@ -102,4 +102,5 @@ marmiton-check:
 marmiton:
 	@$(DOCKER_RUN) encore $(NPM) run marmiton
 	make fixtures
+	make get-images
 
