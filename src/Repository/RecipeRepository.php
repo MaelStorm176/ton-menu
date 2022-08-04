@@ -169,7 +169,7 @@ class RecipeRepository extends ServiceEntityRepository
             $qb->andWhere('r.difficulty IN (:difficulty)')->setParameter('difficulty', $filters['difficulty']);
         }
         if (isset($filters['ingredients']) && !$filters['ingredients']->isEmpty()) {
-            $qb->innerJoin('r.recipeTags', 'i', 'WITH', 'i.id IN (:ingredients)')
+            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
                 ->groupBy('r.id')
                 ->having('COUNT(i.id) = :count')
                 ->setParameter('ingredients', $filters['ingredients'])
