@@ -1,57 +1,96 @@
-  <!-- ======= Header ======= -->
-  <header id="header" class=" d-flex align-items-center">
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
+<!-- ======= Header ======= 
+<header id="header" class="w-100 d-flex align-items-center">-->
+	<!--<div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
+		
+		      <a href="{{ path('home') }}" class="logo me-auto me-lg-0">
+		          <img src="{{ asset('img/ton_menu.png') }}" alt="main-icon" class="img-fluid" loading="lazy">
+		      </a>
+		
+		      <nav id="navbar" class="navbar order-last order-lg-0">
+		        <ul>
+		          <li><a class="nav-link scrollto active" href="{{ path('home') }}">Accueil</a></li>
+		            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link scrollto active" href="{{ path('recipe_all') }}">Liste des recettes</a></li>
+		          <li class="nav-item mx-0 mx-lg-1">
+		            {% if is_granted('ROLE_ADMIN') %} 
+		            <div class="dropdown nav-item mx-0 mx-lg-1">
+		                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+		                    <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+		                </a>
+		                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+		                    <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
+		                    <li><a class="dropdown-item" href="{{ path('admin_users') }}">Gestion utilisateurs</a></li>
+		                    <li><a class="dropdown-item" href="{{ path('admin_ingredients') }}">Gestion ingrédients</a></li>
+		                    <li><a class="dropdown-item" href="{{ path('admin_recipes') }}">Gestion recettes</a></li>
+		                    <li><a class="dropdown-item" href="{{ path('admin_report_comment') }}">Gestion signalement</a></li>
+		                    <li>
+		                        <hr class="dropdown-divider">
+		                    </li>
+		                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
+		                </ul>
+		            </div> 
+		
+		            {% elseif is_granted('ROLE_USER') %}
+		            <div class="dropdown nav-item mx-0 mx-lg-1">
+		                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+		                    <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+		                </a>
+		                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+		                    <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
+		                    {% if is_granted('ROLE_CHIEF') %}<li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>{% endif %}
+		                    <li>
+		                        <hr class="dropdown-divider">
+		                    </li>
+		                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
+		                </ul>
+		            </div>
+		
+		            {% else %} 
+		            <div class="d-flex">
+		              <a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
+		              <a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
+		              </div>
+		            {% endif %}
+		        </ul>
+		      </nav><!-- .navbar -->
 
-      <a href="{{ path('home') }}" class="logo me-auto me-lg-0">
-          <img src="{{ asset('img/ton_menu.png') }}" alt="main-icon" class="img-fluid" loading="lazy">
-      </a>
-
-      <nav id="navbar" class="navbar order-last order-lg-0">
-        <ul>
-          <li><a class="nav-link scrollto active" href="{{ path('home') }}">Accueil</a></li>
-            <li class="nav-item mx-0 mx-lg-1"><a class="nav-link scrollto active" href="{{ path('recipe_all') }}">Liste des recettes</a></li>
-          <li class="nav-item mx-0 mx-lg-1">
-            {% if is_granted('ROLE_ADMIN') %} 
-            <div class="dropdown nav-item mx-0 mx-lg-1">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
-                    <li><a class="dropdown-item" href="{{ path('admin_users') }}">Gestion utilisateurs</a></li>
-                    <li><a class="dropdown-item" href="{{ path('admin_ingredients') }}">Gestion ingrédients</a></li>
-                    <li><a class="dropdown-item" href="{{ path('admin_recipes') }}">Gestion recettes</a></li>
-                    <li><a class="dropdown-item" href="{{ path('admin_report_comment') }}">Gestion signalement</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
-                </ul>
-            </div> 
-
-            {% elseif is_granted('ROLE_USER') %}
-            <div class="dropdown nav-item mx-0 mx-lg-1">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
-                </a>
-                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                    <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
-                    {% if is_granted('ROLE_CHIEF') %}<li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>{% endif %}
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
-                </ul>
-            </div>
-
-            {% else %} 
-            <div class="d-flex">
-              <a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
-              <a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
-              </div>
-            {% endif %}
-        </ul>
-      </nav><!-- .navbar -->
-
+	<!--</div>-->
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ path('home') }}">
+      <img src="{{ asset('img/ton_menu.png') }}" alt="" width="30" height="24">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Link</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
     </div>
-  </header><!-- End Header -->
+  </div>
+</nav>
+<!--</header>
+<!-- End Header -->
