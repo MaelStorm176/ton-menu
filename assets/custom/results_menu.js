@@ -1,3 +1,4 @@
+const generateResultsMenu = JSON.parse($("#menu").val());
 $(document).ready(function (){
   console.log("results_menu.js loaded");
 
@@ -17,7 +18,7 @@ $(document).ready(function (){
   $("#select_nb_jour").change(function(){
     const nb_jours = $(this).val();
     const id_menu = $("#id_menu");
-    if (id_menu != null && id_menu.val() != "" && id_menu.val() != "0"){
+    if (id_menu != null && id_menu.val() !== "" && id_menu.val() !== "0"){
       const url = "/generation-menu/"+nb_jours+"?id_menu="+id_menu.val();
       document.location.href = url;
     }else{
@@ -86,6 +87,9 @@ $(document).ready(function (){
   });
 
 
+  $("div[id^=recipe_]").on("click", "button", (event) => refresh_recipe(event));
+
+  /*
   $("button[id^='refresh_day_']").click(function(){
     const day = $(this).data("day");
     $.ajax({
@@ -108,6 +112,37 @@ $(document).ready(function (){
       }
     });
   });
+   */
 
 });
+
+function refresh_recipe(e){
+  const recipe_to_reload = $(e.delegateTarget);
+  const recipe_id = Number(recipe_to_reload.attr("id").substring(7));
+  const type = recipe_to_reload.attr("data-type");
+  const recipe_type = type.toLowerCase()+"s";
+  const recipe_that_will_be_regenerated_index = generateResultsMenu[recipe_type].findIndex(recipe => recipe === recipe_id);
+  const recipe_that_will_be_regenerated = generateResultsMenu[recipe_type][recipe_that_will_be_regenerated_index];
+
+  if (recipe_that_will_be_regenerated !== undefined){
+    $.ajax({
+      url: "/ajax/generation-menu/refresh",
+      type: "GET",
+      dataType: "html",
+      data: {
+        type: type
+      },
+      success: function(data) {
+        const $data = $(data);
+        const $test = $($data[2])
+        generateResultsMenu[recipe_type][recipe_that_will_be_regenerated_index] = Number($test.attr("id").substring(7));
+        recipe_to_reload.replaceWith($data);
+        $("#menu").val(JSON.stringify(generateResultsMenu));
+        $data.on("click", "button.btn.btn-dark", function (event) {
+          refresh_recipe(event);
+        });
+      }
+    });
+  }
+}
 

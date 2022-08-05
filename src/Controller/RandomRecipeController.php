@@ -352,8 +352,26 @@ class RandomRecipeController extends AbstractController
     }
 
     #[Route('/ajax/generation-menu/refresh', name: 'refresh_menu', methods: ['GET'])]
+    public function refresh(Request $request): Response
+    {
+        $type = $request->get("type");
+        if ($type == "ENTREE") {
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomEntrees()[0], 'reload' => true]));
+        } elseif ($type == "PLAT") {
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomPlats()[0], 'reload' => true]));
+        } elseif ($type == "DESSERT") {
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomDesserts()[0], 'reload' => true]));
+        } else {
+            return new JsonResponse(array(
+                'success' => false,
+                'msg' => 'Erreur lors de la récupération des recettes'
+            ));
+        }
+    }
+    /*
     public function refresh(Request $request): JsonResponse
     {
+        $type = $request->get("type");
         if ($request->get("day")) {
             return new JsonResponse([
                 "success" => true,
@@ -363,17 +381,17 @@ class RandomRecipeController extends AbstractController
                     "dessert" => $this->randomDesserts(),
                 ]
             ]);
-        } elseif ($request->get("entree")) {
+        } elseif ($type == "ENTREE") {
             return new JsonResponse([
                 "success" => true,
                 "data" => $this->randomEntrees()
             ]);
-        } elseif ($request->get("plat")) {
+        } elseif ($type == "PLAT") {
             return new JsonResponse([
                 "success" => true,
                 "data" => $this->randomPlats()
             ]);
-        } elseif ($request->get("dessert")) {
+        } elseif ($type == "DESSERT") {
             return new JsonResponse([
                 "success" => true,
                 "data" => $this->randomDesserts()
@@ -384,7 +402,7 @@ class RandomRecipeController extends AbstractController
                 'msg' => 'Erreur lors de la récupération des recettes'
             ));
         }
-    }
+    }*/
 
     #[Route('/ajax/generation-menu/send', name: 'send_to_mail', methods: ['POST'])]
     public function send_to_mail(Request $request, MailerInterface $mailer): JsonResponse
