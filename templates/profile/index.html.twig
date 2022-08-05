@@ -1,14 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Personnalisation du profil{% endblock %}
+{% block title %}Personnalisation du profil
+{% endblock %}
 
 {% block body %}
 	<div class="container rounded bg-white mt-5 mb-5">
 		<div class="row">
 			<div class="col-md-3 border-right">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
-					<img  class="rounded-circle mt-5" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
-					<span class="font-weight-bold">{{ user.firstname }} {{ user.lastname }}</span>
+					<img class="rounded-circle mt-5" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
+					<span class="font-weight-bold">{{ user.firstname }}
+						{{ user.lastname }}</span>
 					<span class="text-black-50">{{ user.email }}</span>
 				</div>
 			</div>
@@ -81,13 +83,24 @@
 									</tr>
 								</thead>
 								<tbody>
-								{% for menu in generated_menus %}
-									<tr>
-										<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
-										<td class="text-center">{{ menu.nbJours }}</td>
-										<td class="text-center"><a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a></td>
-									</tr>
-								{% endfor %}
+									{% if is_granted('ROLE_PREMIUM') %}
+										{% for menu in generated_menus %}
+											<tr>
+												<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
+												<td class="text-center">{{ menu.nbJours }}</td>
+												<td class="text-center">
+													<a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
+												</td>
+											</tr>
+										{% endfor %}
+									{% else %}
+										<tr>
+											<td class="text-center" colspan="2">Vous n'avez pas accès à cette fonctionnalité.</td>
+											<td class="text-center">
+												<a href="{{ path('app_payment') }}" class="btn btn-primary">Obtenir la version premium pour 4.99€/mois</a>
+											</td>
+										</tr>
+									{% endif %}
 								</tbody>
 							</table>
 
@@ -103,33 +116,33 @@
 		</div>
 
 		{% if is_granted("ROLE_CHIEF") or is_granted("ROLE_ADMIN") %}
-		<div class="row">
-			<div class="col-md-12">
-				<div class="d-flex justify-content-between align-items-center mb-3">
-					<h4 class="text-right">Vos recettes</h4>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h4 class="text-right">Vos recettes</h4>
+					</div>
+					<table id="recipesTable2" class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th>Créé le</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for recette in user.recipes %}
+								<tr>
+									<td>{{ recette.name }}</td>
+									<td>{{ recette.createdAt|date("d/m/Y")}}</td>
+									<td>
+										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
-				<table id="recipesTable2" class="table table-bordered table-striped">
-					<thead>
-						<tr>
-							<th>Nom</th>
-							<th>Créé le</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-					{% for recette in user.recipes %}
-						<tr>
-							<td>{{ recette.name }}</td>
-							<td>{{ recette.createdAt|date("d/m/Y")}}</td>
-							<td>
-								<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
-							</td>
-						</tr>
-					{% endfor %}
-					</tbody>
-				</table>
 			</div>
-		</div>
 		{% endif %}
 
 	</div>

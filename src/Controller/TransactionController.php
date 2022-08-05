@@ -5,8 +5,8 @@ namespace App\Controller;
 use Error;
 use Stripe\Price;
 use DateImmutable;
-use Stripe\Stripe;
 use DateTimeImmutable;
+use Stripe\Stripe;
 use App\Entity\Transaction;
 use Stripe\BillingPortal\Session;
 use Symfony\Component\BrowserKit\Request;
@@ -25,7 +25,6 @@ class TransactionController extends AbstractController
 
         // The price ID passed from the front end.
         //   $priceId = $_POST['priceId'];
-        $priceId = 'price_1LT52FFE8xx5Qn4ZoIATO3nm';
         header('Content-Type: application/json');
 
         $YOUR_DOMAIN = 'http://localhost:8741';
