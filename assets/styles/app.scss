@@ -33,7 +33,7 @@ a:hover {
 /*--------------------------------------------------------------
 # Header
 --------------------------------------------------------------*/
-#header {
+/*#header {
   background: #cda45e;
   border-bottom: 1px solid rgba(12, 11, 9, 0.6);
   transition: all 0.5s;
@@ -42,7 +42,7 @@ a:hover {
   padding-left: 15%;
   padding-right: 10%;
   top: 40px;
-}
+}*/
 #header.header-scrolled {
   top: 0;
   background: rgba(0, 0, 0, 0.85);
@@ -66,7 +66,7 @@ a:hover {
 /**
 * Desktop Navigation 
 */
-.navbar {
+/*.navbar {
   padding: 0;
 }
 .navbar ul {
@@ -149,7 +149,7 @@ a:hover {
     left: -100%;
   }
 }
-
+*/
 
 /////////////////HomePage//////////////////
 
