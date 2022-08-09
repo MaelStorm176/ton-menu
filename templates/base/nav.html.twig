@@ -1,58 +1,172 @@
-<!-- ======= Header ======= -->
+<!-- ======= Header ======= 
 <header id="header" class=" d-flex align-items-center">
-<div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
+	<div class="container-fluid container-xl d-flex align-items-center justify-content-lg-between">
 
-  <a href="{{ path('home') }}" class="logo me-auto me-lg-0">
-      <img src="{{ asset('img/ton_menu.png') }}" alt="main-icon" class="img-fluid" loading="lazy">
-  </a>
+		<a href="{{ path('home') }}" class="logo me-auto me-lg-0">
+			<img src="{{ asset('img/ton_menu.png') }}" alt="main-icon" class="img-fluid" loading="lazy">
+		</a>
 
-  <nav id="navbar" class="navbar order-last order-lg-0">
-    <ul>
-      <li><a class="nav-link scrollto active" href="{{ path('home') }}">Accueil</a></li>
-        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link scrollto active" href="{{ path('recipe_all') }}">Liste des recettes</a></li>
-      <li class="nav-item mx-0 mx-lg-1">
-        {% if is_granted('ROLE_ADMIN') %} 
-        <div class="dropdown nav-item mx-0 mx-lg-1">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
-                <li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>
-                <li><a class="dropdown-item" href="{{ path('admin_users') }}">Gestion utilisateurs</a></li>
-                <li><a class="dropdown-item" href="{{ path('admin_ingredients') }}">Gestion ingrédients</a></li>
-                <li><a class="dropdown-item" href="{{ path('admin_recipes') }}">Gestion recettes</a></li>
-                <li><a class="dropdown-item" href="{{ path('admin_report_comment') }}">Gestion signalement</a></li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
-            </ul>
-        </div> 
+		<nav id="navbar" class="navbar order-last order-lg-0">
+			<ul>
+				<li>
+					<a class="nav-link scrollto active" href="{{ path('home') }}">Accueil</a>
+				</li>
+				<li class="nav-item mx-0 mx-lg-1">
+					<a class="nav-link scrollto active" href="{{ path('recipe_all') }}">Liste des recettes</a>
+				</li>
+				<li class="nav-item mx-0 mx-lg-1">
+					{% if is_granted('ROLE_ADMIN') %}
+						<div class="dropdown nav-item mx-0 mx-lg-1">
+							<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+								<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+								<li>
+									<a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_users') }}">Gestion utilisateurs</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_ingredients') }}">Gestion ingrédients</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_recipes') }}">Gestion recettes</a>
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('admin_report_comment') }}">Gestion signalement</a>
+								</li>
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a>
+								</li>
+							</ul>
+						</div>
 
-        {% elseif is_granted('ROLE_USER') %}
-        <div class="dropdown nav-item mx-0 mx-lg-1">
-            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                <img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
-            </a>
-            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a></li>
-                {% if is_granted('ROLE_CHIEF') %}<li><a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a></li>{% endif %}
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a></li>
-            </ul>
-        </div>
+					{% elseif is_granted('ROLE_USER') %}
+						<div class="dropdown nav-item mx-0 mx-lg-1">
+							<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+								<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+							</a>
+							<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+								<li>
+									<a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a>
+								</li>
+								{% if is_granted('ROLE_CHIEF') %}
+									<li>
+										<a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a>
+									</li>
+								{% endif %}
+								<li>
+									<hr class="dropdown-divider">
+								</li>
+								<li>
+									<a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a>
+								</li>
+							</ul>
+						</div>
 
-        {% else %} 
-        <div class="d-flex">
-          <a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
-          <a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
-          </div>
-        {% endif %}
-    </ul>
-  </nav>
-  <!-- .navbar -->
-</div>
+					{% else %}
+						<div class="d-flex">
+							<a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
+							<a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
+						</div>
+					{% endif %}
+				</li>
+			</ul>
+		</nav>
+		.navbar
+	</div>
+</header>
+-->
+<header id="header" class="w-100">
+	<nav class="navbar navbar-expand-lg bg-light">
+		<div class="container-fluid">
+			<a class="navbar-brand w-25" href="{{ path('home') }}">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid" loading="lazy" width="25%">
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<i class="bi bi-list" style="font-size: 2rem;"></i>
+			</button>
+			<div class="collapse navbar-collapse mr-5" id="navbarSupportedContent" style="flex-grow: 0 !important">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link scrollto text-black" href="{{ path('home') }}">Accueil</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link scrollto text-black" href="{{ path('recipe_all') }}">Liste des recettes</a>
+					</li>
+					<li class="nav-item">
+						{% if is_granted('ROLE_ADMIN') %}
+							<div class="dropdown nav-item mx-0 mx-lg-1">
+								<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+									<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark text-small shadow">
+									<li>
+										<a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_users') }}">Gestion utilisateurs</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_ingredients') }}">Gestion ingrédients</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_recipes') }}">Gestion recettes</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_report_comment') }}">Gestion signalement</a>
+									</li>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a>
+									</li>
+								</ul>
+							</div>
+
+						{% elseif is_granted('ROLE_USER') %}
+							<div class="dropdown nav-item mx-0 mx-lg-1">
+								<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+									<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+								</a>
+								<ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+									<li>
+										<a class="dropdown-item" href="{{ path('profile') }}">Mon Profil</a>
+									</li>
+									{% if is_granted('ROLE_CHIEF') %}
+										<li>
+											<a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a>
+										</li>
+									{% endif %}
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_logout') }}">Deconnexion</a>
+									</li>
+								</ul>
+							</div>
+
+						{% else %}
+							<div class="d-flex">
+								<a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
+								<a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
+							</div>
+						{% endif %}
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
 </header>
