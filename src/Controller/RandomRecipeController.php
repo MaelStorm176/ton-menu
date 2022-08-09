@@ -9,6 +9,7 @@ use App\Entity\RecipeTags;
 use App\Entity\SavedMenus;
 use App\Entity\Ingredients;
 use App\Entity\RecipeIngredients;
+use App\Form\IngredientFilterType;
 use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -448,8 +449,16 @@ class RandomRecipeController extends AbstractController
         //Si l'utilisateur est connecté
         $user = $this->getUser();
         $nb_jour = (int) $request->get('nb_jour');
-
+        $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
+        $form->handleRequest($request);
         //Si je demande à voir un menu en particulier
+        if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
+            $data = $form->getData();
+            $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
+        }else{
+            $refuseRecipe = [];
+        }
+
         if ($id_menu = $request->get('id_menu')) {
             $monMenu = $this->savedMenusRepository->find($id_menu);
             if ($monMenu && $monMenu->getUser()->getId() == $user->getId()) {
@@ -507,9 +516,9 @@ class RandomRecipeController extends AbstractController
         else {
             $nb_matin_soir = $nb_jour * 2;
             $id_menu = 0;
-            $entrees = $this->randomEntrees($nb_matin_soir);
-            $plats = $this->randomPlats($nb_matin_soir);
-            $desserts = $this->randomDesserts($nb_matin_soir);
+            $entrees = $this->randomEntrees($nb_matin_soir, $refuseRecipe);
+            $plats = $this->randomPlats($nb_matin_soir, $refuseRecipe);
+            $desserts = $this->randomDesserts($nb_matin_soir, $refuseRecipe);
 
             $entreesIds = array_map(function ($e) {
                 return $e->getId();
@@ -537,6 +546,7 @@ class RandomRecipeController extends AbstractController
                 'nb_jour' => $nb_jour,
                 'json_menu' => $json_menu,
                 'msg' => "Nouveau menu généré",
+                'form' => $form->createView(),
             ]);
         }
         //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
