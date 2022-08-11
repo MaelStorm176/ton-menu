@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Chef
+{% endblock %}
+
+{% block body %}
+	<div class="container rounded bg-white mb-5">
+		<div class="row">
+			<div class="col-md-3 border-right">
+				<div class="d-flex flex-column align-items-center text-center p-3 py-4">
+					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
+					<span class="font-weight-bold">{{ user.firstname }}
+						{{ user.lastname }}</span>
+					<span class="text-black-50">{{ user.email }}</span>
+				</div>
+			</div>
+		</div>
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container">
+                <h4>Les recettes de {{ user.firstname }} {{ user.lastname }}</h4>
+				<div class="row">
+					{% for recette in recettes %}
+						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		<div class="row offset-md-4 offset-1">
+			{{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

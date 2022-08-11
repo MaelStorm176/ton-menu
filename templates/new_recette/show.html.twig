@@ -203,7 +203,7 @@
                 <div class="col">
                     <p class="description">
                         <i class="icon bi bi-award"></i>
-                        Crée par : <span class="fw-bold">{{ recette.userId.firstName }} {{ recette.userId.lastName }}</span>
+                        Crée par : <a href="{{ path('chef_page',{id: recette.userId.id}) }}"><span class="fw-bold">{{ recette.userId.firstName }} {{ recette.userId.lastName }}</span></a>
                     </p>
                 </div>
                 <div class="col ">

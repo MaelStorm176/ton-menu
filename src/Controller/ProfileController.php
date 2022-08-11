@@ -2,17 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Recipe;
-use App\Entity\SavedMenus;
 use App\Form\ProfileType;
+use App\Entity\SavedMenus;
 use Symfony\Component\Form\FormError;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ProfileController extends AbstractController
 {
@@ -129,5 +131,20 @@ class ProfileController extends AbstractController
             ]);
         }
 
+    }
+
+    #[Route('/chef/{id}', name: 'chef_page')]
+    public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
+    {
+        $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        $recettes = $paginator->paginate(
+            $user->getRecipes(),
+            $request->query->getInt('page', 1),
+            8
+        );
+        return $this->render('profile/chef.html.twig', [
+            'user' => $user,
+            'recettes' => $recettes,
+        ]);
     }
 }
