@@ -31,9 +31,16 @@
 				<tbody>
 					<tr class="text-center">
 						<td>
-							<a class="btn btn-outline-primary" href="{{ path('generation_menu',{nb_jour: nb_jour}) }}">
-								<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
-							</a>
+							{% if countGener > 20 and not is_granted('ROLE_PREMIUM') %}
+								<p>Limite de génération atteinte</p>
+							{% elseif countGener <= 20 or is_granted('ROLE_PREMIUM') %}
+								<a class="btn btn-outline-primary position-relative" href="{{ path('generation_menu',{nb_jour: nb_jour}) }}">
+									<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
+								<span class="position-absolute start-100 top-100 translate-middle badge rounded-pill bg-light">
+									{{ 20-countGener }}
+								</span>
+								</a>
+							{% endif %}
 						</td>
 						<td>
 							<!-- SAUVEGARDER LE MENU -->

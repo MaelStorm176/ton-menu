@@ -8,11 +8,15 @@
 @import "select2";
 @import "pagination";
 
+@font-face {
+  font-family: "Montserrat Sans";
+  src: url("../fonts/Montserrat-Regular.otf") format("otf")
+ }
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: Calisto MT, Bookman Old Style, Bookman, Goudy Old Style, Garamond, Hoefler Text, Bitstream Charter, Georgia, serif;
   background: white;
   color: black;
 }

@@ -357,11 +357,11 @@ class RandomRecipeController extends AbstractController
     {
         $type = $request->get("type");
         if ($type == "ENTREE") {
-            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomEntrees()[0], 'reload' => true]));
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomEntrees()[0], 'reload' => true]));
         } elseif ($type == "PLAT") {
-            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomPlats()[0], 'reload' => true]));
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomPlats()[0], 'reload' => true]));
         } elseif ($type == "DESSERT") {
-            return new Response($this->renderView('components/recipe_thumbnail.html.twig',['recipe' => $this->randomDesserts()[0], 'reload' => true]));
+            return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomDesserts()[0], 'reload' => true]));
         } else {
             return new JsonResponse(array(
                 'success' => false,
@@ -447,15 +447,21 @@ class RandomRecipeController extends AbstractController
     public function menu(Request $request): Response
     {
         //Si l'utilisateur est connecté
+        $manager = $this->getDoctrine()->getManager();
         $user = $this->getUser();
+        $countGener = $user->getGeneratedCounter();
+        $countGener++;
+        $user->setGeneratedCounter($countGener);
+
         $nb_jour = (int) $request->get('nb_jour');
+
         $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         //Si je demande à voir un menu en particulier
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
-        }else{
+        } else {
             $refuseRecipe = [];
         }
 
@@ -536,6 +542,8 @@ class RandomRecipeController extends AbstractController
                 "desserts" => $dessertsIds,
             ]);
         }
+        $manager->persist($user);
+        $manager->flush();
         //Si on a bien générer des entrees, plats et desserts, on peut rendre la vue
         if ($entrees && $plats && $desserts && count($entrees) == count($plats) && count($plats) == count($desserts)) {
             return $this->render('generation_menu/index.html.twig', [
@@ -547,6 +555,7 @@ class RandomRecipeController extends AbstractController
                 'json_menu' => $json_menu,
                 'msg' => "Nouveau menu généré",
                 'form' => $form->createView(),
+                "countGener" => $countGener,
             ]);
         }
         //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil

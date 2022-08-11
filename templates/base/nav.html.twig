@@ -2,7 +2,9 @@
 	<nav class="navbar navbar-expand-lg bg-light">
 		<div class="container-fluid">
 			<a class="navbar-brand w-25" href="{{ path('home') }}">
-				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid" loading="lazy" width="25%">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-block d-md-none" loading="lazy" width="50%">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-none d-md-block d-lg-none" loading="lazy" width="35%">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-none d-lg-block" loading="lazy" width="20%">
 			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 				<i class="bi bi-list" style="font-size: 2rem;"></i>
@@ -22,7 +24,7 @@
 						<li class="nav-item">
 							<a class="nav-link scrollto text-black" href="{{ path('generation_by_ingredient') }}">Génération par ingrédients</a>
 						</li>
-					{% else %}
+					{% elseif is_granted('ROLE_USER') %}
 						<li class="nav-item">
 							<a class="nav-link scrollto text-black" href="{{ path('app_payment') }}">Obtenir le pass premium</a>
 						</li>
@@ -85,9 +87,10 @@
 							</div>
 
 						{% else %}
-							<div class="d-flex">
-								<a class="nav-link scrollto active" href="{{ path('login') }}">Se Connecter</a>
-								<a class="nav-link scrollto active" href="{{ path('app_register') }}">S'inscrire</a>
+							<div class="d-lg-flex">
+								<div class="vr d-none d-lg-block"></div>
+								<a class="nav-link scrollto text-dark" href="{{ path('login') }}">Se Connecter</a>
+								<a class="nav-link scrollto text-dark" href="{{ path('app_register') }}">S'inscrire</a>
 							</div>
 						{% endif %}
 					</li>
