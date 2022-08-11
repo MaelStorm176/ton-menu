@@ -147,4 +147,10 @@ class ProfileController extends AbstractController
             'recettes' => $recettes,
         ]);
     }
+
+    #[Route('/mentions-legales', name: 'mentions_legales')]
+    public function mentionsLegales(): Response
+    {
+        return $this->render('profile/mentions.html.twig');
+    }
 }
