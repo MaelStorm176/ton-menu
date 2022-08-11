@@ -85,6 +85,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $lastname;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $GeneratedCounter;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $ReloadCounter;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -377,6 +387,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
+
+        return $this;
+    }
+
+    public function getGeneratedCounter(): ?int
+    {
+        return $this->GeneratedCounter;
+    }
+
+    public function setGeneratedCounter(?int $GeneratedCounter): self
+    {
+        $this->GeneratedCounter = $GeneratedCounter;
+
+        return $this;
+    }
+
+    public function getReloadCounter(): ?int
+    {
+        return $this->ReloadCounter;
+    }
+
+    public function setReloadCounter(?int $ReloadCounter): self
+    {
+        $this->ReloadCounter = $ReloadCounter;
 
         return $this;
     }
