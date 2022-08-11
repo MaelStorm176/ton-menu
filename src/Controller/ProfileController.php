@@ -7,6 +7,7 @@ use App\Entity\Recipe;
 use App\Form\ProfileType;
 use App\Entity\SavedMenus;
 use Symfony\Component\Form\FormError;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -133,13 +134,17 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/chef/{id}', name: 'chef_page')]
-    public function chefPage(Request $request, SluggerInterface $slugger, $id): Response
+    public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
+        $recettes = $paginator->paginate(
+            $user->getRecipes(),
+            $request->query->getInt('page', 1),
+            8
+        );
         return $this->render('profile/chef.html.twig', [
             'user' => $user,
-            'generated_menus' => $this->getDoctrine()->getRepository(SavedMenus::class)->findBy(['user' => $user], ['createdAt' => 'DESC'], 5),
+            'recettes' => $recettes,
         ]);
     }
 }
