@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page Chef
+{% endblock %}
+
+{% block body %}
+	<div class="container rounded bg-white mb-5">
+		<div class="row">
+			<div class="col-md-3 border-right">
+				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
+					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
+					<span class="font-weight-bold">{{ user.firstname }}
+						{{ user.lastname }}</span>
+					<span class="text-black-50">{{ user.email }}</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="row col-12">
+			<div class="col-md-12">
+				<div class="d-flex justify-content-between align-items-center mb-3">
+					<h4 class="text-right">Recette crée par
+						<span class="font-weight-bold">{{ user.firstname }}
+							{{ user.lastname }}</span>
+					</h4>
+				</div>
+				<table id="recipesTable2" class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>Nom</th>
+							<th>Créé le</th>
+							<th>Action</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for recette in user.recipes %}
+							<tr>
+								<td>{{ recette.name }}</td>
+								<td>{{ recette.createdAt|date("d/m/Y")}}</td>
+								<td>
+									<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('profile_index') }}
+{% endblock %}
