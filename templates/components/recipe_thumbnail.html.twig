@@ -12,7 +12,7 @@
 				<h5 class="text-truncate">
 					<a href="{{ path('recipe_show',{id: recipe.id}) }}" class="text-dark ">{{ recipe.name }}</a>
 				</h5>
-				{% if reload is defined %}
+				{% if reload is defined and reload is same as(true) %}
 					<button class="btn btn-dark">
 						<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem;"></i>
 					</button>
