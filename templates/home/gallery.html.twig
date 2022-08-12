@@ -13,69 +13,9 @@
 
         <div class="row g-0">
 
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgone.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgtwo.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgthree.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgfour.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgfive.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgsix.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a  class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgseven.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-md-4">
-            <div class="gallery-item">
-              <a  class="gallery-lightbox" data-gall="gallery-item">
-                <img src="/img/gallery/imgeight.jpg" alt="" class="img-fluid">
-              </a>
-            </div>
-          </div>
+          {% for recipe in randomRecipes %}
+            {% include "components/gallery_item.html.twig" with {recipe: recipe} %}
+          {% endfor %}
 
         </div>
 
