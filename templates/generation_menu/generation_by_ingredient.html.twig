@@ -18,7 +18,7 @@
 		</div>
 		<div class="col-md-6 m-3 mx-auto">
 			{% if myRecipes %}
-				<h3>Recette généré :</h3>
+				<h3 class="text-center">Recette généré :</h3>
 				{% for myRecipe in myRecipes %}
 					<!-- Gallery item -->
 					<div class="mb-4 w-50 mx-auto" id="recipe_{{ myRecipe.id }}" data-type="{{ myRecipe.type }}">
