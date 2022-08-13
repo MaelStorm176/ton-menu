@@ -250,6 +250,19 @@ class RecipeRepository extends ServiceEntityRepository
             ->setParameters([
                 'ingredients' => $ingredients,
                 'count' => count($ingredients)
+            ]);
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByIngredient($ingredients)
+    {
+        $qb = $this->createQueryBuilder('r');
+        $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
+            ->groupBy('r.id')
+            ->having('COUNT(i.id) = :count')
+            ->setParameters([
+                'ingredients' => $ingredients,
+                'count' => count($ingredients)
             ])
             ->orderBy('RAND()')
             ->setMaxResults(1);

@@ -32,6 +32,7 @@ Encore
 .addEntry('add_ingredient', './assets/custom/add_ingredient.js')
 .addEntry('file_uploader', './assets/custom/image-uploader.min.js')
 .addEntry('profile_index', './assets/custom/profile_index.js')
+.addEntry('generation_ingredient', './assets/custom/generation_ingredient.js')
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge('./assets/controllers.json')
