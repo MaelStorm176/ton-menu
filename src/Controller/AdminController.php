@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Demande;
 use App\Entity\Ingredient;
 use App\Entity\Rating;
 use App\Entity\Recipe;
 use App\Entity\Signalement;
 use App\Entity\User;
+use App\Repository\DemandeRepository;
 use App\Services\MarmitonManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -85,19 +87,22 @@ class AdminController extends AbstractController
     }
 
     #[Route('/role/{id}', name: 'set_chief')]
-    public function setChief($id): Response
+    public function setChief($id, DemandeRepository $demandeRepository): Response
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);
-    
+        
+        //get demande with user id
+        $demande = $demandeRepository->findOneBy(['user' => $user]);
+        $demande->setAccept(1);
     
         $user->setRoles(["ROLE_CHIEF"]);
         $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
+        $entityManager->persist($user, $demande);
         $entityManager->flush();
         // do anything else you need here, like send an email
     
-        return $this->redirectToRoute('admin_users');
+        return $this->redirectToRoute('admin_accept_demande');
     }
 
     #[Route('/report', name: 'report_comment')]
@@ -111,6 +116,17 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/demande', name: 'accept_demande')]
+    public function acceptDemande(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(Demande::class);
+        $demandes = $repository->findAll();
+
+        return $this->render('admin/demande/accept_demande.html.twig', [
+            'demandes' => $demandes,
+        ]);
+    }
+
     #[Route('/delete-comment/{id}', name: 'delete_report')]
     public function deleteReport(Signalement $signalement): Response
     {
@@ -119,5 +135,23 @@ class AdminController extends AbstractController
         $entityManager->remove($signalement);
         $entityManager->flush();
         return $this->redirectToRoute('admin_report_comment');
+    }
+
+    #[Route('/refuse/{id}', name: 'refuse')]
+    public function refuseRole($id, DemandeRepository $demandeRepository): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(User::class);
+        $user = $repository->find($id);
+        
+        //get demande with user id
+        $demande = $demandeRepository->findOneBy(['user' => $user]);
+        $demande->setAccept(2);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($demande);
+        $entityManager->flush();
+        // do anything else you need here, like send an email
+    
+        return $this->redirectToRoute('admin_accept_demande');
     }
 }

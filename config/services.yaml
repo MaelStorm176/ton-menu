@@ -10,6 +10,7 @@ parameters:
     database_user: symfony
     database_password: symfony
     profile_picture: '%kernel.project_dir%/public/profile_picture'
+    document: '%kernel.project_dir%/public/document'
     ingredient_image_directory: '%kernel.project_dir%/public/img/ingredients'
     recipe_image_directory: '%kernel.project_dir%/public/img/recipes'
 

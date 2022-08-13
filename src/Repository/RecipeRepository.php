@@ -250,7 +250,9 @@ class RecipeRepository extends ServiceEntityRepository
             ->setParameters([
                 'ingredients' => $ingredients,
                 'count' => count($ingredients)
-            ]);
+            ])
+            ->orderBy('RAND()')
+            ->setMaxResults(1);
         return $qb->getQuery()->getResult();
     }
 
