@@ -133,7 +133,7 @@
 							{% for recette in user.recipes %}
 								<tr>
 									<td>{{ recette.name }}</td>
-									<td>{{ recette.createdAt|date("d/m/Y")}}</td>
+									<td class="text-center">{{ recette.createdAt|date("d/m/Y")}}</td>
 									<td>
 										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
 									</td>

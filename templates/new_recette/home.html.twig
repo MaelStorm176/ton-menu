@@ -94,8 +94,10 @@
             </div>
         </div>
 
-        <div class="row offset-4">
-            {{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                {{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -1,26 +1,29 @@
 <!-- Gallery item -->
+{% set badges ={'ENTREE': 'bg-light','PLAT': 'bg-primary','DESSERT': 'bg-secondary'} %}
 <div class="col-xl-3 col-lg-4 col-md-6 mb-4" id="recipe_{{ recipe.id }}" data-type="{{ recipe.type }}">
 	<div class="bg-white rounded shadow-sm h-100">
-		{% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
-			<img src="{{ asset(recipe.recipeImages[0].url) }}" alt="picture" class="img-fluid card-img-top w-sm-50">
-		{% else %}
-			<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid card-img-top" >
+
+		{% if reload is defined and reload is same as(true) %}
+			<button class="btn btn-primary position-absolute p-2 m-2" >
+				<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem"></i>
+			</button>
 		{% endif %}
 
-		<div class="p-4">
+		{% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
+			<img src="{{ asset(recipe.recipeImages[0].url) }}" alt="picture" class="card-img-top w-sm-50" style="height: 60%">
+		{% else %}
+			<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="card-img-top w-sm-50" style="height: 60%">
+		{% endif %}
+
+		<span class="badge float-end p-2 m-2 {{ badges[recipe.type] }}">{{ recipe.type|capitalize }}</span>
+
+		<div style="height: 40%" class="p-4">
 			<div class="d-flex justify-content-between align-items-center">
 				<h5 class="text-truncate">
-					<a href="{{ path('recipe_show',{id: recipe.id}) }}" class="text-dark ">{{ recipe.name }}</a>
+					<a href="{{ path('recipe_show',{id: recipe.id}) }}" class="text-dark">{{ recipe.name }}</a>
 				</h5>
-				{% if reload is defined and reload is same as(true) %}
-					<button class="btn btn-dark">
-						<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem;"></i>
-					</button>
-				{% endif %}
 			</div>
-			<div
-				class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
-				<!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
+			<div class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
 				<div class="d-flex flex-row justify-content-center">
 					{% for i in 1..5 %}
 						{% if i <= recipe.getAverageRating %}

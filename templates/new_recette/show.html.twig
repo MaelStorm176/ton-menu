@@ -85,11 +85,13 @@
     </style>
 
 <section id="recipe">
+    <!--
     <div class="btn-titlemenu">
         <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
-    </div>
-    <div class="container mt-5">
+    </div
+    -->
+    <div class="container">
         <div class="col">
             <p class="title">{{recette.name}}</p>
             <div class="d-flex flex-row justify-content-center">
@@ -188,10 +190,14 @@
                     <div class="grid row">
                     {% for ingredient in recette.ingredients %}
                         <div class="col-md-4 col-sm-4 mb-2">
-                            <div class="rounded shadow-sm border">
-                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}">
-                                    <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
-                                    <p class="fw-bold text-center text-wrap">{{ingredient.name}}</p>
+                            <div class="rounded shadow-sm border h-100">
+                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}" class="d-flex flex-column align-items-center h-100">
+                                    {% if ingredient.image %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
+                                    {% else %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ asset('img/placeholder.webp') }}">
+                                    {% endif %}
+                                    <p class="fw-bold text-wrap mt-2">{{ingredient.name}}</p>
                                 </a>
                             </div>
                         </div>
