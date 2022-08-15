@@ -41,9 +41,9 @@
 							{% elseif countGener <= 20 or is_granted('ROLE_PREMIUM') %}
 								<a class="btn btn-outline-primary position-relative" href="{{ path('generation_menu',{nb_jour: nb_jour}) }}">
 									<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
-								<span class="position-absolute start-100 top-100 translate-middle badge rounded-pill bg-light">
-									{{ 20-countGener }}
-								</span>
+									<span class="position-absolute start-100 top-100 translate-middle badge rounded-pill bg-light">
+										{{ 20-countGener }}
+									</span>
 								</a>
 							{% else %}
 								<p>TOTO</p>
@@ -76,10 +76,13 @@
 		<!-- FILTRE PAR INGREDIENTS -->
 		{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
 			{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
-			<div class="col-lg-10 col-md-9 col-sm-12 mt-1">
+			<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
 				{{form_widget(form.ingredients)}}
 			</div>
-			<div class="col-lg-2 col-md-2 mt-1 text-center">
+			<!--<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+				{{form_widget(form.maxDuration)}}
+			</div>-->
+			<div class="col-lg-12 col-md-12 mt-1 text-center">
 				{{ form_widget(form.submit) }}
 			</div>
 			{{ form_end(form) }}

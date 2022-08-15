@@ -457,9 +457,11 @@ class RandomRecipeController extends AbstractController
 
         //Si je demande à voir un menu en particulier
         $refuseRecipe = [];
+        $recettesResults = [];
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
+            //$recettesResults = $this->recipeRepository->findBySearch($data);
         }
 
         if ($id_menu = $request->get('id_menu')) {
