@@ -12,7 +12,6 @@
                         <th>Nom</th>
                         <th>Mail</th>
                         <th>Role</th>
-                        <th>Give role chief</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -22,7 +21,6 @@
                             <td>{{ user.lastname }} {{ user.firstname }}</td>
                             <td>{{user.email}}</td>
                             <td>{{user.roles[0]}}</td>
-                            <td><a href="/admin/role/{{user.id}}">Give Role Chief</a></td>
                             <td class="text-center">
                                 <a href="{{ path('admin_user_show',{id: user.id}) }}" type="button" class="btn btn-secondary"><i class="fs-4 bi-eye"></i></a>
                                 <button type="button" class="btn btn-secondary"><i class="fs-4 bi-pen"></i></button>
