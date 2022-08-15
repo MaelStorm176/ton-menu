@@ -26,9 +26,11 @@ class UserFixtures extends Fixture {
         $admin = $this->createAdminUser();
         $user = $this->createFakeUser();
         $chief = $this->createFakeChief();
+        $premium = $this->createFakePremium();
         $manager->persist($admin);
         $manager->persist($user);
         $manager->persist($chief);
+        $manager->persist($premium);
 
         //create 100 users
         for ($i = 0; $i < 100; $i++) {
@@ -62,7 +64,7 @@ class UserFixtures extends Fixture {
             ->setFirstname("Administrateur")
             ->setLastname(null)
             ->setPassword($password_encoded)
-            ->setRoles(["ROLE_ADMIN"])
+            ->setRoles(["ROLE_ADMIN", "ROLE_CHIEF", "ROLE_PREMIUM", "ROLE_USER"])
             ->setIsVerify(true)
             ->setProfilePicture("/blank.png");
         return $user;
@@ -93,6 +95,19 @@ class UserFixtures extends Fixture {
         $user->setIsVerify(true);
         $user->setProfilePicture("/blank.png");
         $user->setRoles(['ROLE_CHIEF']);
+        return $user;
+    }
+
+    private function createFakePremium(): User
+    {
+        $user = new User();
+        $user->setEmail("fakepremium@gmail.com");
+        $user->setPassword($this->encoder->hashPassword($user, "pass_1234"));
+        $user->setFirstName($this->faker->firstName);
+        $user->setLastName($this->faker->lastName);
+        $user->setIsVerify(true);
+        $user->setProfilePicture("/blank.png");
+        $user->setRoles(['ROLE_PREMIUM']);
         return $user;
     }
 }

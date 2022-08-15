@@ -85,11 +85,13 @@
     </style>
 
 <section id="recipe">
+    <!--
     <div class="btn-titlemenu">
         <a class="btn-menu animated fadeInUp" href="{{ path('generation_menu',{nb_jour: 7}) }}">Retour à ma génération de menu</a>
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
-    </div>
-    <div class="container mt-5">
+    </div
+    -->
+    <div class="container">
         <div class="col">
             <p class="title">{{recette.name}}</p>
             <div class="d-flex flex-row justify-content-center">
@@ -101,7 +103,7 @@
                     {% endif %}
                 {% endfor %}
 
-                <span class="ml-3">({{recette.numberOfRating}} avis)</span>
+                <span class="mx-3">({{recette.numberOfRating}} avis)</span>
             </div>
 
 
@@ -111,6 +113,7 @@
             </div>
             {% endif %}
 
+            <!--
             <div class="row">
                 {% for image in recette.recipeImages %}
                     <div class="col-md-3 mt-2">
@@ -118,6 +121,7 @@
                     </div>
                 {% endfor %}
             </div>
+            -->
 
 
             {% if recette.description %}
@@ -186,10 +190,14 @@
                     <div class="grid row">
                     {% for ingredient in recette.ingredients %}
                         <div class="col-md-4 col-sm-4 mb-2">
-                            <div class="rounded shadow-sm border">
-                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}">
-                                    <img class="w-100" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
-                                    <p class="fw-bold text-center text-wrap">{{ingredient.name}}</p>
+                            <div class="rounded shadow-sm border h-100">
+                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}" class="d-flex flex-column align-items-center h-100">
+                                    {% if ingredient.image %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
+                                    {% else %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ asset('img/placeholder.webp') }}">
+                                    {% endif %}
+                                    <p class="fw-bold text-wrap mt-2">{{ingredient.name}}</p>
                                 </a>
                             </div>
                         </div>
@@ -251,7 +259,20 @@
                                 <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="profile_picture" class="rounded-circle">
                             </a>
                             <div class="p-2">
+                                {% if "ROLE_CHIEF" in comment.user.roles %}
+                                    <span class="badge bg-primary">Chef</span>
+                                {% endif %}
+                                {% if "ROLE_ADMIN" in comment.user.roles %}
+                                    <span class="badge bg-secondary">Admin</span>
+                                {% endif %}
+
+                                {% if "ROLE_CHIEF" in comment.user.roles %}
+                                <a href="{{ path('chef_page',{id: comment.user.id}) }}">
+                                    <span class="fw-bold">{{ comment.user.firstName }} {{ comment.user.lastName }}</span>
+                                </a>
+                                {% else %}
                                 <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
+                                {% endif %}
                                 <br/>
                                 <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
                             </div>

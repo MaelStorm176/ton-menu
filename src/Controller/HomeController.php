@@ -21,9 +21,10 @@ class HomeController extends AbstractController
     public function index(RecipeRepository $recipeRepository): Response
     {
         $recipes = $recipeRepository->getRandomRecipes("PLAT", 3);
-
+        $randomRecipes = $recipeRepository->getRandomRecipes("PLAT", 8);
         return $this->render('home/index.html.twig', [
             'recipes' => $recipes,
+            'randomRecipes' => $randomRecipes,
         ]);
     }
 

@@ -1,5 +1,7 @@
 {% extends "admin/admin.html.twig" %}
 
+{% block title %}Gestion des recettes{% endblock %}
+
 {% block content %}
     <h3>Gestion des recettes</h3>
     <div class="row">
@@ -46,10 +48,9 @@
             </table>
         </div>
     </div>
+{% endblock %}
 
-    {% block javascripts %}
-        {{ parent() }}
-        {{ encore_entry_script_tags('show_recipes') }}
-    {% endblock %}
-
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_recipes') }}
 {% endblock %}

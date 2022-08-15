@@ -6,14 +6,14 @@
     <h3>Gestion des utilisateurs</h3>
     <div class="row">
         <div class="col">
-            <table id="usersTable" class="table table-striped table-bordered" style="width:100%">
+            <table id="reportsTable" class="table table-striped table-bordered w-100">
                 <thead>
                     <tr>
-                        <th>Utilisateur signaler</th>
-                        <th>Message Signaler</th>
-                        <th>Signaler par</th>
-                        <th>Traiter</th>
-                        <th>Signaler le</th>
+                        <th>Utilisateur signalé</th>
+                        <th>Message Signalé</th>
+                        <th>Signalé par</th>
+                        <th>Traité</th>
+                        <th>Signalé le</th>
                         <th>Dernier signalement</th>
                         <th>Actions</th>
                     </tr>
@@ -46,5 +46,10 @@
             </table>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('report_comment') }}
 {% endblock %}
 

@@ -40,9 +40,15 @@
 							<i class="bx bx-chevron-right"></i>
 							<a class="mx-auto" href="#gallery">Gallerie</a>
 						</li>
+						{% if is_granted('ROLE_USER') %}
+							<li>
+								<i class="bx bx-chevron-right"></i>
+								<a class="mx-auto" href="/demande">Demande de role</a>
+							</li>
+						{% endif %}
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="/demande">Demande de role</a>
+							<a class="mx-auto" href="#UseIt">Nos chefs</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
@@ -53,7 +59,7 @@
 
 				<div class="col-md-4 footer-newsletter col-sm-12">
 					<div class="container">
-						<img class="qrcode_img" src="/img/qrcode.png" alt="qrcode">
+						<img class="qrcode_img" src="{{ asset('img/qrcode.png') }}" alt="qrcode">
 					</div>
 
 				</div>

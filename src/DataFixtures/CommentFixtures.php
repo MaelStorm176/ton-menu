@@ -21,7 +21,7 @@ class CommentFixtures extends Fixture implements DependentFixtureInterface
         $recipes = $manager->getRepository('App:Recipe')->findAll();
 
         // create 100 comments
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $createdAt = $this->faker->dateTimeBetween('-1 years', 'now');
 
             $comment = new Comment();

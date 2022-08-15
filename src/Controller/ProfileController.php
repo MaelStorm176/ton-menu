@@ -89,62 +89,32 @@ class ProfileController extends AbstractController
             'generated_menus' => $this->getDoctrine()->getRepository(SavedMenus::class)->findBy(['user' => $user], ['createdAt' => 'DESC'], 5),
         ]);
     }
-    // nouvelle route profile/menu
-    #[Route('/profile/menu', name: 'profile_menu')]
-    public function seeMenu(): Response
-    {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-        $menu = $user->getMonMenu();
-        if ($menu !== null) {
-            $menu2 = $menu->getMenuSave();
-
-            $date_menu = $menu->getDateGenerate();
-            $now = new \DateTime();
-            $diff = $now->diff($date_menu);
-
-            if ($diff->d > count($menu2[0])) {
-                $user->setMonMenu(null);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
-            }
-            if (isset($menu)) {
-                $recipes = [];
-                $repository = $this->getDoctrine()->getRepository(Recipe::class);
-                $recipes1 = $repository->findBy(['id' => $menu2[0][$diff->d]]);
-                $recipes2 = $repository->findBy(['id' => $menu2[1][$diff->d]]);
-                $recipes3 = $repository->findBy(['id' => $menu2[2][$diff->d]]);
-                $recipes4 = $repository->findBy(['id' => $menu2[3][$diff->d]]);
-                $recipes5 = $repository->findBy(['id' => $menu2[4][$diff->d]]);
-                $recipes6 = $repository->findBy(['id' => $menu2[5][$diff->d]]);
-                array_push($recipes, $recipes1, $recipes2, $recipes3, $recipes4, $recipes5, $recipes6);
-            }
-            $none = 0;
-            return $this->render('profile/menu.html.twig', [
-                "recette" => $recipes,
-                "test" => $none,
-            ]);
-        }else{
-            $none = 1;
-            return $this->render('profile/menu.html.twig', [
-                "test" => $none,
-            ]);
-        }
-
-    }
 
     #[Route('/chef/{id}', name: 'chef_page')]
     public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (!$user || !array_search("ROLE_CHIEF",$user->getRoles()) || !$user->getIsVerify()) {
+            throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
+        }
+
+        $countEntrees = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'ENTREE']);
+        $countPlats = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'PLAT']);
+        $countDesserts = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'DESSERT']);
         $recettes = $paginator->paginate(
             $user->getRecipes(),
             $request->query->getInt('page', 1),
             8
         );
+        $bestRecipes = $this->getDoctrine()->getRepository(Recipe::class)->findBestRatedRecipesMadeByAUser($user);
         return $this->render('profile/chef.html.twig', [
             'user' => $user,
             'recettes' => $recettes,
+            'bestRecipes' => $bestRecipes,
+            'countEntrees' => $countEntrees,
+            'countPlats' => $countPlats,
+            'countDesserts' => $countDesserts,
+            'totalRecettes' => $countEntrees + $countPlats + $countDesserts,
         ]);
     }
 
