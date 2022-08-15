@@ -1,4 +1,3 @@
-const generateResultsMenu = JSON.parse($("#menu").val());
 $(document).ready(function (){
   console.log("results_menu.js loaded");
 
@@ -117,6 +116,7 @@ $(document).ready(function (){
 });
 
 function refresh_recipe(e){
+  const generateResultsMenu = JSON.parse($("#menu").val());
   const recipe_to_reload = $(e.delegateTarget);
   const recipe_id = Number(recipe_to_reload.attr("id").substring(7));
   const type = recipe_to_reload.attr("data-type");
