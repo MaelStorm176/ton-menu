@@ -34,5 +34,9 @@ $(document).ready(function () {
         $('#sidebar').toggleClass('active');
     });
 
-    $('.toast').toast('show');
+    /*
+    $('.toast').each(function () {
+        const toast = new Toast(this);
+        toast.show();
+    });*/
 })

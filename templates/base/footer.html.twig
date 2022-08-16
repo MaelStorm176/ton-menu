@@ -22,37 +22,37 @@
 					<ul>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="/">Home</a>
+							<a class="mx-auto" href="{{ path('home') }}">Accueil</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="#about">About us</a>
+							<a class="mx-auto" href="{{ path('home') }}#about">A propos de nous</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="#why-us">En ce Moment</a>
+							<a class="mx-auto" href="{{ path('home') }}#why-us">En ce Moment</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="#UseIt">Comment utiliser</a>
+							<a class="mx-auto" href="{{ path('home') }}#UseIt">Comment utiliser</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="#gallery">Gallerie</a>
+							<a class="mx-auto" href="{{ path('home') }}#gallery">Gallerie</a>
 						</li>
 						{% if is_granted('ROLE_USER') %}
 							<li>
 								<i class="bx bx-chevron-right"></i>
-								<a class="mx-auto" href="/demande">Demande de role</a>
+								<a class="mx-auto" href="{{ path('demande') }}">Demande de role</a>
 							</li>
 						{% endif %}
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="#UseIt">Nos chefs</a>
+							<a class="mx-auto" href="{{ path('home') }}#UseIt">Nos chefs</a>
 						</li>
 						<li>
 							<i class="bx bx-chevron-right"></i>
-							<a class="mx-auto" href="/mentions-legales">Mentions Légales</a>
+							<a class="mx-auto" href="{{ path('mentions_legales') }}">Mentions Légales</a>
 						</li>
 					</ul>
 				</div>

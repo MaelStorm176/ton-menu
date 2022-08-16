@@ -22,7 +22,7 @@ class IngredientFilterType extends AbstractType
             'choice_label' => 'name',
             'multiple' => true,
             'expanded' => false,
-        ])
+        ]);
         /*->add('maxDuration', ChoiceType::class, [
             'label' => 'Temps passé en cuisine',
             'required' => false,
@@ -33,10 +33,6 @@ class IngredientFilterType extends AbstractType
                 '1h - 2h' => 2,
             ],
         ])*/
-        ->add('submit', SubmitType::class, [
-            'label' => 'Rechercher',
-            'attr' => ['class' => 'btn btn-primary']
-        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

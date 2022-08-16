@@ -25,34 +25,6 @@ $(document).ready(function (){
     }
   });
 
-  /*
-  $("#save_menu").click(function(){
-    if (generatedMenu == null || generatedMenu === "") {
-      alert("Veuillez générer un menu avant de sauvegarder");
-    }else{
-      $.ajax({
-        url: "/ajax/generation-menu/save_menu",
-        type: "POST",
-        dataType: "json",
-        data: {
-          menu: generatedMenu
-        },
-        success: function(data){
-          if (data.success === true && data.msg !== "" && data.id !== "") {
-            console.log(data);
-            alert(data.msg);
-            $("#save_menu").data("id", data.id);
-          }else if (data.success === false && data.msg !== "") {
-            alert(data.msg);
-          } else{
-            alert("Une erreur est survenue");
-          }
-        }
-      });
-    }
-  });
-  */
-
   $("#send_menu").submit(function(e){
     e.preventDefault();
     const generatedMenu = $("#menu").val();
@@ -88,31 +60,6 @@ $(document).ready(function (){
 
   $("div[id^=recipe_]").on("click", "button", (event) => refresh_recipe(event));
 
-  /*
-  $("button[id^='refresh_day_']").click(function(){
-    const day = $(this).data("day");
-    $.ajax({
-      url: "/ajax/generation-menu/refresh",
-      type: "GET",
-      dataType: "json",
-      data: {
-        day: true
-      },
-      success: function(data){
-        if (data.success === true && data.msg !== "") {
-          console.log(data);
-          alert(data.msg);
-          $("#refresh_day_"+day).data("day", data.day);
-        }else if (data.success === false && data.msg !== "") {
-          alert(data.msg);
-        } else{
-          alert("Une erreur est survenue");
-        }
-      }
-    });
-  });
-   */
-
 });
 
 function refresh_recipe(e){
@@ -138,7 +85,7 @@ function refresh_recipe(e){
         generateResultsMenu[recipe_type][recipe_that_will_be_regenerated_index] = Number($test.attr("id").substring(7));
         recipe_to_reload.replaceWith($data);
         $("#menu").val(JSON.stringify(generateResultsMenu));
-        $data.on("click", "button.btn.btn-dark", function (event) {
+        $data.on("click", "button.btn.btn-primary", function (event) {
           refresh_recipe(event);
         });
       }
