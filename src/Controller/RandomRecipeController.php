@@ -293,7 +293,7 @@ class RandomRecipeController extends AbstractController
         return $this->randomRecipes("DESSERT", $nb_matin_soir, $not_in);
     }
 
-    private function randomRecipes($type, $max = 1, $notIn = [])
+    protected function randomRecipes($type, $max = 1, $notIn = [])
     {
         $type = strtoupper($type);
         if (in_array($type, ["ENTREE", "PLAT", "DESSERT"])) {

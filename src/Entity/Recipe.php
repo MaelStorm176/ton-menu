@@ -2,6 +2,10 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Controller\Api\RandomMenuController;
+use App\Controller\Api\RandomRecipeController;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,6 +20,56 @@ use Symfony\Component\Serializer\Annotation\Groups;
                 'groups' => ['recipe:list']
             ]
         ],
+        'random' => [
+            'method' => 'GET',
+            'path' => '/recipes/random/{type}',
+            'controller' => RandomRecipeController::class,
+            'filters' => [],
+            'normalization_context' => [
+                'groups' => ['recipe:list']
+            ],
+            'openapi_context' => [
+                'summary' => 'Get a random recipe',
+                'description' => 'Get a random recipe',
+                'parameters' => [
+                    'type' => [
+                        'in' => 'path',
+                        'name' => 'type',
+                        'description' => 'The type of recipe',
+                        'required' => true,
+                        'schema' => [
+                            'type' => 'string'
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        'menu' => [
+            'method' => 'GET',
+            'path' => '/recipes/menu/{number}',
+            'controller' => RandomMenuController::class,
+            'filters' => [],
+            'normalization_context' => [
+                'groups' => ['recipe:list']
+            ],
+            'openapi_context' => [
+                'summary' => 'Get {number} of random menus',
+                'description' => 'One menu is composed of 1 starter 1 main 1 dessert',
+                'parameters' => [
+                    'number' => [
+                        'in' => 'path',
+                        'name' => 'number',
+                        'description' => 'number of menus',
+                        'required' => true,
+                        'minimum' => 1,
+                        'maximum' => 7,
+                        'schema' => [
+                            'number' => 'number'
+                        ]
+                    ]
+                ]
+            ]
+        ]
     ],
     itemOperations: [
         'get' => [
@@ -31,6 +85,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         'order' => ['created_at' => 'DESC'],
     ]
 )]
+#[ApiFilter(SearchFilter::class, properties:["name" => "partial", "type" => "exact"])]
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
  */
