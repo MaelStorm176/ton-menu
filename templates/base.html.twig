@@ -15,11 +15,22 @@
         {% block stylesheets %}{{ encore_entry_link_tags('app') }}{% endblock %}
         {% block javascripts %}{{ encore_entry_script_tags('app') }}{% endblock %}
     </head>
-    <body class="col-12">
+    <body>
         {% include 'base/nav.html.twig' %}
-        {% block body %}
-        
-        {% endblock %}
+        {% block body %}{% endblock %}
+
+        <div aria-live="polite" aria-atomic="true">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                {% for flashMessage in app.session.flashBag.get('success') %}
+                    {% include 'components/toast.html.twig' with {title: "Succes !", message: flashMessage, type: "success"} %}
+                {% endfor %}
+
+                {% for flashMessage in app.session.flashBag.get('error') %}
+
+                    {% include 'components/toast.html.twig' with {title: "Erreur !", message: flashMessage, type: "error"} %}
+                {% endfor %}
+            </div>
+        </div>
         {% include 'base/footer.html.twig' %}
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </body>
