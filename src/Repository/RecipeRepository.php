@@ -287,5 +287,11 @@ class RecipeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    //Find recipe by ingredient array
+    public function findLast10One(){
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.created_at', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
 }

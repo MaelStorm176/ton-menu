@@ -17,7 +17,6 @@
         <h3>Subscription to Starter plan successful!</h3>
       </div>
     </div>
-    {{dump(session)}}
     <form action="/success" method="POST">
       <input type="hidden" id="session-id" name="session_id" value="{{session}}" />
       <button id="checkout-and-portal-button" type="submit">Manage your billing information</button>
