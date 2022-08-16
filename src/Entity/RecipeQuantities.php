@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RecipeQuantitiesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeQuantitiesRepository::class)
@@ -19,6 +20,7 @@ class RecipeQuantities
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"recipe:list"})
      */
     private $content;
 

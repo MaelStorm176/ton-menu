@@ -36,6 +36,7 @@ Encore
 .addEntry('generation_ingredient', './assets/custom/generation_ingredient.js')
 .addEntry('report_comment', './assets/custom/report_comment.js')
 .addEntry('admin_css', './assets/custom/admin.js')
+.addEntry('form', './assets/styles/form.scss')
 
 // enables the Symfony UX Stimulus bridge (used in assets/bootstrap.js)
 .enableStimulusBridge('./assets/controllers.json')

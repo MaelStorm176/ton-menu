@@ -13,10 +13,21 @@ security:
       entity:
         class: App\Entity\User
         property: email
+    apikey_user_provider:
+      entity:
+        class: App\Entity\User
+        property: apiKey
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+    api:
+      pattern: ^/api
+      security: true
+      provider: apikey_user_provider
+      guard:
+        authenticators:
+          - App\Security\ApiKeyAuthentificator
     main:
       lazy: true
       provider: app_user_provider
@@ -46,3 +57,4 @@ security:
     - { path: ^/chef, roles: ROLE_USER }
     - { path: ^/ingredient, roles: [ROLE_ADMIN, ROLE_CHIEF] }
     - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
+    - { path: ^/api, roles: [ROLE_PREMIUM, ROLE_ADMIN] }
