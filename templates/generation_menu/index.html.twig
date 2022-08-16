@@ -3,7 +3,7 @@
 {% block title %} Generation Menu {% endblock %}
 
 {% block body %}
-    <div class="mx-auto w-100 p-2">
+    <div class="container p-2">
         {% include 'generation_menu/table_menu.html.twig' %}
     </div>
 {% endblock %}
@@ -11,5 +11,4 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('results_menu') }}
-
 {% endblock %}

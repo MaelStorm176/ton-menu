@@ -20,7 +20,11 @@
                         <tr>
                             <td>{{ user.lastname }} {{ user.firstname }}</td>
                             <td>{{user.email}}</td>
-                            <td>{{user.roles[0]}}</td>
+                            <td>
+                            {% for role in user.roles %}
+                                {{ role }} <br>
+                            {% endfor %}
+                            </td>
                             <td class="text-center">
                                 <a href="{{ path('admin_user_show',{id: user.id}) }}" type="button" class="btn btn-secondary"><i class="fs-4 bi-eye"></i></a>
                                 <button type="button" class="btn btn-secondary"><i class="fs-4 bi-pen"></i></button>

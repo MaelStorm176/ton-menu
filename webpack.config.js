@@ -35,6 +35,7 @@ Encore
 .addEntry('profile_index', './assets/custom/profile_index.js')
 .addEntry('generation_ingredient', './assets/custom/generation_ingredient.js')
 .addEntry('report_comment', './assets/custom/report_comment.js')
+.addEntry('accept_demande', './assets/custom/accept_demande.js')
 .addEntry('admin_css', './assets/custom/admin.js')
 .addEntry('form', './assets/styles/form.scss')
 

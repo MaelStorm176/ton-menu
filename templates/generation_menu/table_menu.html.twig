@@ -17,24 +17,38 @@
 <div>
 	{% if is_granted('ROLE_USER') %}
 		<div class="row mb-3 col-12 mx-auto">
-			<div class="form-group d-flex align-items-center col-md-7 col-sm-12">
-				<select class="form-select w-100 mt-4" name="select_nb_jour" id="select_nb_jour">
-					{% for i in range(2,7) %}
-						<option value="{{ i }}" {% if i is same as nb_jour %} selected {% endif %}>{{ i }}
-							jours</option>
-					{% endfor %}
-				</select>
-			</div>
-			<table class="col-md-4 col-sm-11 mx-auto">
+			<table>
 				<thead>
 					<tr class="text-center">
-						<td>Nouveau menu</td>
-						<td>Sauvegarde</td>
-						<td>Envoi par mail</td>
+						<th>Jour</th>
+						{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
+							<th>Ingrédients à éviter</th>
+						{% endif %}
+						<th>Nouveau menu</th>
+						<th>Sauvegarde</th>
+						<th>Envoi par mail</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr class="text-center">
+						<td>
+							<select class="form-select w-100" name="select_nb_jour" id="select_nb_jour">
+								{% for i in range(2,7) %}
+									<option value="{{ i }}" {% if i is same as nb_jour %} selected {% endif %}>{{ i }}
+										jours</option>
+								{% endfor %}
+							</select>
+						</td>
+						<!-- FILTRE PAR INGREDIENTS -->
+						{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
+							<td>
+								{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
+								<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+									{{form_widget(form.ingredients)}}
+								</div>
+								{{ form_end(form) }}
+							</td>
+						{% endif %}
 						<td>
 							{% if countGener > 20 and not is_granted('ROLE_PREMIUM') %}
 								<p>Limite de génération atteinte</p>
@@ -72,21 +86,6 @@
 				</tbody>
 			</table>
 		</div>
-
-		<!-- FILTRE PAR INGREDIENTS -->
-		{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
-			{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
-			<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
-				{{form_widget(form.ingredients)}}
-			</div>
-			<!--<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
-				{{form_widget(form.maxDuration)}}
-			</div>-->
-			<div class="col-lg-12 col-md-12 mt-1 text-center">
-				{{ form_widget(form.submit) }}
-			</div>
-			{{ form_end(form) }}
-		{% endif %}
 		<hr class="dropdown-divider">
 	{% endif %}
 
