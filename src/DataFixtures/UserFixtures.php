@@ -66,6 +66,7 @@ class UserFixtures extends Fixture {
             ->setPassword($password_encoded)
             ->setRoles(["ROLE_ADMIN", "ROLE_CHIEF", "ROLE_PREMIUM", "ROLE_USER"])
             ->setIsVerify(true)
+            ->setApiKey(uniqid())
             ->setProfilePicture("/blank.png");
         return $user;
     }
