@@ -289,7 +289,7 @@ class RecipeRepository extends ServiceEntityRepository
 
     public function findLast10One(){
         return $this->createQueryBuilder('c')
-            ->orderBy('c.created_at', 'ASC')
+            ->orderBy('c.created_at', 'DESC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult();

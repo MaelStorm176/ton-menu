@@ -61,6 +61,7 @@ class TransactionController extends AbstractController
         $transaction->setValidate(true);
         $transaction->setCreatedAt(new DateTimeImmutable());
         $transaction->setValidateAt(new DateTimeImmutable());
+        $transaction->setSessionId($session_id);
 
         $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);
 
