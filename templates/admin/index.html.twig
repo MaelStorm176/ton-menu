@@ -1,7 +1,202 @@
 {% extends 'admin/admin.html.twig' %}
 
-{% block title %}Hello AdminController!{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block content %}
-    <img src="https://assets.afcdn.com/recipe/20170609/68312_w1024h768c1cx2000cy3000.webp" alt="recette" />
+	<div id="layoutSidenav_content">
+		<main>
+			<div class="container-fluid px-4">
+				<h1 class="mt-4">Dashboard</h1>
+				<ol class="breadcrumb mb-4">
+					<li class="breadcrumb-item active">Dernières stats</li>
+				</ol>
+				<div class="row">
+					<div class="col-xl-6">
+						<div class="card mb-4">
+							<div class="card-header">
+								<i class="bi bi-flag-fill"></i>
+								Dernier signalements
+							</div>
+							<div class="card-body">
+								{% if comments != [] %}
+									<table id="reportsTable" class="table table-striped table-bordered w-100">
+										<thead>
+											<tr>
+												<th>Utilisateur signalé</th>
+												<th>Message Signalé</th>
+												<th>Signalé par</th>
+												<th>Traité</th>
+												<th>Signalé le</th>
+												<th>Dernier signalement</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for comment in comments %}
+												<tr>
+													<td>{{ comment.message.user.lastname }}
+														{{ comment.message.user.firstname }}</td>
+													<td>{{comment.message.content}}</td>
+													<td>
+														{% for user in comment.userSignalement %}
+															{{user.lastname}}
+															{{user.firstname}}
+															<br>
+														{% endfor %}
+													</td>
+													<td>
+														{% if comment.traiter %}
+															Oui
+														{% else %}
+															Non
+														{% endif %}
+													</td>
+													<td>{{comment.createAt|date('d/m/Y')}}</td>
+													<td>{{comment.updateAt|date('d/m/Y')}}</td>
+													<td class="text-center">
+														<a href="{{ path('admin_delete_report', {'id': comment.id}) }}" class="btn btn-secondary">
+															<i class="fs-4 bi-trash"></i>
+														</a>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								{% else %}
+									<p>Aucun signalement</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+					<div class="col-xl-6">
+						<div class="card mb-4">
+							<div class="card-header">
+								<i class="bi bi-award"></i>
+								Dernières demandes
+							</div>
+							<div class="card-body">
+								{% if demandes != [] %}
+									<table id="usersTable" class="table table-striped table-bordered" style="width:100%">
+										<thead>
+											<tr>
+												<th>Utilisateur</th>
+												<th>Nom Prénom</th>
+												<th>Message</th>
+												<th>Document</th>
+												<th>Etats de la demande</th>
+												<th>Date de la demande</th>
+												<th>Actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											{% for demande in demandes %}
+												<tr>
+													<td>{{ demande.user.lastname }}
+														{{ demande.user.firstname }}</td>
+													<td>{{demande.name}}</td>
+													<td>
+														{{demande.message}}
+													</td>
+													<td>
+														<a href="{{ asset('/document/' ~ demande.document) }}" target="_blank" class="mx-auto">
+															<i class="fs-4 bi bi-filetype-pdf"></i>
+														</a>
+													</td>
+													<td>
+														{% if demande.accept == 0 %}
+															En attente
+														{% elseif demande.accept == 1 %}
+															Accepté
+														{% else %}
+															Demande refusée
+														{% endif %}
+													</td>
+													<td>{{demande.sendAt|date('d/m/Y')}}</td>
+													<td class="text-center">
+														<a href="/admin/role/{{demande.user.id}}">
+															<i class="fs-4 bi bi-check-square-fill"></i>
+														</a>
+														<a href="/admin/refuse/{{demande.user.id}}">
+															<i class="fs-4 bi bi-x-square-fill"></i>
+														</a>
+													</td>
+												</tr>
+											{% endfor %}
+										</tbody>
+									</table>
+								{% else %}
+									<p>Aucun signalement</p>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card mb-4">
+					<div class="card-header">
+						<i class="fas fa-table me-1"></i>
+						Dernières recettes
+					</div>
+					<div class="card-body">
+						<table id="recipesTable" class="display table table-striped table-bordered" style="width:100%">
+							<thead>
+								<tr>
+									<th style="width: 2%"></th>
+									<th style="width: 10%">Créateur</th>
+									<th style="width: 20%">Nom</th>
+									<th style="width: 5%">Type</th>
+									<th style="width: 5%">Personnes</th>
+									<th style="width: 5%">Difficulté</th>
+									<th style="width: 10%">Temps prépration</th>
+									<th style="width: 10%">Temps total</th>
+									<th style="width: 20%">Actions</th>
+									<th style="width: 3%"></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for recipe in recipes %}
+									<tr id="recette_{{ recipe.id }}">
+										<td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
+										<td>{{ recipe.userId.email }}</td>
+										<td>
+											<span class="d-block text-truncate" style="max-width: 300px;">
+												<a href="{{ path('recipe_show',{id: recipe.id}) }}" target="_blank">
+													{{ recipe.name }}
+												</a>
+											</span>
+										</td>
+										<td>{{ recipe.type }}</td>
+										<td class="text-center">{{ recipe.NumberOfPersons }}</td>
+										<td class="text-center">{{ recipe.difficulty }}
+											/ 5</td>
+										<td class="text-center">{{ recipe.PreparationTime|date("H:i") }}</td>
+										<td class="text-center">{{ recipe.TotalTime|date("H:i") }}</td>
+										<td class="text-center">
+											<a href="{{ path('recipe_show',{id: recipe.id}) }}" type="button" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-eye"></i>
+											</a>
+											<button type="button" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-pen"></i>
+											</button>
+											<button type="button" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-trash"></i>
+											</button>
+										</td>
+										<td id="recette_ingredients_results_{{ recipe.id }}">
+											<div style="width: 1000px;"></div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+	{% block javascripts %}
+		{{ parent() }}
+		{{ encore_entry_script_tags('show_recipes') }}
+		{{ encore_entry_script_tags('report_comment') }}
+	{% endblock %}
 {% endblock %}

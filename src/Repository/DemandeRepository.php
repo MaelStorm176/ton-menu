@@ -75,4 +75,12 @@ class DemandeRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findLast5One(){
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.send_at', 'DESC')
+            ->andWhere('c.accept = 0')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 }

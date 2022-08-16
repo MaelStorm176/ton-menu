@@ -10,6 +10,9 @@ use App\Entity\Recipe;
 use App\Entity\Signalement;
 use App\Entity\User;
 use App\Repository\DemandeRepository;
+use App\Repository\CommentRepository;
+use App\Repository\RecipeRepository;
+use App\Repository\SignalementRepository;
 use App\Services\MarmitonManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,11 +22,20 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminController extends AbstractController
 {
     #[Route("/", name: 'index')]
-    public function index(): Response
+    public function index(SignalementRepository $signalementRepository, DemandeRepository $demandeRepository, RecipeRepository $recipeRepository): Response
     {
         $marmitonManager = new MarmitonManager($this->getDoctrine()->getRepository(Ingredient::class));
         $marmitonManager->updateIngredientsImage();
-        return $this->render('admin/index.html.twig');
+
+        $comments = $signalementRepository->findLast5One();
+        $demande = $demandeRepository->findLast5One();
+        $recipe = $recipeRepository->findLast10One();
+
+        return $this->render('admin/index.html.twig', [
+            'comments' => $comments,
+            'demandes' => $demande,
+            'recipes' => $recipe,
+        ]);
     }
 
     #[Route("/users", name: 'users')]

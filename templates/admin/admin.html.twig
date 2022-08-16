@@ -1,68 +1,93 @@
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-      <meta charset="UTF-8">
-      <title>{% block title %}Administrateur - {% endblock %}</title>
-      {% block stylesheets %}
-          {{ encore_entry_link_tags('app') }}
-      {% endblock %}
-      {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-      {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Administrateur -
+			{% endblock %}
+		</title>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+			{{ encore_entry_link_tags('admin') }}
+		{% endblock %}
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('admin_css') }}
+		{% endblock %}
 	</head>
-	<body>
+	<body class="sb-nav-fixed">
 		{% block body %}
 			<div class="container-fluid">
-				<div class="row flex-nowrap">
+				<div class="flex-nowrap">
 					{% block navbar %}
-						<div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-primary">
-							<div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
-								<a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-									<span class="fs-5 d-none d-sm-inline">Menu Admin</span>
-								</a>
-								<ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-
-									<li class="nav-link">
-										<a href="{{ path('admin_users') }}" class=" text-white px-0 align-middle">
-											<i class="fs-4 bi-people"></i>
-											<span class="ms-1 d-none d-sm-inline">Utilisateurs</span>
+						<nav
+							class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+							<!-- Navbar Brand-->
+							<a class="navbar-brand ps-3" href="/admin">Panel Admin</a>
+							<!-- Sidebar Toggle-->
+							<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+								<i class="bi bi-list"></i>
+							</button>
+						</nav>
+						<div id="layoutSidenav">
+							<div id="layoutSidenav_nav">
+								<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+									<div class="sb-sidenav-menu">
+										<div class="nav">
+											<div class="sb-sidenav-menu-heading">Core</div>
+											<a class="nav-link" href="/admin">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-speedometer"></i>
+												</div>
+												Dashboard
+											</a>
+											<div class="sb-sidenav-menu-heading">Recettes</div>
+											<a class="nav-link" href="{{ path('admin_ingredients') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-card-list"></i>
+												</div>
+												Ingrédients
+											</a>
+											<a class="nav-link" href="{{ path('admin_recipes') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-book"></i>
+												</div>
+												Recettes
+											</a>
+											<div class="sb-sidenav-menu-heading">Utilisateurs</div>
+											<a class="nav-link" href="{{ path('admin_users') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-person-lines-fill"></i>
+												</div>
+												Utilisateurs
+											</a>
+											<a class="nav-link" href="{{ path('admin_report_comment') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-flag-fill"></i>
+												</div>
+												Signalement
+											</a>
+											<a class="nav-link" href="{{ path('admin_accept_demande') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-award"></i>
+												</div>
+												Demande de roles
+											</a>
+										</div>
+									</div>
+									<div class="sb-sidenav-footer">
+										<a class="nav-link text-white" href="{{ path('home') }}">
+											<div class="sb-nav-link-icon">
+												<i class="bi bi-house"></i>
+											</div>
+											Retour à la page d'accueil
 										</a>
-									</li>
-									<li class="nav-link">
-										<a href="{{ path('admin_ingredients') }}" class=" text-white px-0 align-middle">
-											<i class="fs-4 bi-egg-fried"></i>
-											<span class="ms-1 d-none d-sm-inline">Ingrédients</span>
-										</a>
-									</li>
-									<li class="nav-link">
-										<a href="{{ path('admin_recipes') }}" class=" text-white px-0 align-middle">
-											<i class="fs-4 bi-grid"></i>
-											<span class="ms-1 d-none d-sm-inline">Recettes</span>
-										</a>
-									</li>
-									<li class="nav-link">
-										<a href="{{ path('admin_report_comment') }}" class=" text-white px-0 align-middle">
-											<i class="fs-4 bi-flag-fill"></i>
-											<span class="ms-1 d-none d-sm-inline">Signalement</span>
-										</a>
-									</li>
-									<li class="nav-link">
-										<a href="{{ path('admin_accept_demande') }}" class=" text-white px-0 align-middle">
-											<i class="fs-4 bi-flag-fill"></i>
-											<span class="ms-1 d-none d-sm-inline">Demande de roles</span>
-										</a>
-									</li>
-									<li class="nav-item nav-link">
-										<a href="{{ path('home') }}" class="text-white  align-middle px-0">
-											<i class="fs-4 bi-house"></i>
-											<span class="ms-1 d-none d-sm-inline">Retour au site</span>
-										</a>
-									</li>
-								</ul>
+									</div>
+								</nav>
 							</div>
 						</div>
 					{% endblock %}
-					<div class="col py-3">
+					<div class="col" style="margin-left: 15rem !important; margin-top: 4rem !important">
 						{% block content %}{% endblock %}
 					</div>
 				</div>

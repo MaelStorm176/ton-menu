@@ -331,21 +331,6 @@
   /* ==========================================================================
      #BUTTON
      ========================================================================== */
-  .btn {
-    display: inline-block;
-    line-height: 50px;
-    padding: 0 30px;
-    -webkit-transition: all 0.4s ease;
-    -o-transition: all 0.4s ease;
-    -moz-transition: all 0.4s ease;
-    transition: all 0.4s ease;
-    cursor: pointer;
-    font-size: 15px;
-    text-transform: capitalize;
-    font-weight: 700;
-    color: #fff;
-    font-family: inherit;
-  }
   
   .btn--radius {
     -webkit-border-radius: 3px;

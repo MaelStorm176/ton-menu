@@ -75,4 +75,12 @@ class SignalementRepository extends ServiceEntityRepository
         ;
     }
     */
+    public function findLast5One(){
+        return $this->createQueryBuilder('c')
+            ->orderBy('c.create_at', 'DESC')
+            ->andWhere('c.traiter != true')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getResult();
+    }
 }

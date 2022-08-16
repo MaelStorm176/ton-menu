@@ -145,9 +145,11 @@ class RandomRecipeController extends AbstractController
 
         //Si je demande à voir un menu en particulier
         $refuseRecipe = [];
+        $recettesResults = [];
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
+            //$recettesResults = $this->recipeRepository->findBySearch($data);
         }
 
         if ($id_menu = $request->get('id_menu')) {
@@ -259,21 +261,22 @@ class RandomRecipeController extends AbstractController
     public function generationByIngredient(Request $request): Response
     {
         $ingredientRepository = $this->getDoctrine()->getRepository(Ingredient::class);
-        $requete = $request->request->all();
+        $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
+        $form->handleRequest($request);
 
-        if ($request->isMethod('POST')) {
-            /** AJOUT DES INGREDIENTS A LA RECETTE **/
-            if (isset($requete["choosen_ingredient"]) && !empty($requete["choosen_ingredient"])) {
-                $myRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($requete["choosen_ingredient"]);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+            $myRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredient($data["ingredients"]);
                 return $this->render('generation_menu/generation_by_ingredient.html.twig', [
                     'ingredients' => $ingredientRepository->findAll(),
                     'myRecipes' => $myRecipe,
+                    "form" => $form->createView(),
                 ]);
-            }
         }
         return $this->render('generation_menu/generation_by_ingredient.html.twig', [
             'ingredients' => $ingredientRepository->findAll(),
             'myRecipes' => null,
+            "form" => $form->createView(),
         ]);
     }
 

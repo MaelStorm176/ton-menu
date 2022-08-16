@@ -4,41 +4,42 @@
 {% endblock %}
 
 {% block body %}
-	<div class="row">
-		<div class="col-md-6">
+	<div class="row col-12">
+		<div class="col-md-5 m-3">
 			<h3>Liste des ingrédients</h3>
-			<table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
-				<thead>
-					<tr>
-						<th>Nom</th>
-						<th>Choisir</th>
-					</tr>
-				</thead>
-				<tbody>
-					<form method="post" action="{{ path('generation_by_ingredient') }}">
-						{% for ingredient in ingredients %}
-							<tr>
-								<td>{{ ingredient.name }}</td>
-								<td class="text-center">
-									<input type="checkbox" name="choosen_ingredient[]" value="{{ ingredient.id }}"/>
-								</td>
-							</tr>
-						{% endfor %}
-						<input type="submit" class="btn btn-primary" value="Ajouter"/>
-					</form>
-				</tbody>
-			</table>
+			{{ form_start(form, {'attr': {'class': 'col-12 mx-auto'}}) }}
+			<div class="mt-1">
+				{{form_widget(form.ingredients)}}
+			</div>
+			<div class="mt-3">
+				{{ form_widget(form.submit) }}
+			</div>
+			{{ form_end(form) }}
 		</div>
-		<div class="col-md-6">
+		<div class="col-md-6 m-3 mx-auto">
 			{% if myRecipes %}
+				<h3 class="text-center">Recette généré :</h3>
 				{% for myRecipe in myRecipes %}
-					<div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+					<!-- Gallery item -->
+					<div class="mb-4 w-50 mx-auto" id="recipe_{{ myRecipe.id }}" data-type="{{ myRecipe.type }}">
 						<div class="bg-white rounded shadow-sm h-100">
-							<img src="{{ myRecipe.recipeImages[0].url }}" alt="picture" class="img-fluid card-img-top">
+							{% if myRecipe.recipeImages is not empty and myRecipe.recipeImages[0].url %}
+								<img src="{{ asset(myRecipe.recipeImages[0].url) }}" alt="picture" class="img-fluid card-img-top">
+							{% else %}
+								<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid card-img-top">
+							{% endif %}
+
 							<div class="p-4">
-								<h5 class="text-truncate">
-									<a href="{{ path('recipe_show',{id: myRecipe.id}) }}" class="text-dark ">{{ myRecipe.name }}</a>
-								</h5>
+								<div class="d-flex justify-content-between align-items-center">
+									<h5 class="text-truncate">
+										<a href="{{ path('recipe_show',{id: myRecipe.id}) }}" class="text-dark ">{{ myRecipe.name }}</a>
+									</h5>
+									{% if reload is defined %}
+										<button class="btn btn-dark">
+											<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem;"></i>
+										</button>
+									{% endif %}
+								</div>
 								<div
 									class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
 									<!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
@@ -62,11 +63,18 @@
 							</div>
 						</div>
 					</div>
+					<!-- End -->
+
 				{% endfor %}
+			{% else %}
+				<div class="col-12 text-center">
+					<h3>Aucune recette trouvé.</h3>
+				</div>
 			{% endif %}
 		</div>
 	</div>
-	<script>
-		$("#ingredientsTable").DataTable(dataTableOptions);
-	</script>
+	{% block javascripts %}
+		{{ parent() }}
+		{{ encore_entry_script_tags('generation_ingredient') }}
+	{% endblock %}
 {% endblock %}
