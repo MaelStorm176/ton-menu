@@ -2,11 +2,35 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RecipeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    collectionOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => ['recipe:list']
+            ]
+        ],
+    ],
+    itemOperations: [
+        'get' => [
+            'normalization_context' => [
+                'groups' => ['recipe:item']
+            ]
+        ],
+    ],
+    attributes: [
+        'pagination_enabled' => true,
+        'pagination_items_per_page' => 5,
+        'pagination_partial' => true,
+        'order' => ['created_at' => 'DESC'],
+    ]
+)]
 /**
  * @ORM\Entity(repositoryClass=RecipeRepository::class)
  */
@@ -16,11 +40,13 @@ class Recipe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $name;
 
@@ -31,32 +57,38 @@ class Recipe
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $type;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $number_of_persons;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $difficulty;
 
     /**
      * @ORM\Column(type="time")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $preparation_time;
 
     /**
      * @ORM\Column(type="time")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $total_time;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="recipes")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $user_id;
 
@@ -67,16 +99,19 @@ class Recipe
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $created_at;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $updated_at;
 
     /**
      * @ORM\OneToMany(targetEntity=RecipeSteps::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $recipeSteps;
 
@@ -92,26 +127,31 @@ class Recipe
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $budget;
 
     /**
      * @ORM\ManyToMany(targetEntity=RecipeTags::class, mappedBy="recipe")
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $recipeTags;
 
     /**
      * @ORM\OneToMany(targetEntity=RecipeQuantities::class, mappedBy="recipe", orphanRemoval=true, cascade={"persist"})
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $recipeQuantities;
 
     /**
      * @ORM\ManyToMany(targetEntity=Ingredient::class, inversedBy="recipes")
+     * @ORM\JoinTable(name="recipe_ingredients")
      */
     private $ingredients;
 
     /**
      * @ORM\Column(type="string", length=100, nullable=true)
+     * @Groups({"recipe:list", "recipe:item"})
      */
     private $description;
   

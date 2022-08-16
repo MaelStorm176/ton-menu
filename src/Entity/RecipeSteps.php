@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RecipeStepsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RecipeStepsRepository::class)
@@ -19,6 +20,7 @@ class RecipeSteps
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"recipe:list"})
      */
     private $step;
 
@@ -30,6 +32,7 @@ class RecipeSteps
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"recipe:list"})
      */
     private $ordre;
 
