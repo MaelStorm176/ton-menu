@@ -1,42 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page Chef{% endblock %}
+{% block title %}Page Chef
+{% endblock %}
 {% set pourcentageEntrees = countEntrees/totalRecettes*100 %}
 {% set pourcentagePlats = countPlats/totalRecettes*100 %}
 {% set pourcentageDesserts = countDesserts/totalRecettes*100 %}
 
 {% block body %}
-    <button class="btn btn-primary m-2" onclick="history.back();">Revenir sur votre recette</button>
+	<button class="btn btn-primary m-2" onclick="history.back();">Revenir sur votre recette</button>
 	<div class="container bg-white mb-5">
 		<div class="row">
-			<div class="col-md-3 border-right">
+			<div class="col-md-3 border-right mx-auto">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-4">
 					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
 					<span class="font-weight-bold">{{ user.firstname }}
 						{{ user.lastname }}</span>
 					<span class="text-black-50">Chef</span>
 				</div>
-			</div>
-
-			<div class="col-md-5">
-				<div class="progress" style="height: 100px">
-					<div class="progress-bar"  role="progressbar" style="width: {{ pourcentageEntrees }}%" aria-valuenow="{{ pourcentageEntrees }}" aria-valuemin="0" aria-valuemax="100">
-						{{ countEntrees }} entrées
+				{% if app.user.id != user.id %}
+					<div>
+						<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">Suivre</a>
 					</div>
-					<div class="progress-bar bg-success" role="progressbar" style="width: {{ pourcentagePlats }}%" aria-valuenow="{{ pourcentagePlats }}" aria-valuemin="0" aria-valuemax="100">
-						{{ countPlats }} plats
+				{% elseif app.user in user.follows[0].user %}
+					<div>
+						<button class="btn btn-primary" disabled>Suivi</button>
 					</div>
-					<div class="progress-bar bg-info" role="progressbar" style="width: {{ pourcentageDesserts }}%" aria-valuenow="{{ pourcentageDesserts }}" aria-valuemin="0" aria-valuemax="100">
-						{{ countDesserts }} desserts
-					</div>
-				</div>
+				{% endif %}
 			</div>
 		</div>
-		<hr class="solid" />
+		<hr class="solid my-2"/>
 
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
-				<h4 class="text-center">{{ user.firstname }} {{ user.lastname }} vous propose ses meilleures recettes</h4>
+				<h4 class="text-center">{{ user.firstname }}
+					{{ user.lastname }}
+					vous propose ses meilleures recettes</h4>
 				<div class="row justify-content-center">
 					{% for recette in bestRecipes %}
 						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
@@ -46,9 +44,11 @@
 		</div>
 
 
-		<div class="jumbotron jumbotron-fluid mt-3" >
+		<div class="jumbotron jumbotron-fluid mt-3">
 			<div class="container">
-                <h4>Découvrez les recettes de {{ user.firstname }} {{ user.lastname }}</h4>
+				<h4>Découvrez les recettes de
+					{{ user.firstname }}
+					{{ user.lastname }}</h4>
 				<div class="row">
 					{% for recette in recettes %}
 						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
