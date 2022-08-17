@@ -15,8 +15,8 @@
 				<div class="container">
 					<h3 class="display-5 mb-3">{{ ingredient.recipes.count }}
 						Recettes contiennent l'ingrédient
-						{{ ingredient.name }}
-						:</h3>
+						<span class="fw-bold"> {{ ingredient.name }}</span>
+					</h3>
 					<div class="row">
 						{% for recette in ingredient.recipes %}
 							{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}

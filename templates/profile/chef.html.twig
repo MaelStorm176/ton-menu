@@ -21,7 +21,7 @@
 					<div>
 						<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">Suivre</a>
 					</div>
-				{% elseif app.user in user.follows[0].user %}
+				{% elseif app.user in user.follows %}
 					<div>
 						<button class="btn btn-primary" disabled>Suivi</button>
 					</div>
