@@ -80,7 +80,7 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show')]
-    public function show(Ingredient $ingredient): Response{
+    public function show(Ingredient $ingredient): Response {
         return $this->render('ingredient/show.html.twig', [
             'ingredient' => $ingredient,
         ]);
@@ -128,6 +128,6 @@ class IngredientController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($ingredient);
         $entityManager->flush();
-        return $this->redirectToRoute('ingredient_index');
+        return $this->redirectToRoute('home');
     }
 }

@@ -131,24 +131,26 @@ class RandomRecipeController extends AbstractController
         }
     }
 
-    #[Route('/generation-menu/{nb_jour}', name: 'generation_menu', methods: ['GET'])]
+    #[Route('/generation-menu', name: 'generation_menu', methods: ['GET'])]
     public function menu(Request $request): Response
     {
         //Si l'utilisateur est connecté
         $manager = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $nb_jour = (int) $request->get('nb_jour');
-
         $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
 
+        $nb_jour = 7;
+
         //Si je demande à voir un menu en particulier
         $refuseRecipe = [];
-        $recettesResults = [];
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
+            if ($data["nb_jours"] && $data["nb_jours"] > 0 && $data["nb_jours"] < 7) {
+                $nb_jour = $data["nb_jours"];
+            }
             //$recettesResults = $this->recipeRepository->findBySearch($data);
         }
 

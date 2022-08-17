@@ -262,6 +262,9 @@
                                 {% if "ROLE_CHIEF" in comment.user.roles %}
                                     <span class="badge bg-primary">Chef</span>
                                 {% endif %}
+                                {% if "ROLE_PREMIUM" in comment.user.roles %}
+                                    <span class="badge bg-light">Premium</span>
+                                {% endif %}
                                 {% if "ROLE_ADMIN" in comment.user.roles %}
                                     <span class="badge bg-secondary">Admin</span>
                                 {% endif %}

@@ -39,7 +39,7 @@ class RecipeController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $recette = new Recipe();
         $user = $this->getUser();
-        $follow = $user->getFollows();
+        $followers = $user->getFollows();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
@@ -76,10 +76,10 @@ class RecipeController extends AbstractController
                 $recette->setUserId($user);
                 $manager->persist($recette);
                 $manager->flush();
-                foreach ($follow[0]->getUser() as $follows) {
+                foreach ($followers as $follower) {
                     $email = (new TemplatedEmail())
                         ->from('tonmenu@mange.fr')
-                        ->to($follows->getEmail())
+                        ->to($follower->getEmail())
                         ->subject("Nouvelle recette de votre chef !")
                         ->htmlTemplate('new_recette/new.html.twig')
                         ->context([
