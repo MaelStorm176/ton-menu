@@ -18,6 +18,9 @@ use App\Entity\RecipeTags;
 use App\Repository\RecipeRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RecipeController extends AbstractController
 {
@@ -31,12 +34,14 @@ class RecipeController extends AbstractController
     /**
      * @Route("/recipe/add", name="recipe_add")
      */
-    public function add_recette(Request $request): Response {
+    public function add_recette(Request $request, MailerInterface $mailer): Response
+    {
         $manager = $this->getDoctrine()->getManager();
         $recette = new Recipe();
+        $user = $this->getUser();
+        $follow = $user->getFollows();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
-
         if ($request->isMethod('POST')) {
             if ($form->isSubmitted() && $form->isValid()) {
 
@@ -49,7 +54,7 @@ class RecipeController extends AbstractController
                             $fichier
                         );
                         $recipeImage = new RecipeImages();
-                        $recipeImage->setPath('/img/recipes/'.$fichier);
+                        $recipeImage->setPath('/img/recipes/' . $fichier);
                         $recipeImage->setRecipe($recette);
                         $manager->persist($recipeImage);
                     }
@@ -68,9 +73,24 @@ class RecipeController extends AbstractController
                 }
 
                 $recette->setCreatedAt(new DateTimeImmutable());
-                $recette->setUserId($this->getUser());
+                $recette->setUserId($user);
                 $manager->persist($recette);
                 $manager->flush();
+                foreach ($follow[0]->getUser() as $follows) {
+                    $email = (new TemplatedEmail())
+                        ->from('tonmenu@mange.fr')
+                        ->to($follows->getEmail())
+                        ->subject("Nouvelle recette de votre chef !")
+                        ->htmlTemplate('new_recette/new.html.twig')
+                        ->context([
+                            'recette' => $recette,
+                        ]);
+                    try {
+                        $mailer->send($email);
+                    } catch (\Exception $e) {
+                        return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                    }
+                }
 
                 return $this->redirectToRoute('recipe_show', [
                     'id' => $recette->getId()
@@ -116,8 +136,7 @@ class RecipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $recettesResults = $this->recipeRepository->findBySearch($data);
-        }
-        else
+        } else
             $recettesResults = $recipeRepository->findBy([], ['created_at' => 'DESC']);
 
         $recettes = $paginator->paginate(
@@ -177,12 +196,12 @@ class RecipeController extends AbstractController
      */
     public function show_ingredients(Recipe $recipe, Request $request): Response
     {
-        if ($request->isXmlHttpRequest()){
+        if ($request->isXmlHttpRequest()) {
             $ingredients = $recipe->getIngredients();
             return $this->render('admin/recipes/table_ingredients.html.twig', [
                 'ingredients' => $ingredients
             ]);
-        }else{
+        } else {
             return new Response('This is not ajax!', 400);
         }
     }

@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Recipe;
+use App\Entity\Follow;
 use App\Form\ProfileType;
 use App\Entity\SavedMenus;
+use App\Repository\FollowRepository;
 use Symfony\Component\Form\FormError;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -91,7 +93,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/chef/{id}', name: 'chef_page')]
-    public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
+    public function chefPage($id, PaginatorInterface $paginator, Request $request, FollowRepository $followRepository): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         if (!$user || !array_search("ROLE_CHIEF",$user->getRoles()) || !$user->getIsVerify()) {
@@ -122,5 +124,22 @@ class ProfileController extends AbstractController
     public function mentionsLegales(): Response
     {
         return $this->render('profile/mentions.html.twig');
+    }
+
+    #[Route('/follow/{id}', name: 'follow')]
+    public function followChef($id): Response
+    {
+        $user = $this->getUser();
+        $follow = new Follow();
+        $follow->addUser($user);
+        $follow->setChef($this->getDoctrine()->getRepository(User::class)->find($id));
+        $follow->setFollowAt(new \DateTimeImmutable());
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($follow);
+        $manager->flush();
+
+        return $this->redirectToRoute('chef_page', [
+            'id' => $id,
+        ]);
     }
 }
