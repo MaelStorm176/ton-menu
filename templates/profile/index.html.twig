@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Personnalisation du profil
-{% endblock %}
+{% block title %}Personnalisation du profil{% endblock %}
 
 {% block body %}
 	<div class="container bg-white mt-5 mb-5">
@@ -9,9 +8,19 @@
 			<div class="col-md-3 border-right">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
 					<img class="rounded-circle mt-5" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
-					<span class="font-weight-bold">{{ user.firstname }}
-						{{ user.lastname }}</span>
-					<span class="text-black-50">{{ user.roles[0] }}</span>
+					<div class="mt-2">
+						<span class="font-weight-bold">{{ user.firstname }} {{ user.lastname }}</span>
+						{% if "ROLE_CHIEF" in user.roles %}
+							<span class="badge bg-primary">Chef</span>
+						{% endif %}
+						{% if "ROLE_PREMIUM" in user.roles %}
+							<span class="badge bg-light">Premium</span>
+						{% endif %}
+						{% if "ROLE_ADMIN" in user.roles %}
+							<span class="badge bg-secondary">Admin</span>
+						{% endif %}
+					</div>
+					<span class="text-black-50">{{ user.email }}</span>
 				</div>
 			</div>
 			<div class="col-md-5 border-right">
@@ -28,6 +37,7 @@
 							{{ form_widget(form.firstname, {
 								'attr': {'class': 'form-control'}
 							}) }}
+
 						</div>
 						<div class="col-md-6">
 							{{ form_label(form.lastname, 'Nom', {
@@ -92,7 +102,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									{% if is_granted('ROLE_PREMIUM') %}
+									{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
 										{% for menu in generated_menus %}
 											<tr>
 												<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
@@ -143,7 +153,7 @@
 								<tr>
 									<td>{{ recette.name }}</td>
 									<td class="text-center">{{ recette.createdAt|date("d/m/Y")}}</td>
-									<td>
+									<td class="text-center">
 										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
 									</td>
 								</tr>
