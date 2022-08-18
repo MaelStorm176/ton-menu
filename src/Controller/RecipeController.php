@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RecipeController extends AbstractController
 {
 
-    private $recipeRepository;
+    private RecipeRepository $recipeRepository;
     public function __construct(RecipeRepository $recipeRepository)
     {
         $this->recipeRepository = $recipeRepository;
@@ -39,7 +39,7 @@ class RecipeController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $recette = new Recipe();
         $user = $this->getUser();
-        $follow = $user->getFollows();
+        $followers = $user->getFollows();
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
@@ -76,10 +76,10 @@ class RecipeController extends AbstractController
                 $recette->setUserId($user);
                 $manager->persist($recette);
                 $manager->flush();
-                foreach ($follow[0]->getUser() as $follows) {
+                foreach ($followers as $follower) {
                     $email = (new TemplatedEmail())
                         ->from('tonmenu@mange.fr')
-                        ->to($follows->getEmail())
+                        ->to($follower->getEmail())
                         ->subject("Nouvelle recette de votre chef !")
                         ->htmlTemplate('new_recette/new.html.twig')
                         ->context([
@@ -92,6 +92,7 @@ class RecipeController extends AbstractController
                     }
                 }
 
+                $this->addFlash('success', 'Votre recette a bien été ajoutée !');
                 return $this->redirectToRoute('recipe_show', [
                     'id' => $recette->getId()
                 ]);
@@ -106,7 +107,7 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/{id}/edit", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
+     * @Route("/recipe/edit/{id}", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
     public function edit(Request $request, Recipe $recipe): Response
     {
@@ -114,6 +115,7 @@ class RecipeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre recette a bien été modifiée !');
             return $this->redirectToRoute('recipe_show', [
                 'id' => $recipe->getId()
             ]);

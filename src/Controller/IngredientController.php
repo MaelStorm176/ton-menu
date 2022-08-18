@@ -80,13 +80,13 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show')]
-    public function show(Ingredient $ingredient): Response{
+    public function show(Ingredient $ingredient): Response {
         return $this->render('ingredient/show.html.twig', [
             'ingredient' => $ingredient,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit')]
+    #[Route('/edit/{id}', name: 'edit')]
     public function edit(Request $request, Ingredient $ingredient): Response{
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
@@ -123,11 +123,11 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete')]
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete(Ingredient $ingredient): Response{
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($ingredient);
         $entityManager->flush();
-        return $this->redirectToRoute('ingredient_index');
+        return $this->redirectToRoute('home');
     }
 }

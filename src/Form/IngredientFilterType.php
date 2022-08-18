@@ -14,6 +14,20 @@ class IngredientFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        ->add('nb_jours', ChoiceType::class, [
+            'choices' => [
+                '-- Nombre de jours --' => null,
+                '1 jour' => 1,
+                '2 jours' => 2,
+                '3 jours' => 3,
+                '4 jours' => 4,
+                '5 jours' => 5,
+                '6 jours' => 6,
+                '7 jours' => 7,
+            ],
+            'label' => 'Nombre de jours',
+            'required' => false,
+        ])
         ->add('ingredients', EntityType::class, [
             'label' => 'Ingredients',
             'required' => false,

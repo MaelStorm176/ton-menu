@@ -9,15 +9,11 @@ use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture {
-    private $encoder;
-    private $adminPassword;
-    private $adminEmail;
-    private $faker;
+    private UserPasswordHasherInterface $encoder;
+    private \Faker\Generator $faker;
     public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
-        $this->adminPassword = "admin@gmail.com";
-        $this->adminEmail = "pass_1234";
         $this->faker = Factory::create('fr_FR');
     }
 
@@ -64,7 +60,7 @@ class UserFixtures extends Fixture {
             ->setFirstname("Administrateur")
             ->setLastname(null)
             ->setPassword($password_encoded)
-            ->setRoles(["ROLE_ADMIN", "ROLE_CHIEF", "ROLE_PREMIUM", "ROLE_USER"])
+            ->setRoles(["ROLE_ADMIN", "ROLE_CHIEF"])
             ->setIsVerify(true)
             ->setApiKey(uniqid())
             ->setProfilePicture("/blank.png");
@@ -107,6 +103,7 @@ class UserFixtures extends Fixture {
         $user->setFirstName($this->faker->firstName);
         $user->setLastName($this->faker->lastName);
         $user->setIsVerify(true);
+        $user->setApiKey(uniqid());
         $user->setProfilePicture("/blank.png");
         $user->setRoles(['ROLE_PREMIUM']);
         return $user;

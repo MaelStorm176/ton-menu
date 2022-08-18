@@ -20,6 +20,9 @@ class TransactionController extends AbstractController
     #[Route('/payment', name: 'app_payment')]
     public function indexMonthPayment(): Response
     {
+        if (in_array("ROLE_PREMIUM", $this->getUser()->getRoles())) {
+            return $this->redirectToRoute('home');
+        }
         //use stripe for payment
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
@@ -27,7 +30,7 @@ class TransactionController extends AbstractController
         //   $priceId = $_POST['priceId'];
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741';
+        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
 
         try {
             $checkout_session = SessionCheckout::create([
@@ -62,14 +65,16 @@ class TransactionController extends AbstractController
         $transaction->setCreatedAt(new DateTimeImmutable());
         $transaction->setValidateAt(new DateTimeImmutable());
         $transaction->setSessionId($session_id);
-
-        $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);
+        
+        $role = $user->getRoles();
+        array_push($role, "ROLE_PREMIUM");
+        $user->setRoles($role);
 
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741/profile';
+        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io/profile';
 
         try {
             $checkout_session = SessionCheckout::retrieve($session_id);

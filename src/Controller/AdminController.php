@@ -107,8 +107,9 @@ class AdminController extends AbstractController
         //get demande with user id
         $demande = $demandeRepository->findOneBy(['user' => $user]);
         $demande->setAccept(1);
-    
-        $user->setRoles(["ROLE_CHIEF"]);
+        $role = $user->getRoles();
+        array_push($role, "ROLE_CHIEF");
+        $user->setRoles($role);
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user, $demande);
         $entityManager->flush();

@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\Recipe;
 use App\Entity\Ingredient;
 use App\Entity\SavedMenus;
+use App\Entity\User;
 use App\Form\IngredientFilterType;
 use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +22,7 @@ class RandomRecipeController extends AbstractController
 {
     private RecipeRepository $recipeRepository;
     private SavedMenusRepository $savedMenusRepository;
+    const MAX_DAYS = 7;
     public function __construct(RecipeRepository $recipeRepository, SavedMenusRepository $savedMenusRepository)
     {
         //get recipe repository
@@ -27,7 +30,7 @@ class RandomRecipeController extends AbstractController
         $this->savedMenusRepository = $savedMenusRepository;
     }
 
-    #[Route('/generation-plat', name: 'generation_plat')]
+    /*#[Route('/generation-plat', name: 'generation_plat')]
     public function index(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
@@ -37,14 +40,13 @@ class RandomRecipeController extends AbstractController
         return $this->render('generation_menu/index.html.twig', [
             'recipe' => $recette,
         ]);
-    }
+    }*/
 
     #[Route('/ajax/generation-menu/save_menu', name: 'save_menu', methods: ['POST'])]
     public function saveMenu(Request $request)
     {
         if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jour")) {
             $em = $this->getDoctrine()->getManagerForClass(SavedMenus::class);
-            $savedMenuRepository = $em->getRepository(SavedMenus::class);
 
             $menuJson = json_decode($request->get("menu"), true);
             $user = $this->getUser();
@@ -53,7 +55,7 @@ class RandomRecipeController extends AbstractController
                 $savedMenu = new SavedMenus();
                 $savedMenu->setUser($user);
             } else {
-                $savedMenu = $savedMenuRepository->find($id_menu);
+                $savedMenu = $this->savedMenusRepository->find($id_menu);
                 $savedMenu->setUpdatedAt(new \DateTimeImmutable());
                 if ($savedMenu->getUser()->getId() != $user->getId()) {
                     return new JsonResponse(["error" => "Vous n'avez pas le droit d'éditer ce menu"]);
@@ -64,7 +66,7 @@ class RandomRecipeController extends AbstractController
             $em->flush();
             return $this->redirectToRoute('generation_menu', [
                 'id_menu' => $savedMenu->getId(),
-                'nb_jour' => $request->get("nb_jour"),
+                'nb_jours' => $request->get("nb_jour"),
             ]);
         } else {
             return new Response("Erreur");
@@ -104,9 +106,9 @@ class RandomRecipeController extends AbstractController
             }
             if (is_array($menuJson)) {
                 $menus = $menuJson;
-                $entrees = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["entrees"]]);
-                $plats = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["plats"]]);
-                $desserts = $this->getDoctrine()->getRepository(Recipe::class)->findBy(["id" => $menus["desserts"]]);
+                $entrees = $this->recipeRepository->findBy(["id" => $menus["entrees"]]);
+                $plats = $this->recipeRepository->findBy(["id" => $menus["plats"]]);
+                $desserts = $this->recipeRepository->findBy(["id" => $menus["desserts"]]);
                 $nb_jours = $request->get("nb_jours");
                 $email = (new TemplatedEmail())
                     ->from('tonmenu@mange.fr')
@@ -122,7 +124,9 @@ class RandomRecipeController extends AbstractController
                 try {
                     $mailer->send($email);
                 } catch (\Exception $e) {
-                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail " . $e->getMessage()]);
+                } catch (TransportExceptionInterface $e) {
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail " . $e->getMessage()]);
                 }
             }
             return new JsonResponse(["success" => true, "msg" => "Votre menu a été envoyé à votre adresse email"]);
@@ -131,27 +135,30 @@ class RandomRecipeController extends AbstractController
         }
     }
 
-    #[Route('/generation-menu/{nb_jour}', name: 'generation_menu', methods: ['GET'])]
+    #[Route('/generation-menu', name: 'generation_menu', methods: ['GET'])]
     public function menu(Request $request): Response
     {
         //Si l'utilisateur est connecté
         $manager = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
-        $nb_jour = (int) $request->get('nb_jour');
-
         $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
 
+        //Nb de jours par défaut
+        $nb_jour = self::MAX_DAYS;
+
         //Si je demande à voir un menu en particulier
         $refuseRecipe = [];
-        $recettesResults = [];
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
-            $refuseRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients($data["ingredients"]);
-            //$recettesResults = $this->recipeRepository->findBySearch($data);
+            $refuseRecipe = $this->recipeRepository->findByIngredients($data["ingredients"]);
+            if ($data["nb_jours"] && $data["nb_jours"] > 0 && $data["nb_jours"] < self::MAX_DAYS) {
+                $nb_jour = $data["nb_jours"];
+            }
         }
 
+        //Si je demande à voir un menu en particulier
         if ($id_menu = $request->get('id_menu')) {
             $monMenu = $this->savedMenusRepository->find($id_menu);
             if ($monMenu && $monMenu->getUser()->getId() == $user->getId()) {
@@ -196,18 +203,21 @@ class RandomRecipeController extends AbstractController
                     $em->flush();
                 }
                 $idsRecipes = $monMenu->getRecipes(); //[entrees: [id, id, id], plats: [id, id, id], desserts: [id, id, id]]
-                $entrees = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['entrees']]);
-                $plats = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['plats']]);
-                $desserts = $this->getDoctrine()->getRepository(Recipe::class)->findBy(['id' => $idsRecipes['desserts']]);
+
+                $entrees = $this->sortRecipes($this->recipeRepository->findBy(['id' => $idsRecipes['entrees']]), $idsRecipes['entrees']);
+                $plats = $this->sortRecipes($this->recipeRepository->findBy(['id' => $idsRecipes['plats']]), $idsRecipes['plats']);
+                $desserts = $this->sortRecipes($this->recipeRepository->findBy(['id' => $idsRecipes['desserts']]), $idsRecipes['desserts']);
+
                 $json_menu = json_encode($idsRecipes);
             } else {
+                $this->addFlash('error', 'Ce menu n\'existe pas');
                 return $this->redirectToRoute('home');
             }
         }
 
         //Si je genere un menu
         else {
-            if ($user){
+            if ($user instanceof User) {
                 $countGener = $user->getGeneratedCounter() + 1;
                 $user->setGeneratedCounter($countGener);
                 $manager->persist($user);
@@ -216,6 +226,7 @@ class RandomRecipeController extends AbstractController
 
             $nb_matin_soir = $nb_jour * 2;
             $id_menu = 0;
+
             $entrees = $this->randomEntrees($nb_matin_soir, $refuseRecipe);
             $plats = $this->randomPlats($nb_matin_soir, $refuseRecipe);
             $desserts = $this->randomDesserts($nb_matin_soir, $refuseRecipe);
@@ -246,13 +257,15 @@ class RandomRecipeController extends AbstractController
                 'desserts' => $desserts,
                 'nb_jour' => $nb_jour,
                 'json_menu' => $json_menu,
-                'msg' => "Nouveau menu généré",
                 'form' => $form->createView(),
                 "countGener" => $countGener ?? 20,
             ]);
         }
         //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
-        return $this->redirectToRoute('home');
+        else {
+            $this->addFlash('error', 'Il n\'y a pas assez de recettes disponibles pour générer un menu');
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -266,7 +279,7 @@ class RandomRecipeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $myRecipe = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredient($data["ingredients"]);
+            $myRecipe = $this->recipeRepository->findByIngredient($data["ingredients"]);
                 return $this->render('generation_menu/generation_by_ingredient.html.twig', [
                     'ingredients' => $ingredientRepository->findAll(),
                     'myRecipes' => $myRecipe,
@@ -304,5 +317,14 @@ class RandomRecipeController extends AbstractController
         } else {
             return null;
         }
+    }
+
+    private function sortRecipes($recipes, $order)
+    {
+        $new_recipes = array_flip($order);
+        usort($recipes, function($a, $b) use ($new_recipes) {
+            return $new_recipes[$a->getId()] <=> $new_recipes[$b->getId()];
+        });
+        return $recipes;
     }
 }

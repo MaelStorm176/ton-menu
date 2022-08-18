@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SignalementController extends AbstractController
 {
-    #[Route('/{id}/signalement', name: 'send_signalement')]
+    #[Route('/signalement/{id}', name: 'send_signalement')]
     public function send_signalement(Comment $comment): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();

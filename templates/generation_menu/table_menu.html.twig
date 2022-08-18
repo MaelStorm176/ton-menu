@@ -20,10 +20,8 @@
 			<table>
 				<thead>
 					<tr class="text-center">
-						<th>Jour</th>
-						{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
-							<th>Ingrédients à éviter</th>
-						{% endif %}
+						<th>Jours générés</th>
+						<th>Ingrédients à éviter</th>
 						<th>Nouveau menu</th>
 						<th>Sauvegarde</th>
 						<th>Envoi par mail</th>
@@ -31,38 +29,31 @@
 				</thead>
 				<tbody>
 					<tr class="text-center">
+						{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
 						<td>
-							<select class="form-select w-100" name="select_nb_jour" id="select_nb_jour">
-								{% for i in range(2,7) %}
-									<option value="{{ i }}" {% if i is same as nb_jour %} selected {% endif %}>{{ i }}
-										jours</option>
-								{% endfor %}
-							</select>
+							{{ form_widget(form.nb_jours) }}
 						</td>
 						<!-- FILTRE PAR INGREDIENTS -->
-						{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
-							<td>
-								{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
-								<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
-									{{form_widget(form.ingredients)}}
-								</div>
-								{{ form_end(form) }}
-							</td>
-						{% endif %}
+						<td>
+							<div class="col-lg-12 col-md-12 col-sm-12 mt-1">
+								{{ form_widget(form.ingredients) }}
+							</div>
+						</td>
 						<td>
 							{% if countGener > 20 and not is_granted('ROLE_PREMIUM') %}
 								<p>Limite de génération atteinte</p>
 							{% elseif countGener <= 20 or is_granted('ROLE_PREMIUM') %}
-								<a class="btn btn-outline-primary position-relative" href="{{ path('generation_menu',{nb_jour: nb_jour}) }}">
+								<button type="submit" class="btn btn-outline-primary position-relative">
 									<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
 									<span class="position-absolute start-100 top-100 translate-middle badge rounded-pill bg-light">
 										{{ 20-countGener }}
 									</span>
-								</a>
+								</button>
 							{% else %}
-								<p>TOTO</p>
+								<p>Erreur</p>
 							{% endif %}
 						</td>
+						{{ form_end(form) }}
 						<td>
 							<!-- SAUVEGARDER LE MENU -->
 							<form class="" method="post" action="{{ path('save_menu') }}">
