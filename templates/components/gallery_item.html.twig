@@ -1,11 +1,14 @@
 <div class="col-lg-3 col-md-4">
-    <div class="gallery-item">
-        <a class="gallery-lightbox" data-gall="gallery-item">
-            {% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
-                <img src="{{ recipe.recipeImages[0].url }}" alt="picture" class="img-fluid">
-            {% else %}
-                <img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid" >
-            {% endif %}
-        </a>
-    </div>
+	<div class="member" data-aos="zoom-in" data-aos-delay="100" style="margin-bottom: 0 !important">
+		{% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
+			<img src="{{ recipe.recipeImages[0].url }}" alt="picture" class="img-fluid">
+		{% else %}
+			<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid">
+		{% endif %}
+		<div class="member-info">
+			<div class="member-info-content">
+				<h4>{{recipe.name}}</h4>
+			</div>
+		</div>
+	</div>
 </div>
