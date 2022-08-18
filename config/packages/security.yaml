@@ -56,9 +56,9 @@ security:
     - { path: ^/rate, roles: ROLE_USER }
     - { path: ^/logout, roles: ROLE_USER }
     - { path: ^/chef, roles: ROLE_USER }
-    - { path: ^/ingredient/add, roles: [ROLE_ADMIN, ROLE_CHIEF] }
-    - { path: ^/ingredient/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
-    - { path: ^/ingredient/check-name, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/add, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/edit/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/check-name, roles: [ROLE_ADMIN] }
     - { path: ^/ingredient/delete/\d+$, roles: [ROLE_ADMIN] }
     - { path: ^/ingredient/\d+$, roles: ROLE_USER }
     - { path: ^/recipe/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }

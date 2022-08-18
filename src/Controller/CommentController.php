@@ -16,7 +16,10 @@ class CommentController extends AbstractController
         if(in_array("ROLE_ADMIN", $user->getRoles()) XOR $user->getId() == $comment->getUser()->getId()){
             $signalement = $signalementRepository->findOneBy(['message' => $comment]);
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($signalement, $comment);
+            if($signalement){
+                $entityManager->remove($signalement);
+            }
+            $entityManager->remove($comment);
             $entityManager->flush();
             return $this->redirectToRoute('recipe_show', [
                 'id' => $comment->getRecette()->getId(),
