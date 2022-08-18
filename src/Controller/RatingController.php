@@ -34,9 +34,9 @@ class RatingController extends AbstractController
 
         if ($request->isXmlHttpRequest() && $recipe && $rateInput) {
             if (!empty($rate))
-                return new JsonResponse(["error" => "Vous avez déjà noté cette recette"], Response::HTTP_BAD_REQUEST);
+                return new JsonResponse(["error" => "Vous avez déjà noté cette recette"]);
             if ($rateInput < 0 || $rateInput > 5) {
-                return new JsonResponse(["error" => "Valeur invalide"], 400);
+                return new JsonResponse(["error" => "Valeur invalide"]);
             }
             $rate = new Rating();
     

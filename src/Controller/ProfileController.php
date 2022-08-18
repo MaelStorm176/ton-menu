@@ -30,7 +30,10 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function index(Request $request, SluggerInterface $slugger): Response
     {
-        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('home');
+        }
         $oldHash = $user->getPassword();
         $oldPicture = $user->getProfilePicture();
         $manager = $this->getDoctrine()->getManager();
@@ -78,11 +81,11 @@ class ProfileController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $user->setProfilePicture($newFilename);
-
-                $this->addFlash('success', 'Your profile picture has been updated!');
             }
             $manager->persist($user);
             $manager->flush();
+
+            $this->addFlash('success', 'Votre profil a bien été mis à jour');
         }
 
         return $this->render('profile/index.html.twig', [
@@ -93,10 +96,11 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/chef/{id}', name: 'chef_page')]
-    public function chefPage($id, PaginatorInterface $paginator, Request $request, FollowRepository $followRepository): Response
+    public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-        if (!$user || !array_search("ROLE_CHIEF",$user->getRoles()) || !$user->getIsVerify()) {
+
+        if (!$user instanceof User || !$this->isGranted('ROLE_CHIEF', $user) || !$user->getIsVerify()) {
             throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
         }
 
@@ -130,16 +134,24 @@ class ProfileController extends AbstractController
     public function followChef($id): Response
     {
         $user = $this->getUser();
+        $chief = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('home');
+        }
+        if (!$chief instanceof User) {
+            throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
+        }
         $follow = new Follow();
         $follow->addUser($user);
-        $follow->setChef($this->getDoctrine()->getRepository(User::class)->find($id));
+        $follow->setChef($chief);
         $follow->setFollowAt(new \DateTimeImmutable());
+
+
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($follow);
         $manager->flush();
 
-        return $this->redirectToRoute('chef_page', [
-            'id' => $id,
-        ]);
+        $this->addFlash('success', 'Vous êtes maintenant abonné à ce chef');
+        return $this->redirectToRoute('chef_page', ['id' => $id]);
     }
 }

@@ -1,7 +1,6 @@
 
 <!-- ======= Gallery Section ======= -->
 <section id="gallery" class="gallery chefs">
-
     <div class="container" data-aos="fade-up">
         <div class="section-title">
             <h2>Gallerie</h2>
@@ -10,14 +9,11 @@
     </div>
 
     <div class="container-fluid" data-aos="fade-up" data-aos-delay="100">
-
         <div class="row g-0">
-
           {% for recipe in randomRecipes %}
             {% include "components/gallery_item.html.twig" with {recipe: recipe} %}
           {% endfor %}
 
         </div>
-
-      </div>
-    </section><!-- End Gallery Section -->
+    </div>
+</section><!-- End Gallery Section -->
