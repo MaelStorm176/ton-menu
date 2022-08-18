@@ -43,7 +43,7 @@ class ApiKeyAuthentificator extends AbstractGuardAuthenticator
 
     public function checkCredentials($credentials, UserInterface $user)
     {
-        return $user instanceof User && $user->getApiKey() === $credentials['apiKey'];
+        return $user instanceof User && $user->getApiKey() === $credentials['apiKey'] && $user->getIsVerify();
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
