@@ -51,10 +51,10 @@ security:
     - { path: ^/admin, roles: ROLE_ADMIN }
     - { path: ^/profile, roles: ROLE_USER }
     - { path: ^/recipe/add, roles: [ROLE_CHIEF, ROLE_ADMIN] }
-    - { path: ^/recipe, roles: ROLE_USER }
     - { path: ^/rate, roles: ROLE_USER }
     - { path: ^/logout, roles: ROLE_USER }
     - { path: ^/chef, roles: ROLE_USER }
     - { path: ^/ingredient, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/recipe/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
     - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
     - { path: ^/api, roles: [ROLE_PREMIUM, ROLE_ADMIN] }

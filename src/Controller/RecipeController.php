@@ -106,7 +106,7 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/{id}/edit", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
+     * @Route("/recipe/edit/{id}", name="recipe_edit", requirements={"id"="\d+"}, methods={"GET", "POST"})
      */
     public function edit(Request $request, Recipe $recipe): Response
     {
