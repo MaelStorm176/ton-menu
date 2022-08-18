@@ -1,5 +1,5 @@
 <div class="col-lg-3 col-md-4">
-	<div class="member" data-aos="zoom-in" data-aos-delay="100" style="margin-bottom: 0 !important">
+	<div class="member" style="margin-bottom: 0 !important">
 		{% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
 			<img src="{{ recipe.recipeImages[0].url }}" alt="picture" class="img-fluid">
 		{% else %}
@@ -7,7 +7,20 @@
 		{% endif %}
 		<div class="member-info">
 			<div class="member-info-content">
-				<h4>{{recipe.name}}</h4>
+				<a href="{{ path('recipe_show', {id: recipe.id}) }}">
+					<h4>{{ recipe.name }}</h4>
+					<div class="d-flex flex-row justify-content-center">
+						{% for i in 1..5 %}
+							{% if i <= recipe.averageRating %}
+								<i class="bi bi-star-fill" style="color: white"></i>
+							{% else %}
+								<i class="bi bi-star" style="color: black"></i>
+							{% endif %}
+						{% endfor %}
+
+						<span class="mx-3">({{recipe.numberOfRating}} avis)</span>
+					</div>
+				</a>
 			</div>
 		</div>
 	</div>

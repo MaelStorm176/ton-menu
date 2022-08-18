@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class RecipeController extends AbstractController
 {
 
-    private $recipeRepository;
+    private RecipeRepository $recipeRepository;
     public function __construct(RecipeRepository $recipeRepository)
     {
         $this->recipeRepository = $recipeRepository;
@@ -92,6 +92,7 @@ class RecipeController extends AbstractController
                     }
                 }
 
+                $this->addFlash('success', 'Votre recette a bien été ajoutée !');
                 return $this->redirectToRoute('recipe_show', [
                     'id' => $recette->getId()
                 ]);
@@ -114,6 +115,7 @@ class RecipeController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+            $this->addFlash('success', 'Votre recette a bien été modifiée !');
             return $this->redirectToRoute('recipe_show', [
                 'id' => $recipe->getId()
             ]);

@@ -23,10 +23,6 @@ class HomeController extends AbstractController
         $recipes = $recipeRepository->getRandomRecipes("PLAT", 3);
         $randomRecipes = $recipeRepository->getRandomRecipes("PLAT", 8);
 
-        $this->addFlash('error', 'Vous êtes bien connecté !');
-        $this->addFlash('success', 'Vous êtes bien ttt !');
-
-
         return $this->render('home/index.html.twig', [
             'recipes' => $recipes,
             'randomRecipes' => $randomRecipes,
@@ -48,7 +44,6 @@ class HomeController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dd($form->getData());
             $demande = new Demande();
             $demande->setUser($user);
             $demande->setSendAt(new DateTimeImmutable());

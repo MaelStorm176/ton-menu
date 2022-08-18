@@ -11,6 +11,7 @@ use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -124,6 +125,8 @@ class RandomRecipeController extends AbstractController
                     $mailer->send($email);
                 } catch (\Exception $e) {
                     return new JsonResponse(["error" => "Erreur lors de l'envoi du mail " . $e->getMessage()]);
+                } catch (TransportExceptionInterface $e) {
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail " . $e->getMessage()]);
                 }
             }
             return new JsonResponse(["success" => true, "msg" => "Votre menu a été envoyé à votre adresse email"]);
@@ -207,6 +210,7 @@ class RandomRecipeController extends AbstractController
 
                 $json_menu = json_encode($idsRecipes);
             } else {
+                $this->addFlash('error', 'Ce menu n\'existe pas');
                 return $this->redirectToRoute('home');
             }
         }
@@ -246,7 +250,6 @@ class RandomRecipeController extends AbstractController
 
         //Si on a bien générer des entrees, plats et desserts, on peut rendre la vue
         if ($entrees && $plats && $desserts && count($entrees) == count($plats) && count($plats) == count($desserts)) {
-            $this->addFlash('success', 'Votre menu a bien été généré !');
             return $this->render('generation_menu/index.html.twig', [
                 'id_menu' => $id_menu,
                 'entrees' => $entrees,
@@ -259,7 +262,10 @@ class RandomRecipeController extends AbstractController
             ]);
         }
         //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
-        return $this->redirectToRoute('home');
+        else {
+            $this->addFlash('error', 'Il n\'y a pas assez de recettes disponibles pour générer un menu');
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**

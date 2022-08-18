@@ -34,6 +34,26 @@ $(document).ready(function () {
         $('#sidebar').toggleClass('active');
     });
 
+    const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    const toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl, {
+            autohide: true,
+            delay: 5000,
+            animation: true,
+            newestOnTop: true,
+            placement: 'top',
+            preventDuplicates: true,
+            progressBar: true,
+            closeButton: true,
+            showMethod: 'slideDown',
+            hideMethod: 'slideUp'
+        });
+    });
+
+    toastList.forEach(function (toast) {
+        toast.show();
+    });
+
     /*
     $('.toast').each(function () {
         const toast = new Toast(this);
