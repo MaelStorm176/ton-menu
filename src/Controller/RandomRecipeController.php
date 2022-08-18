@@ -27,7 +27,7 @@ class RandomRecipeController extends AbstractController
         $this->savedMenusRepository = $savedMenusRepository;
     }
 
-    #[Route('/generation-plat', name: 'generation_plat')]
+    /*#[Route('/generation-plat', name: 'generation_plat')]
     public function index(): Response
     {
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
@@ -37,7 +37,7 @@ class RandomRecipeController extends AbstractController
         return $this->render('generation_menu/index.html.twig', [
             'recipe' => $recette,
         ]);
-    }
+    }*/
 
     #[Route('/ajax/generation-menu/save_menu', name: 'save_menu', methods: ['POST'])]
     public function saveMenu(Request $request)

@@ -123,7 +123,7 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete')]
+    #[Route('/delete/{id}', name: 'delete')]
     public function delete(Ingredient $ingredient): Response{
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($ingredient);

@@ -14,9 +14,11 @@
 					<li class="nav-item">
 						<a class="nav-link scrollto text-black" href="{{ path('home') }}">Accueil</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link scrollto text-black" href="{{ path('recipe_all') }}">Liste des recettes</a>
-					</li>
+					{% if is_granted('ROLE_USER') %}
+						<li class="nav-item">
+							<a class="nav-link scrollto text-black" href="{{ path('recipe_all') }}">Liste des recettes</a>
+						</li>
+					{% endif %}
 					<li class="nav-item">
 						<a class="nav-link scrollto text-black" href="{{ path('generation_menu',{nb_jour: 7}) }}">Génération de menus</a>
 					</li>

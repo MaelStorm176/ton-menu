@@ -38,6 +38,8 @@ security:
         enable_csrf: true
       logout:
         path: app_logout
+      entry_point: App\Security\AuthenticationEntryPoint
+      access_denied_handler: App\Security\AccessDeniedHandler
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -54,7 +56,22 @@ security:
     - { path: ^/rate, roles: ROLE_USER }
     - { path: ^/logout, roles: ROLE_USER }
     - { path: ^/chef, roles: ROLE_USER }
-    - { path: ^/ingredient, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/add, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/edit/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/check-name, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/delete/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/\d+$, roles: ROLE_USER }
     - { path: ^/recipe/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
     - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
     - { path: ^/api, roles: [ROLE_PREMIUM, ROLE_ADMIN] }
+    - { path: ^/demande, roles: ROLE_USER }
+    - { path: ^/recipe/all, roles: ROLE_USER }
+    - { path: ^/recipe/\d+$, roles: ROLE_USER }
+    - { path: ^/payment, roles: ROLE_USER }
+    - { path: ^/delete/\d+$, roles: ROLE_USER }
+    - { path: ^/signalement/\d+$, roles: ROLE_USER }
+    - { path: ^/follow/\d+$, roles: ROLE_USER }
+    - { path: ^/ajax, roles: ROLE_USER }
+    - { path: ^/rate/\d+$, roles: ROLE_USER }
+    - { path: ^/success, roles: ROLE_USER }
+    - { path: ^/cancel, roles: ROLE_USER }

@@ -30,7 +30,7 @@ class TransactionController extends AbstractController
         //   $priceId = $_POST['priceId'];
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io/';
+        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
 
         try {
             $checkout_session = SessionCheckout::create([
@@ -65,8 +65,10 @@ class TransactionController extends AbstractController
         $transaction->setCreatedAt(new DateTimeImmutable());
         $transaction->setValidateAt(new DateTimeImmutable());
         $transaction->setSessionId($session_id);
-
-        $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);
+        
+        $role = $user->getRoles();
+        array_push($role, "ROLE_PREMIUM");
+        $user->setRoles($role);
 
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
