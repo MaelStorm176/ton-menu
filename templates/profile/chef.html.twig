@@ -17,7 +17,7 @@
 						{{ user.lastname }}</span>
 					<span class="text-black-50">Chef</span>
 				</div>
-				{% if app.user.id != user.id %}
+				{% if app.user.id != user.id and app.user not in user.follows %}
 					<div>
 						<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">Suivre</a>
 					</div>

@@ -38,6 +38,8 @@ security:
         enable_csrf: true
       logout:
         path: app_logout
+      entry_point: App\Security\AuthenticationEntryPoint
+      access_denied_handler: App\Security\AccessDeniedHandler
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -54,7 +56,11 @@ security:
     - { path: ^/rate, roles: ROLE_USER }
     - { path: ^/logout, roles: ROLE_USER }
     - { path: ^/chef, roles: ROLE_USER }
-    - { path: ^/ingredient, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/add, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/check-name, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/ingredient/delete/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/\d+$, roles: ROLE_USER }
     - { path: ^/recipe/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
     - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
     - { path: ^/api, roles: [ROLE_PREMIUM, ROLE_ADMIN] }
