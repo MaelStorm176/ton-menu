@@ -66,7 +66,7 @@ class TransactionController extends AbstractController
         $transaction->setValidateAt(new DateTimeImmutable());
         $transaction->setSessionId($session_id);
 
-        $user->setRoles(['ROLE_USER', 'ROLE_PREMIUM']);
+        $user->setRoles(array_push($user->getRoles(), "ROLE_PREMIUM"));
 
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
