@@ -1,4 +1,3 @@
-<!-- bootstrap mail template --->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,21 +42,21 @@
                                                 <ul>
                                                     <li>Entrées</li>
                                                     {% for ingredient in entrees[i].ingredients %}
-                                                        <li>{{ ingredient.ingredient.name }}</li>
+                                                        <li>{{ ingredient.name }}</li>
                                                     {% endfor %}
                                                 </ul>
 
                                                 <ul>
                                                     <li>Plats</li>
                                                     {% for ingredient in plats[i].ingredients %}
-                                                        <li>{{ ingredient.ingredient.name }}</li>
+                                                        <li>{{ ingredient.name }}</li>
                                                     {% endfor %}
                                                 </ul>
 
                                                 <ul>
                                                     <li>Desserts</li>
                                                     {% for ingredient in desserts[i].ingredients %}
-                                                        <li>{{ ingredient.ingredient.name }}</li>
+                                                        <li>{{ ingredient.name }}</li>
                                                     {% endfor %}
                                                 </ul>
                                             </td>

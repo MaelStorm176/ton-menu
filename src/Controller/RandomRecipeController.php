@@ -122,7 +122,7 @@ class RandomRecipeController extends AbstractController
                 try {
                     $mailer->send($email);
                 } catch (\Exception $e) {
-                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail " . $e->getMessage()]);
                 }
             }
             return new JsonResponse(["success" => true, "msg" => "Votre menu a été envoyé à votre adresse email"]);

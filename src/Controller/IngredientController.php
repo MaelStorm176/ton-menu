@@ -86,7 +86,7 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit')]
+    #[Route('/edit/{id}', name: 'edit')]
     public function edit(Request $request, Ingredient $ingredient): Response{
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);

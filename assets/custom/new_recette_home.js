@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  $(".dropdown-toggle").on("click", function() {
+  $("#filter").on("click", function() {
     const dropdown = $("#cascade");
     dropdown.is(":visible") ? dropdown.hide() : dropdown.show();
   });
