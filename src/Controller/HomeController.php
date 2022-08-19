@@ -20,6 +20,12 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(RecipeRepository $recipeRepository): Response
     {
+        if($this->getUser()){
+            if ($this->getUser()->getIsVerify() == false) {
+                return $this->redirectToRoute('app_logout');
+            }
+        }
+
         $recipes = $recipeRepository->getRandomRecipes("PLAT", 3);
         $randomRecipes = $recipeRepository->getRandomRecipes("PLAT", 8);
 
@@ -44,12 +50,18 @@ class HomeController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $demande = new Demande();
-            $demande->setUser($user);
-            $demande->setSendAt(new DateTimeImmutable());
-            $demande->setAccept(0);
+
             $brochureFile = $form->get('document')->getData();
-            if ($brochureFile) {
+
+            $mimeType = ['application/pdf', 'application/x-pdf', 'application/acrobat', 'applications/vnd.pdf', 'text/pdf', 'text/x-pdf'];
+            // this condition is needed because the 'brochure' field is not required
+            // so the PDF file must be processed only when a file is uploaded
+            if ($brochureFile && in_array($brochureFile->getMimeType(), $mimeType)) {
+                $demande = new Demande();
+                $demande->setUser($user);
+                $demande->setSendAt(new DateTimeImmutable());
+                $demande->setAccept(0);
+
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -69,12 +81,20 @@ class HomeController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $demande->setDocument($newFilename);
+
+                $demande->setName($form->get('name')->getData());
+                $demande->setMessage($form->get('message')->getData());
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($demande);
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre demande a bien été envoyée');
+                return $this->redirectToRoute('home');
+            }else{
+                $fileUploadError = new FormError("Veuillez uploader un fichier PDF");
+                $form->get('document')->addError($fileUploadError);
+                $this->addFlash('Error', 'Votre photo de profil n\'est pas une image ou n\'est pas valide.');
             }
-            $demande->setName($form->get('name')->getData());
-            $demande->setMessage($form->get('message')->getData());
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($demande);
-            $entityManager->flush();
         }
         return $this->render('profile/demande.html.twig', [
             "form" => $form->createView(),
