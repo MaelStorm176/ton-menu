@@ -130,6 +130,19 @@ class RecipeController extends AbstractController
     }
 
     /**
+     * @Route("/recipe/delete/{id}", name="recipe_delete", requirements={"id"="\d+"}, methods={"DELETE"})
+     */
+    public function delete(Request $request, Recipe $recipe): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
+            $this->entityManager->remove($recipe)->flush();
+        }
+        $this->addFlash('success', 'Votre recette a bien été supprimée !');
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+
+    /**
      * @Route("/recipe/all", name="recipe_all", methods={"GET"})
      */
     public function show_all(RecipeRepository $recipeRepository, Request $request, PaginatorInterface $paginator): Response
@@ -209,4 +222,21 @@ class RecipeController extends AbstractController
             return new Response('This is not ajax!', 400);
         }
     }
+
+    /**
+     * @Route ("/recipe/{id}/tags", name="recipe_show_tags", methods={"POST"})
+     */
+    public function show_tags(Recipe $recipe, Request $request): Response
+    {
+        if ($request->isXmlHttpRequest()) {
+            $tags = $recipe->getRecipeTags();
+            return $this->render('admin/recipes/table_tags.html.twig', [
+                'tags' => $tags
+            ]);
+        } else {
+            return new Response('This is not ajax!', 400);
+        }
+    }
+
+
 }

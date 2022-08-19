@@ -10,8 +10,9 @@ $(document).ready(function (){
             orderable: false,
             targets:   0
         } ],
-        length: 10,
+        pageLength: 10,
     }
     $("#ingredientsTable").DataTable(dataTableOptions);
-    $("#recipesTable").DataTable(dataTableOptions);
+    if ($("#recipesTable"))
+        $("#recipesTable").DataTable(dataTableOptions);
 });

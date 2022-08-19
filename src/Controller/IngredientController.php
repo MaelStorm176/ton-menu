@@ -85,7 +85,7 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(Request $request, Ingredient $ingredient): Response{
+    public function edit(Request $request, Ingredient $ingredient): Response {
         $form = $this->createForm(IngredientType::class, $ingredient);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -107,6 +107,8 @@ class IngredientController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($ingredient);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Ingredient modifié avec succès');
             // do anything else you need here, like send an email
             return $this->redirectToRoute('ingredient_show', [
                 'id' => $ingredient->getId()
@@ -118,9 +120,15 @@ class IngredientController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'delete')]
-    public function delete(Ingredient $ingredient): Response{
-        $this->entityManager->remove($ingredient)->flush();
+    #[Route('/delete/{id}', name: 'delete', methods: ['DELETE', 'POST'])]
+    public function delete(Ingredient $ingredient, Request $request): Response {
+        if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), $request->request->get('_token'))) {
+            dump($ingredient);
+            //$this->entityManager->remove($ingredient)->flush();
+            $this->addFlash('success', 'Ingredient supprimé avec succès');
+        }else{
+            $this->addFlash('error', 'Une erreur est survenue');
+        }
         return $this->redirectToRoute('home');
     }
 

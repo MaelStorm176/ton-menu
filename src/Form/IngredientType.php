@@ -27,6 +27,8 @@ class IngredientType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Entrez l\'image de l\'ingrédient',
                 ],
+                'required' => false,
+                'data_class' => null,
             ])
             ->add('Enregistrer', SubmitType::class)
         ;
