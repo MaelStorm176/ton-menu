@@ -31,7 +31,7 @@ class TransactionController extends AbstractController
         //   $priceId = $_POST['priceId'];
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741';
+        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
 
         try {
             $checkout_session = SessionCheckout::create([
@@ -88,7 +88,7 @@ class TransactionController extends AbstractController
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'http://localhost:8741/profile';
+        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io/profile';
 
         try {
             $checkout_session = SessionCheckout::retrieve($session_id);
