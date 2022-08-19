@@ -39,7 +39,7 @@ security:
       logout:
         path: app_logout
       entry_point: App\Security\AuthenticationEntryPoint
-      access_denied_handler: App\Security\AccessDeniedHandler
+      #access_denied_handler: App\Security\AccessDeniedHandler
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall

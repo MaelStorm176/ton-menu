@@ -91,6 +91,9 @@
         <a class="btn-menu animated fadeInUp" href="{{ path('recipe_all') }}">Retour a la liste des recettes</a>
     </div
     -->
+    {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
+     <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp">Modifier la recette</a>
+    {% endif %}
     <div class="container">
         <div class="col">
             <p class="title">{{recette.name}}</p>

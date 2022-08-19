@@ -12,7 +12,6 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
         // ...
-
         return new Response("Bas alors, on s'est tromper de page ?", 403);
     }
 }

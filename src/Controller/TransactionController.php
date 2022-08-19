@@ -8,6 +8,7 @@ use DateImmutable;
 use DateTimeImmutable;
 use Stripe\Stripe;
 use App\Entity\Transaction;
+use App\Repository\TransactionRepository;
 use Stripe\BillingPortal\Session;
 use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class TransactionController extends AbstractController
         //   $priceId = $_POST['priceId'];
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
+        $YOUR_DOMAIN = 'http://localhost:8741';
 
         try {
             $checkout_session = SessionCheckout::create([
@@ -54,8 +55,21 @@ class TransactionController extends AbstractController
     }
 
     #[Route('/success/{session_id}', name: 'app_payment_success')]
-    public function success($session_id): Response
+    public function success($session_id, TransactionRepository $transactionRepository): Response
     {
+        //$stripe = Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
+        //$responseStripe = $stripe->paymentIntents->retrieve($session_id->getStripeId());
+
+        $check_transaction = $transactionRepository->findOneBy(['session_id' => $session_id]);
+
+        if($check_transaction && $check_transaction->getUser() != $this->getUser()) {
+            $this->addFlash('error', 'Cette confirmation de paiements à déjà été réalisé et appartient à un autre utilisateur, veuillez avoir l\'argent sur vous au lieux de gratter comme un rat.');
+            return $this->redirectToRoute('home');
+        }elseif($check_transaction->getUser() == $this->getUser()){
+            $this->addFlash('error', 'Votre argent nous fais plaisir, mais vous essayez tout de même de nous gruger, cependant comme vous avez déjà payé vous ne pouvez pas.');
+            return $this->redirectToRoute('home');
+        }
+        
         $manager = $this->getDoctrine()->getManager();
 
         $transaction = new Transaction();
@@ -65,7 +79,7 @@ class TransactionController extends AbstractController
         $transaction->setCreatedAt(new DateTimeImmutable());
         $transaction->setValidateAt(new DateTimeImmutable());
         $transaction->setSessionId($session_id);
-        
+
         $role = $user->getRoles();
         array_push($role, "ROLE_PREMIUM");
         $user->setRoles($role);
@@ -74,7 +88,7 @@ class TransactionController extends AbstractController
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io/profile';
+        $YOUR_DOMAIN = 'http://localhost:8741/profile';
 
         try {
             $checkout_session = SessionCheckout::retrieve($session_id);
