@@ -2,32 +2,32 @@
 
 namespace App\Repository;
 
-use App\Entity\Follow;
+use App\Entity\Follower;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Follow>
+ * @extends ServiceEntityRepository<Follower>
  *
- * @method Follow|null find($id, $lockMode = null, $lockVersion = null)
- * @method Follow|null findOneBy(array $criteria, array $orderBy = null)
- * @method Follow[]    findAll()
- * @method Follow[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Follower|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Follower|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Follower[]    findAll()
+ * @method Follower[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FollowRepository extends ServiceEntityRepository
+class FollowerRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Follow::class);
+        parent::__construct($registry, Follower::class);
     }
 
     /**
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function add(Follow $entity, bool $flush = true): void
+    public function add(Follower $entity, bool $flush = true): void
     {
         $this->_em->persist($entity);
         if ($flush) {
@@ -39,7 +39,7 @@ class FollowRepository extends ServiceEntityRepository
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function remove(Follow $entity, bool $flush = true): void
+    public function remove(Follower $entity, bool $flush = true): void
     {
         $this->_em->remove($entity);
         if ($flush) {
@@ -48,7 +48,7 @@ class FollowRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Follow[] Returns an array of Follow objects
+    //  * @return Follower[] Returns an array of Follower objects
     //  */
     /*
     public function findByExampleField($value)
@@ -65,7 +65,7 @@ class FollowRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Follow
+    public function findOneBySomeField($value): ?Follower
     {
         return $this->createQueryBuilder('f')
             ->andWhere('f.exampleField = :val')

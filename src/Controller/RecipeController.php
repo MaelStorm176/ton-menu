@@ -2,25 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\RecipeImages;
-use App\Form\SearchRecipeType;
+use App\Entity\User;
 use App\Entity\Rating;
 use App\Entity\Recipe;
 use DateTimeImmutable;
 use App\Entity\Comment;
+use App\Entity\Follower;
 use App\Form\CommentType;
 use App\Form\RecetteType;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Ingredient;
 use App\Entity\RecipeTags;
+use App\Entity\RecipeImages;
+use App\Form\SearchRecipeType;
 use App\Repository\RecipeRepository;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class RecipeController extends AbstractController
 {
@@ -39,8 +41,8 @@ class RecipeController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $recette = new Recipe();
         $user = $this->getUser();
-        $followers = $user->getFollows();
-        dd($followers);
+        $followers = $manager->getRepository(Follower::class)->findBy(['chef_id' => $user->getId()]);
+
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
@@ -78,10 +80,10 @@ class RecipeController extends AbstractController
                 $manager->persist($recette);
                 $manager->flush();
                 foreach ($followers as $follower) {
-                    dd($follower->getEmail());
+                    $follow = $manager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
                     $email = (new TemplatedEmail())
                         ->from('tonmenu@mange.fr')
-                        ->to($follower->getEmail())
+                        ->to($follow->getEmail())
                         ->subject("Nouvelle recette de votre chef !")
                         ->htmlTemplate('new_recette/new.html.twig')
                         ->context([

@@ -2,9 +2,6 @@
 
 {% block title %}Page Chef
 {% endblock %}
-{% set pourcentageEntrees = countEntrees/totalRecettes*100 %}
-{% set pourcentagePlats = countPlats/totalRecettes*100 %}
-{% set pourcentageDesserts = countDesserts/totalRecettes*100 %}
 
 {% block body %}
 	<button class="btn btn-primary m-2" onclick="history.back();">Revenir sur votre recette</button>
@@ -12,16 +9,30 @@
 		<div class="row">
 			<div class="col-md-3 border-right mx-auto">
 				<div class="d-flex flex-column align-items-center text-center p-3 py-4">
-					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
+					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ user.profilePicture) }}" id="output" loading="lazy">
 					<span class="font-weight-bold">{{ user.firstname }}
 						{{ user.lastname }}</span>
 					<span class="text-black-50">Chef</span>
 				</div>
-				{% if app.user.id != user.id and app.user not in user.follows %}
+				{% set break = false %}
+				{% set i = 0 %}
+				<!-- for loop while break is false -->
+
+				{% for follow in follower %}
+					{% if break == false %}
+						{% if app.user.id != user.id and app.user.id != follow.userId %}
+							{% set i = 0 %}
+						{% elseif app.user.id == follow.userId %}
+							{% set i = 1 %}
+							{% set break = true %}
+						{% endif %}
+					{% endif %}
+				{% endfor %}
+				{% if i == 0 %}
 					<div>
 						<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">Suivre</a>
 					</div>
-				{% elseif app.user in user.follows %}
+				{% elseif i == 1 %}
 					<div>
 						<button class="btn btn-primary" disabled>Suivi</button>
 					</div>
@@ -32,33 +43,40 @@
 
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
-				<h4 class="text-center">{{ user.firstname }}
-					{{ user.lastname }}
-					vous propose ses meilleures recettes</h4>
-				<div class="row justify-content-center">
-					{% for recette in bestRecipes %}
-						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
-					{% endfor %}
-				</div>
+				{% if bestRecipes %}
+					<h4 class="text-center">{{ user.firstname }}
+						{{ user.lastname }}
+						vous propose ses meilleures recettes</h4>
+					<div class="row justify-content-center">
+						{% for recette in bestRecipes %}
+							{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+						{% endfor %}
+					</div>
+				{% else %}
+					<h4 class="text-center">{{ user.firstname }}
+						{{ user.lastname }}
+						n'a pas encore proposé de recette</h4>
+				{% endif %}
 			</div>
 		</div>
 
-
-		<div class="jumbotron jumbotron-fluid mt-3">
-			<div class="container">
-				<h4>Découvrez les recettes de
-					{{ user.firstname }}
-					{{ user.lastname }}</h4>
-				<div class="row">
-					{% for recette in recettes %}
-						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
-					{% endfor %}
+		{% if bestRecipes %}
+			<div class="jumbotron jumbotron-fluid mt-3">
+				<div class="container">
+					<h4>Découvrez les recettes de
+						{{ user.firstname }}
+						{{ user.lastname }}</h4>
+					<div class="row">
+						{% for recette in recettes %}
+							{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+						{% endfor %}
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row offset-md-4 offset-1">
-			{{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
-		</div>
+			<div class="row offset-md-4 offset-1">
+				{{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+			</div>
+		{% endif %}
 	</div>
 {% endblock %}
 
