@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 
 #[AsCommand(name:'marmiton:get-images')]
@@ -15,10 +16,10 @@ class MarmitonCommand extends Command
 {
     private MarmitonManager $marmitonManager;
 
-    public function __construct(EntityManagerInterface $em,string $name = null)
+    public function __construct(EntityManagerInterface $em, ParameterBagInterface $parameterBag, string $name = null)
     {
+        $this->marmitonManager = new MarmitonManager($em->getRepository(Ingredient::class), $parameterBag);
         parent::__construct($name);
-        $this->marmitonManager = new MarmitonManager($em->getRepository(Ingredient::class));
     }
 
     protected function configure()

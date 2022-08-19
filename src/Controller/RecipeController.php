@@ -10,6 +10,8 @@ use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Form\CommentType;
 use App\Form\RecetteType;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,9 +28,11 @@ class RecipeController extends AbstractController
 {
 
     private RecipeRepository $recipeRepository;
-    public function __construct(RecipeRepository $recipeRepository)
+    private EntityManagerInterface $entityManager;
+    public function __construct(EntityManagerInterface $manager ,RecipeRepository $recipeRepository)
     {
         $this->recipeRepository = $recipeRepository;
+        $this->entityManager = $manager;
     }
 
     /**
@@ -36,7 +40,6 @@ class RecipeController extends AbstractController
      */
     public function add_recette(Request $request, MailerInterface $mailer): Response
     {
-        $manager = $this->getDoctrine()->getManager();
         $recette = new Recipe();
         $user = $this->getUser();
         $followers = $user->getFollows();
@@ -56,7 +59,7 @@ class RecipeController extends AbstractController
                         $recipeImage = new RecipeImages();
                         $recipeImage->setPath('/img/recipes/' . $fichier);
                         $recipeImage->setRecipe($recette);
-                        $manager->persist($recipeImage);
+                        $this->entityManager->persist($recipeImage);
                     }
                 }
 
@@ -74,8 +77,7 @@ class RecipeController extends AbstractController
 
                 $recette->setCreatedAt(new DateTimeImmutable());
                 $recette->setUserId($user);
-                $manager->persist($recette);
-                $manager->flush();
+                $this->entityManager->persist($recette)->flush();
                 foreach ($followers as $follower) {
                     $email = (new TemplatedEmail())
                         ->from('tonmenu@mange.fr')
