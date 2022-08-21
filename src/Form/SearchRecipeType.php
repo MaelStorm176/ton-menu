@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\User;
 use Doctrine\DBAL\Types\TimeType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -101,6 +102,23 @@ class SearchRecipeType extends AbstractType
                 'class' => 'App\Entity\Ingredient',
                 'attr' => ['class' => 'form-control w-100'],
                 'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => false,
+            ])
+            ->add('author', EntityType::class, [
+                'label' => 'Créateur / Chef',
+                'required' => false,
+                'class' => 'App\Entity\User',
+                'attr' => ['class' => 'form-control w-100'],
+                'choice_label' => function (User $user) {
+                    return $user->getFirstname() . ' ' . $user->getLastname();
+                },
+                'query_builder' => function (\App\Repository\UserRepository $repository) {
+                    return $repository->createQueryBuilder('u')
+                        ->where('u.recipes IS NOT EMPTY')
+                        ->orderBy('u.firstname', 'ASC')
+                        ->addOrderBy('u.lastname', 'ASC');
+                },
                 'multiple' => true,
                 'expanded' => false,
             ])

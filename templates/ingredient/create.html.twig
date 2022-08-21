@@ -45,13 +45,15 @@
                                         <i class="bi bi-eye"></i>
                                     </a>
 
-                                    <a href="{{ path('recipe_edit', {'id': recipe.id}) }}" class="btn btn-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    {% if recipe.userId is same as app.user %}
+                                        <a href="{{ path('recipe_edit', {'id': recipe.id}) }}" class="btn btn-primary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
 
-                                    <a href="{{ path('recipe_delete', {'id': recipe.id}) }}" class="btn btn-danger">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                        <a href="{{ path('recipe_delete', {'id': recipe.id}) }}" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

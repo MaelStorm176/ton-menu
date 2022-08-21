@@ -9,14 +9,14 @@
 			<div class="container-fluid px-4">
 				<h1 class="mt-4">Dashboard</h1>
 				<ol class="breadcrumb mb-4">
-					<li class="breadcrumb-item active">Dernières stats</li>
+					<li class="breadcrumb-item active">Dernières statistiques</li>
 				</ol>
 				<div class="row">
 					<div class="col-xl-6">
 						<div class="card mb-4">
 							<div class="card-header">
 								<i class="bi bi-flag-fill"></i>
-								Dernier signalements
+								Derniers signalements
 							</div>
 							<div class="card-body">
 								{% if comments != [] %}
@@ -134,30 +134,36 @@
 				</div>
 				<div class="card mb-4">
 					<div class="card-header">
-						<i class="fas fa-table me-1"></i>
-						Dernières recettes
+						<i class="bi bi-book"></i>
+						Dernières recettes publiées
 					</div>
 					<div class="card-body">
 						<table id="recipesTable" class="display table table-striped table-bordered" style="width:100%">
 							<thead>
 								<tr>
-									<th style="width: 2%"></th>
-									<th style="width: 10%">Créateur</th>
-									<th style="width: 20%">Nom</th>
-									<th style="width: 5%">Type</th>
-									<th style="width: 5%">Personnes</th>
-									<th style="width: 5%">Difficulté</th>
-									<th style="width: 10%">Temps prépration</th>
-									<th style="width: 10%">Temps total</th>
-									<th style="width: 20%">Actions</th>
-									<th style="width: 3%"></th>
+									<th style="width: 10px"></th>
+									<th>Créateur</th>
+									<th>Nom</th>
+									<th>Type</th>
+									<th>Personnes</th>
+									<th>Difficulté</th>
+									<th>Temps prépration</th>
+									<th>Temps total</th>
+									<th>Actions</th>
+									<th></th>
 								</tr>
 							</thead>
 							<tbody>
 								{% for recipe in recipes %}
 									<tr id="recette_{{ recipe.id }}">
 										<td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
-										<td>{{ recipe.userId.email }}</td>
+										<td>
+											<span class="d-block text-truncate" style="max-width: 150px;">
+												<a href="{{ path('admin_user_show',{id: recipe.userId.id}) }}" target="_blank">
+													{{ recipe.userId.lastname }} {{ recipe.userId.firstname }}
+												</a>
+											</span>
+										</td>
 										<td>
 											<span class="d-block text-truncate" style="max-width: 300px;">
 												<a href="{{ path('recipe_show',{id: recipe.id}) }}" target="_blank">

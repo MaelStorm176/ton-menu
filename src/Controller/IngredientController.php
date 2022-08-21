@@ -123,8 +123,17 @@ class IngredientController extends AbstractController
     #[Route('/delete/{id}', name: 'delete', methods: ['DELETE', 'POST'])]
     public function delete(Ingredient $ingredient, Request $request): Response {
         if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), $request->request->get('_token'))) {
-            dump($ingredient);
-            //$this->entityManager->remove($ingredient)->flush();
+            if ($ingredient->getRecipes()){
+                $this->addFlash('error', 'Cet ingredient est utilisé dans une ou plusieurs recettes');
+                return $this->redirectToRoute('ingredient_show', [
+                    'id' => $ingredient->getId()
+                ]);
+            }
+            if ($ingredient->getImage()){
+                $this->delete_image($ingredient->getImage());
+            }
+            $this->entityManager->remove($ingredient);
+            $this->entityManager->flush();
             $this->addFlash('success', 'Ingredient supprimé avec succès');
         }else{
             $this->addFlash('error', 'Une erreur est survenue');

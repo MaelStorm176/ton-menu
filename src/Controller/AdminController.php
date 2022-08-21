@@ -9,6 +9,7 @@ use App\Entity\Rating;
 use App\Entity\Recipe;
 use App\Entity\Signalement;
 use App\Entity\User;
+use App\Form\SearchRecipeType;
 use App\Repository\DemandeRepository;
 use App\Repository\CommentRepository;
 use App\Repository\RecipeRepository;
@@ -17,6 +18,7 @@ use App\Services\MarmitonManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,17 +35,15 @@ class AdminController extends AbstractController
     #[Route("/", name: 'index')]
     public function index(SignalementRepository $signalementRepository, DemandeRepository $demandeRepository, RecipeRepository $recipeRepository, ParameterBagInterface $parameterBag): Response
     {
-        $marmitonManager = new MarmitonManager($this->getDoctrine()->getRepository(Ingredient::class), $parameterBag);
-        $marmitonManager->updateIngredientsImage();
-
-        $comments = $signalementRepository->findLast5One();
-        $demande = $demandeRepository->findLast5One();
-        $recipe = $recipeRepository->findLast10One();
+        //find last 5 signalement where traiter is not true
+        $signalements = $signalementRepository->findBy(['traiter' => false], ['create_at' => 'DESC'], 5);
+        $demandes = $demandeRepository->findBy(['accept' => false], ['send_at' => 'DESC'], 5);
+        $recipes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 10);
 
         return $this->render('admin/index.html.twig', [
-            'comments' => $comments,
-            'demandes' => $demande,
-            'recipes' => $recipe,
+            'comments' => $signalements,
+            'demandes' => $demandes,
+            'recipes' => $recipes,
         ]);
     }
 
@@ -84,13 +84,30 @@ class AdminController extends AbstractController
     }
 
     #[Route("/recipes",name: 'recipes')]
-    public function show_recipes(): Response
+    public function show_recipes(Request $request): Response
     {
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
-        $recipes = $repository->findAll();
+
+        $form = $this->createForm(SearchRecipeType::class, null, ['method' => 'GET']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
+            $data = $form->getData();
+            $recettesResults = $repository->findBySearch($data);
+        } else
+            $recettesResults = $repository->findBy([], ['created_at' => 'DESC']);
+
+        /*
+        $recettes = $paginator->paginate(
+            $recettesResults,
+            $request->query->getInt('page', 1),
+            8
+        );
+        */
 
         return $this->render('admin/recipes/show_recipes.html.twig', [
-            'recipes' => $recipes,
+            'recipes' => $recettesResults,
+            'form' => $form->createView(),
         ]);
     }
 

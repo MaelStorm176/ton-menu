@@ -11,8 +11,9 @@ $(document).ready(function (){
             targets:   0
         } ],
         pageLength: 10,
+
     }
-    $("#ingredientsTable").DataTable(dataTableOptions);
+    const table = $("#ingredientsTable").DataTable(dataTableOptions);
     if ($("#recipesTable"))
         $("#recipesTable").DataTable(dataTableOptions);
 });

@@ -35,4 +35,13 @@ $(document).ready(function() {
     closeOnSelect: true,
     width: "100%"
   });
+
+  $('#search_recipe_author').select2({
+    placeholder: "Sélectionner un ou plusieurs chefs",
+    allowClear: true,
+    multiple: true,
+    theme: "classic",
+    closeOnSelect: true,
+    width: "100%"
+  });
 });
