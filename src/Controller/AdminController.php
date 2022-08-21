@@ -7,6 +7,7 @@ use App\Entity\Demande;
 use App\Entity\Ingredient;
 use App\Entity\Rating;
 use App\Entity\Recipe;
+use App\Entity\RecipeTags;
 use App\Entity\Signalement;
 use App\Entity\User;
 use App\Form\SearchRecipeType;
@@ -80,6 +81,16 @@ class AdminController extends AbstractController
 
         return $this->render('admin/ingredients/show_ingredients.html.twig', [
             'ingredients' => $ingredients,
+        ]);
+    }
+
+    #[Route("/tags", name: 'tags')]
+    public function show_tags(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(RecipeTags::class);
+        $tags = $repository->findAll();
+        return $this->render('admin/tags/show_tags.html.twig', [
+            'tags' => $tags,
         ]);
     }
 
@@ -166,8 +177,15 @@ class AdminController extends AbstractController
     #[Route('/delete-comment/{id}', name: 'delete_report')]
     public function deleteReport(Signalement $signalement): Response
     {
-        $this->entityManager->remove($signalement->getMessage());
-        $this->entityManager->remove($signalement)->flush();
+        $this->entityManager->remove($signalement->getMessage())->flush();
+        return $this->redirectToRoute('admin_report_comment');
+    }
+
+    #[Route('/accept-comment/{id}', name: 'accept_comment')]
+    public function acceptComment(Signalement $signalement): Response
+    {
+        $signalement->setTraiter(true);
+        $this->entityManager->persist($signalement)->flush();
         return $this->redirectToRoute('admin_report_comment');
     }
 
@@ -176,13 +194,13 @@ class AdminController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);
-        
+
         //get demande with user id
         $demande = $demandeRepository->findOneBy(['user' => $user]);
         $demande->setAccept(2);
         $this->entityManager->persist($demande)->flush();
         // do anything else you need here, like send an email
-    
+
         return $this->redirectToRoute('admin_accept_demande');
     }
 }

@@ -182,6 +182,7 @@
                         <th>Commentaire</th>
                         <th>Recette</th>
                         <th>Créé le</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -198,6 +199,9 @@
                             </span>
                         </td>
                         <td>{{ comment.createdAt|date("d/m/Y H:i") }}</td>
+                        <td>
+                            <a href="{{ path('delete_comment',{id: comment.id}) }}" class="btn btn-danger">Supprimer</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
