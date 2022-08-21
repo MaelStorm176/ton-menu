@@ -183,8 +183,8 @@ class RecipeRepository extends ServiceEntityRepository
                 ->setParameter('tags', $filters['tags'])
                 ->setParameter('count', count($filters['tags']));
         }
-        if (isset($filters['user'])) {
-            $qb->andWhere('r.user_id = :user')->setParameter('user', $filters['user']);
+        if (isset($filters['author']) && !empty($filters['author'])) {
+            $qb->andWhere('r.user_id IN (:user)')->setParameter('user', $filters['author']);
         }
         if (isset($filters['minRate']) || isset($filters['maxRate'])) {
             $qb->innerJoin('r.ratings', 'r2', 'WITH', 'r2.recette = r.id')
