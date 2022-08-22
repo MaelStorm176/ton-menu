@@ -39,9 +39,9 @@
 					</div>
 				{% elseif i == 1 %}
 					<div>
-						<button class="btn btn-secondary" disabled>
+						<a class="btn btn-secondary" href="{{ path('unfollow', {'id': user.id}) }}">
 							<i class="bi bi-heartbreak-fill"></i>
-						</button>
+						</a>
 					</div>
 				{% endif %}
 			</div>
