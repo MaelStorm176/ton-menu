@@ -35,6 +35,18 @@
                         <input name="email" id="email" type="text" class="form-control disabled" value="{{ user.email }}" disabled>
                     </div>
                 </div>
+                {% if user.hasRole("ROLE_PREMIUM") or user.hasRole("ROLE_ADMIN") %}
+                    <hr />
+                    <div class="row mt-3">
+                        <div class="col-md-12 input-group">
+                            <label for="apiKey" class="labels">Paramètres développeur - clé API</label>
+                            <div class="input-group mb-3">
+                                <input id="apiKey" name="apiKey" type="text" class="form-control disabled" value="{{ user.apiKey }}" disabled />
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Copier</button>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-4">

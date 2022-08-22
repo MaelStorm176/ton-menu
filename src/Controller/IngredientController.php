@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Ingredient;
+use App\Entity\Recipe;
 use App\Entity\RecipeIngredients;
 use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -78,9 +80,17 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/{id}', name: 'show')]
-    public function show(Ingredient $ingredient): Response {
+    public function show(Ingredient $ingredient, Request $request, PaginatorInterface $paginator): Response {
+        //paginate recipes
+        $recipes = $this->getDoctrine()->getRepository(Recipe::class)->findByIngredients([$ingredient]);
+        $pagination = $paginator->paginate(
+            $recipes, /* query NOT result */
+            $request->query->getInt('page', 1)/*page number*/,
+            10/*limit per page*/
+        );
         return $this->render('ingredient/show.html.twig', [
             'ingredient' => $ingredient,
+            'pagination' => $pagination,
         ]);
     }
 

@@ -30,11 +30,8 @@ $.extend( true, $.fn.dataTable.defaults, {
 } );
 
 $(document).ready(function () {
-    $('#sidebarCollapse').on('click', function () {
-        $('#sidebar').toggleClass('active');
-    });
-
-    const toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    /* Taost */
+    const toastElList = [].slice.call($('.toast:not([id])'));
     const toastList = toastElList.map(function (toastEl) {
         return new bootstrap.Toast(toastEl, {
             autohide: true,
@@ -50,6 +47,7 @@ $(document).ready(function () {
         });
     });
 
+    /* Tooltips */
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     const tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -59,9 +57,7 @@ $(document).ready(function () {
         toast.show();
     });
 
-    /*
-    $('.toast').each(function () {
-        const toast = new Toast(this);
-        toast.show();
-    });*/
+    $('#sidebarCollapse').on('click', function () {
+        $('#sidebar').toggleClass('active');
+    });
 })

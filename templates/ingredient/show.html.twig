@@ -18,9 +18,15 @@
 						<span class="fw-bold"> {{ ingredient.name }}</span>
 					</h3>
 					<div class="row">
-						{% for recette in ingredient.recipes %}
+						{% for recette in pagination %}
 							{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
 						{% endfor %}
+					</div>
+
+					<div class="row">
+						<div class="col-12 d-flex justify-content-center">
+							{{ knp_pagination_render(pagination, 'pagination/pagination_template.html.twig') }}
+						</div>
 					</div>
 				</div>
 			</div>

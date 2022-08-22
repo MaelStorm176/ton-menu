@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Comment;
 use App\Entity\Signalement;
@@ -15,6 +16,10 @@ class SignalementController extends AbstractController
     public function send_signalement(Comment $comment): Response
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        if(!$user instanceof User){
+            $this->addFlash('error', 'Vous devez être connecté pour signaler un commentaire');
+            return $this->redirectToRoute('login');
+        }
 
         $signalementRepository = $this->getDoctrine()->getRepository(Signalement::class);
         $report = $signalementRepository->findOneBy(['message' => $comment]);
@@ -32,11 +37,8 @@ class SignalementController extends AbstractController
             $report->setUserSignalement($userSignalements);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($report);
-            $entityManager->flush();
-            return $this->redirectToRoute('recipe_show', [
-                'id' => $comment->getRecette()->getId(),
-            ]);
-        }else{
+        }
+        else{
             $userArray = array();
             $userArray[] = $user;
             $signalement = new Signalement();
@@ -49,11 +51,11 @@ class SignalementController extends AbstractController
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($signalement);
-            $entityManager->flush();
-    
-            return($this->redirectToRoute('recipe_show', [
-                'id' => $comment->getRecette()->getId(),
-            ]));
         }
+        $entityManager->flush();
+        $this->addFlash('success', 'Le commentaire a bien été signalé');
+        return $this->redirectToRoute('recipe_show', [
+            'id' => $comment->getRecette()->getId(),
+        ]);
     }
 }
