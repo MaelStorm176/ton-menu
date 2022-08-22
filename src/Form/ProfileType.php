@@ -60,7 +60,10 @@ class ProfileType extends AbstractType
             ->add('profile_picture', FileType::class, [
                 'label' => 'Photo de profil',
                 'required' => false,
-                'data_class' => null
+                'data_class' => null,
+                'attr' => [
+                    'accept' => 'image/*',
+                ]
             ])
             ->add("validate", SubmitType::class, [
                 'label' => 'Valider',

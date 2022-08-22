@@ -104,18 +104,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $apiKey;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Follow::class, inversedBy="user")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $follow;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Follow::class, mappedBy="chef")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $follows;
-
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -454,48 +442,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
-
-        return $this;
-    }
-
-    public function getFollow(): ?Follow
-    {
-        return $this->follow;
-    }
-
-    public function setFollow(?Follow $follow): self
-    {
-        $this->follow = $follow;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Follow>
-     */
-    public function getFollows(): Collection
-    {
-        return $this->follows;
-    }
-
-    public function addFollow(Follow $follow): self
-    {
-        if (!$this->follows->contains($follow)) {
-            $this->follows[] = $follow;
-            $follow->setChef($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFollow(Follow $follow): self
-    {
-        if ($this->follows->removeElement($follow)) {
-            // set the owning side to null (unless already changed)
-            if ($follow->getChef() === $this) {
-                $follow->setChef(null);
-            }
-        }
 
         return $this;
     }

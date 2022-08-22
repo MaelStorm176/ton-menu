@@ -4,10 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Recipe;
-use App\Entity\Follow;
+use App\Entity\Follower;
 use App\Form\ProfileType;
 use App\Entity\SavedMenus;
-use App\Repository\FollowRepository;
 use Symfony\Component\Form\FormError;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +29,12 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function index(Request $request, SluggerInterface $slugger): Response
     {
+        if($this->getUser()){
+            if ($this->getUser()->getIsVerify() == false) {
+                return $this->redirectToRoute('app_logout');
+            }
+        }
+
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->redirectToRoute('home');
@@ -57,10 +62,10 @@ class ProfileController extends AbstractController
 
             /** @var UploadedFile $brochureFile */
             $brochureFile = $form->get('profile_picture')->getData();
-
+            $mimeType = ['image/jpeg', 'image/png', 'image/jpg'];
             // this condition is needed because the 'brochure' field is not required
             // so the PDF file must be processed only when a file is uploaded
-            if ($brochureFile) {
+            if ($brochureFile && in_array($brochureFile->getMimeType(), $mimeType)) {
                 $originalFilename = pathinfo($brochureFile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
                 $safeFilename = $slugger->slug($originalFilename);
@@ -81,6 +86,9 @@ class ProfileController extends AbstractController
                 // updates the 'brochureFilename' property to store the PDF file name
                 // instead of its contents
                 $user->setProfilePicture($newFilename);
+            }else{
+                $user->setProfilePicture($oldPicture);
+                $this->addFlash('error', 'Votre photo de profil n\'est pas une image ou n\'est pas valide.');
             }
             $manager->persist($user);
             $manager->flush();
@@ -99,8 +107,9 @@ class ProfileController extends AbstractController
     public function chefPage($id, PaginatorInterface $paginator, Request $request): Response
     {
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
-
-        if (!$user instanceof User || !$this->isGranted('ROLE_CHIEF', $user) || !$user->getIsVerify()) {
+        $follower = $this->getDoctrine()->getRepository(Follower::class)->findBy(['chef_id' => $id]);
+        //dd(in_array("ROLE_CHIEF", $user->getRoles()));
+        if (!$user instanceof User || !in_array("ROLE_CHIEF", $user->getRoles()) || !$user->getIsVerify()) {
             throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
         }
 
@@ -115,12 +124,9 @@ class ProfileController extends AbstractController
         $bestRecipes = $this->getDoctrine()->getRepository(Recipe::class)->findBestRatedRecipesMadeByAUser($user);
         return $this->render('profile/chef.html.twig', [
             'user' => $user,
+            'follower' => $follower,
             'recettes' => $recettes,
             'bestRecipes' => $bestRecipes,
-            'countEntrees' => $countEntrees,
-            'countPlats' => $countPlats,
-            'countDesserts' => $countDesserts,
-            'totalRecettes' => $countEntrees + $countPlats + $countDesserts,
         ]);
     }
 
@@ -141,9 +147,9 @@ class ProfileController extends AbstractController
         if (!$chief instanceof User) {
             throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
         }
-        $follow = new Follow();
-        $follow->addUser($user);
-        $follow->setChef($chief);
+        $follow = new Follower();
+        $follow->setUserId($user->getId());
+        $follow->setChefId($chief->getId());
         $follow->setFollowAt(new \DateTimeImmutable());
 
 

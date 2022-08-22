@@ -17,6 +17,9 @@ class LoginController extends AbstractController
             return $this->redirectToRoute('home');
         }
 
+        //if user is not verify can't login redirecgt to page confirm
+
+
         $error = $authenticationUtils->getLastAuthenticationError();
 
         // last username entered by the user
