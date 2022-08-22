@@ -146,7 +146,10 @@ class AdminController extends AbstractController
         $role[] = "ROLE_CHIEF";
         $user->setRoles($role);
         $this->entityManager->persist($demande);
-        $this->entityManager->persist($user)->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Le role chef a bien été attribué');
         // do anything else you need here, like send an email
     
         return $this->redirectToRoute('admin_accept_demande');
@@ -198,7 +201,8 @@ class AdminController extends AbstractController
         //get demande with user id
         $demande = $demandeRepository->findOneBy(['user' => $user]);
         $demande->setAccept(2);
-        $this->entityManager->persist($demande)->flush();
+        $this->entityManager->persist($demande);
+        $this->entityManager->flush();
         // do anything else you need here, like send an email
 
         return $this->redirectToRoute('admin_accept_demande');

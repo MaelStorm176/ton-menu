@@ -2,15 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use Error;
-use Stripe\Price;
-use DateImmutable;
+use Stripe\Exception\ApiErrorException;
 use DateTimeImmutable;
 use Stripe\Stripe;
 use App\Entity\Transaction;
 use App\Repository\TransactionRepository;
 use Stripe\BillingPortal\Session;
-use Symfony\Component\BrowserKit\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Stripe\Checkout\Session as SessionCheckout;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,10 +17,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TransactionController extends AbstractController
 {
+    const YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
+
     #[Route('/payment', name: 'app_payment')]
     public function indexMonthPayment(): Response
     {
-        if (in_array("ROLE_PREMIUM", $this->getUser()->getRoles())) {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page');
+            return $this->redirectToRoute('login');
+        }
+        if ($user->hasRole('ROLE_PREMIUM') || $user->hasRole('ROLE_ADMIN')) {
+            $this->addFlash('error', 'Vous êtes déjà membre premium');
             return $this->redirectToRoute('home');
         }
         //use stripe for payment
@@ -31,8 +38,6 @@ class TransactionController extends AbstractController
         //   $priceId = $_POST['priceId'];
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
-
         try {
             $checkout_session = SessionCheckout::create([
                 'line_items' => [[
@@ -40,13 +45,16 @@ class TransactionController extends AbstractController
                     'quantity' => 1,
                 ]],
                 'mode' => 'subscription',
-                'success_url' => $YOUR_DOMAIN . '/success/{CHECKOUT_SESSION_ID}',
-                'cancel_url' => $YOUR_DOMAIN . '/cancel',
+                'success_url' => self::YOUR_DOMAIN . '/success/{CHECKOUT_SESSION_ID}',
+                'cancel_url' => self::YOUR_DOMAIN . '/cancel',
             ]);
 
             header("HTTP/1.1 303 See Other");
             header("Location: " . $checkout_session->url);
         } catch (Error $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        } catch (ApiErrorException $e) {
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);
         }
@@ -74,6 +82,9 @@ class TransactionController extends AbstractController
 
         $transaction = new Transaction();
         $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('This user does not have access to this section.');
+        }
         $transaction->setUser($user);
         $transaction->setValidate(true);
         $transaction->setCreatedAt(new DateTimeImmutable());
@@ -81,23 +92,21 @@ class TransactionController extends AbstractController
         $transaction->setSessionId($session_id);
 
         $role = $user->getRoles();
-        array_push($role, "ROLE_PREMIUM");
+        $role[] = "ROLE_PREMIUM";
         $user->setRoles($role);
+        $user->refreshApiKey();
 
         Stripe::setApiKey('sk_test_51LT4c2FE8xx5Qn4Z4Lhs70L8T5AiOnSbUHGMldAcySIc38XPX0MTz42VwqYr5s1n9AW9E3sJOeygnw1t7C867JgQ00hAvVGDiz');
 
         header('Content-Type: application/json');
 
-        $YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io/profile';
-
         try {
             $checkout_session = SessionCheckout::retrieve($session_id);
-            $return_url = $YOUR_DOMAIN;
 
             // Authenticate your user.
             $session = Session::create([
                 'customer' => $checkout_session->customer,
-                'return_url' => $return_url,
+                'return_url' => self::YOUR_DOMAIN,
             ]);
             header("HTTP/1.1 303 See Other");
             header("Location: " . $session->url);
@@ -108,13 +117,11 @@ class TransactionController extends AbstractController
         } catch (Error $e) {
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);
+        } catch (ApiErrorException $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
         }
-        return ($this->render(
-            'transaction/success.html.twig',
-            [
-                "session" => $session,
-            ]
-        ));
+        return ($this->render('transaction/success.html.twig', ["session" => $session]));
     }
 
     #[Route('/cancel', name: 'app_payment_cancel')]

@@ -77,7 +77,12 @@
 								<label for="apiKey" class="labels">Paramètres développeur - clé API</label>
 								<div class="input-group mb-3">
 									<input id="apiKey" name="apiKey" type="text" class="form-control disabled" value="{{ user.apiKey }}" disabled />
-									<button class="btn btn-outline-secondary" type="button" id="button-addon2">Copier</button>
+									<button class="btn btn-outline-secondary" type="button" id="button-addon2">
+										<i class="bi bi-clipboard"></i>
+									</button>
+									<button class="btn btn-outline-secondary" type="button" id="button-refresh">
+										<i class="bi bi-arrow-clockwise"></i>
+									</button>
 								</div>
 							</div>
 						</div>
@@ -141,13 +146,16 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h4 class="text-right">Vos recettes</h4>
+						<h4 class="text-right">Vos recettes publiées</h4>
 					</div>
 					<table id="recipesTable2" class="table table-bordered table-striped">
 						<thead>
 							<tr>
 								<th>Nom</th>
-								<th>Créé le</th>
+								<th>Type</th>
+								<th>Nombre de commentaires</th>
+								<th>Note moyenne</th>
+								<th>Date de publication</th>
 								<th>Action</th>
 							</tr>
 						</thead>
@@ -155,9 +163,30 @@
 							{% for recette in user.recipes %}
 								<tr>
 									<td>{{ recette.name }}</td>
+									<td>{{ recette.type|capitalize }}</td>
+									<td>{{ recette.comments|length }}</td>
+									<td>
+										{% if recette.averageRating|length > 0 %}
+											{{ recette.averageRating }} / 5
+										{% else %}
+											Aucune note
+										{% endif %}
+									</td>
 									<td class="text-center">{{ recette.createdAt|date("d/m/Y")}}</td>
 									<td class="text-center">
-										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
+										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">
+											<i class="bi bi-eye"></i>
+										</a>
+										<a href="{{ path('recipe_edit', {'id': recette.id}) }}" class="btn btn-primary">
+											<i class="bi bi-pencil"></i>
+										</a>
+										<form action="{{ path('recipe_delete',{id: recette.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');" class="d-inline-block">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete'~recette.id) }}"/>
+											<input type="hidden" name="_method" value="DELETE"/>
+											<button type="submit" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-trash"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 							{% endfor %}

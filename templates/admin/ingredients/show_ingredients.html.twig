@@ -27,7 +27,7 @@
 							{% for ingredient in ingredients %}
 								<tr>
 									<td>{{ ingredient.userId.email }}</td>
-									<td>{{ingredient.name}}</td>
+									<td>{{ ingredient.name }}</td>
 									<td>
 										<img src="{{ ingredient.image }}" loading="lazy" alt="{{ingredient.name}}" style="width: 100px; height: 100px">
 									</td>
