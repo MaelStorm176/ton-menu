@@ -42,7 +42,12 @@
                             <label for="apiKey" class="labels">Paramètres développeur - clé API</label>
                             <div class="input-group mb-3">
                                 <input id="apiKey" name="apiKey" type="text" class="form-control disabled" value="{{ user.apiKey }}" disabled />
-                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">Copier</button>
+                                <button class="btn btn-outline-secondary" type="button" id="button-addon2">
+                                    <i class="bi bi-clipboard"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button" id="button-refresh">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -223,4 +228,5 @@
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('show_user') }}
+    {{ encore_entry_script_tags('profile_index') }}
 {% endblock %}

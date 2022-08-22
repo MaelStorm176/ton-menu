@@ -105,6 +105,9 @@
 				{% if error is defined and error %}
 					{% include 'components/toast.html.twig' with {title: "Erreur !", message: error.messageKey|trans(error.messageData, 'security'), type: "error"} %}
 				{% endif %}
+
+				{% include 'components/toast.html.twig' with {title: "Succes !", message: '', type: "success", id: "custom-success"} %}
+				{% include 'components/toast.html.twig' with {title: "Erreur !", message: '', type: "error", id: "custom-error"} %}
 			</div>
 		</div>
 	</body>

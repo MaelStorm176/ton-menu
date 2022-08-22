@@ -27,7 +27,8 @@ class TransactionController extends AbstractController
             $this->addFlash('error', 'Vous devez être connecté pour accéder à cette page');
             return $this->redirectToRoute('login');
         }
-        if (!$user->hasRole('ROLE_PREMIUM') && !$user->hasRole('ROLE_ADMIN')) {
+        if ($user->hasRole('ROLE_PREMIUM') || $user->hasRole('ROLE_ADMIN')) {
+            $this->addFlash('error', 'Vous êtes déjà membre premium');
             return $this->redirectToRoute('home');
         }
         //use stripe for payment

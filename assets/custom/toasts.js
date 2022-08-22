@@ -2,7 +2,6 @@ import * as $ from "jquery";
 
 const custom_success = $('#custom-success');
 const custom_error = $('#custom-error');
-console.log(custom_success.find(".toast-body"));
 const toast_success = new bootstrap.Toast(custom_success);
 const toast_error = new bootstrap.Toast(custom_error);
 
