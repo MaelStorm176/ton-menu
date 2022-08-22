@@ -44,7 +44,7 @@ class RecipeController extends AbstractController
     {
         $recette = new Recipe();
         $user = $this->getUser();
-        $followers = $manager->getRepository(Follower::class)->findBy(['chef_id' => $user->getId()]);
+        $followers = $this->entityManager->getRepository(Follower::class)->findBy(['chef_id' => $user->getId()]);
 
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
@@ -82,7 +82,7 @@ class RecipeController extends AbstractController
                 $recette->setUserId($user);
                 $this->entityManager->persist($recette)->flush();
                 foreach ($followers as $follower) {
-                    $follow = $manager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
+                    $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
                     $email = (new TemplatedEmail())
                         ->from('tonmenu@mange.fr')
                         ->to($follow->getEmail())
@@ -134,15 +134,25 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/delete/{id}", name="recipe_delete", requirements={"id"="\d+"}, methods={"DELETE"})
+     * @Route("/recipe/delete/{id}", name="recipe_delete", requirements={"id"="\d+"}, methods={"DELETE", "POST"})
      */
     public function delete(Request $request, Recipe $recipe): Response
     {
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
-            $this->entityManager->remove($recipe)->flush();
+
+            $images = $recipe->getRecipeImages();
+            foreach ($images as $image) {
+                $file = $this->getParameter('recipe_image_directory') . $image->getPath();
+                if (file_exists($file)) {
+                    unlink($file);
+                }
+                $this->entityManager->remove($image);
+            }
+            $this->entityManager->remove($recipe);
+            $this->entityManager->flush();
         }
         $this->addFlash('success', 'Votre recette a bien été supprimée !');
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToRoute('recipe_all');
     }
 
 

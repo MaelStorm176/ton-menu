@@ -148,7 +148,7 @@ class Recipe
     private $user_id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette")
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette", orphanRemoval=true)
      */
     private $ratings;
 
@@ -171,7 +171,7 @@ class Recipe
     private $recipeSteps;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette", orphanRemoval=true, cascade={"persist"})
      */
     private $comments;
 

@@ -19,6 +19,7 @@
 							<thead>
 								<tr>
 									<th style="width: 10px"></th>
+									<th>ID</th>
 									<th>Créateur</th>
 									<th>Nom</th>
 									<th>Type</th>
@@ -34,6 +35,7 @@
 								{% for recipe in recipes %}
 									<tr id="recette_{{ recipe.id }}">
 										<td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
+										<td class="align-middle text-center">{{ recipe.id }}</td>
 										<td class="align-middle">
 											<span class="d-block text-truncate" style="max-width: 150px;">
 												<a href="{{ path('admin_user_show',{id: recipe.userId.id}) }}" target="_blank">

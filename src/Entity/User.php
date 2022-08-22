@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $recipes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user", orphanRemoval=true)
      */
     private $ratings;
 
