@@ -65,7 +65,7 @@ class ProfileType extends AbstractType
             ->add("validate", SubmitType::class, [
                 'label' => 'Valider',
                 'attr' => [
-                    'class' => 'btn btn-secondary profile-button'
+                    'class' => 'btn btn-secondary'
                 ]
             ])
         ;
