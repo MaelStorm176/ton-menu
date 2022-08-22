@@ -127,6 +127,7 @@ class RecipeController extends AbstractController
             ]);
         }
         return $this->render('new_recette/create.html.twig', [
+            'recipe' => $recipe,
             'recetteForm' => $form->createView(),
             'ingredients' => $this->getDoctrine()->getRepository(Ingredient::class)->findAll(),
             'tags' => $this->getDoctrine()->getRepository(RecipeTags::class)->findAll()
@@ -138,7 +139,14 @@ class RecipeController extends AbstractController
      */
     public function delete(Request $request, Recipe $recipe): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
+        $user = $this->getUser();
+
+        if (!$user instanceof User)
+        {
+            $this->addFlash('error', 'Vous devez être connecté pour supprimer une recette');
+            return $this->redirectToRoute('home');
+        }
+        if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token')) && $user->getId() == $recipe->getUserId()->getId()) {
 
             $images = $recipe->getRecipeImages();
             foreach ($images as $image) {
@@ -150,8 +158,13 @@ class RecipeController extends AbstractController
             }
             $this->entityManager->remove($recipe);
             $this->entityManager->flush();
+            $this->addFlash('success', 'Votre recette a bien été supprimée !');
+        }else{
+            $this->addFlash('error', 'Vous n\'avez pas le droit de supprimer cette recette !');
         }
-        $this->addFlash('success', 'Votre recette a bien été supprimée !');
+        if ($user->hasRole('ROLE_ADMIN')) {
+            return $this->redirectToRoute('admin_recipes');
+        }
         return $this->redirectToRoute('recipe_all');
     }
 
@@ -184,7 +197,7 @@ class RecipeController extends AbstractController
     }
 
     /**
-     * @Route("/recipe/{id}", name="recipe_show")
+     * @Route("/recipe/{id}", requirements={"id"="\d+"},name="recipe_show")
      */
     public function show_recette(Recipe $recette, Request $request): Response
     {

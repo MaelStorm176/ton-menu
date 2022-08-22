@@ -445,4 +445,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function refreshApiKey(): self
+    {
+        $this->apiKey = uniqid();
+
+        return $this;
+    }
 }

@@ -141,7 +141,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h4 class="text-right">Vos recettes</h4>
+						<h4 class="text-right">Vos recettes publiées</h4>
 					</div>
 					<table id="recipesTable2" class="table table-bordered table-striped">
 						<thead>
@@ -157,7 +157,19 @@
 									<td>{{ recette.name }}</td>
 									<td class="text-center">{{ recette.createdAt|date("d/m/Y")}}</td>
 									<td class="text-center">
-										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">Voir</a>
+										<a href="{{ path('recipe_show', {'id': recette.id}) }}" class="btn btn-primary">
+											<i class="bi bi-eye"></i>
+										</a>
+										<a href="{{ path('recipe_edit', {'id': recette.id}) }}" class="btn btn-primary">
+											<i class="bi bi-pencil"></i>
+										</a>
+										<form action="{{ path('recipe_delete',{id: recette.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');" class="d-inline-block">
+											<input type="hidden" name="_token" value="{{ csrf_token('delete'~recette.id) }}"/>
+											<input type="hidden" name="_method" value="DELETE"/>
+											<button type="submit" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-trash"></i>
+											</button>
+										</form>
 									</td>
 								</tr>
 							{% endfor %}

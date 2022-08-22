@@ -29,13 +29,18 @@
 						<tbody>
 							{% for demande in demandes %}
 								<tr>
-									<td>{{ demande.user.lastname }}
-										{{ demande.user.firstname }}</td>
+									<td>
+										<span class="d-block text-truncate" style="max-width: 150px;">
+											<a href="{{ path('admin_user_show',{id: demande.user.id }) }}" target="_blank">
+												{{ demande.user.lastname }} {{ demande.user.firstname }}
+											</a>
+										</span>
+									</td>
 									<td>{{demande.name}}</td>
 									<td>
 										{{demande.message}}
 									</td>
-									<td>
+									<td class="align-middle text-center">
 										<a href="{{ asset('/document/' ~ demande.document) }}" target="_blank" class="mx-auto">
 											<i class="fs-4 bi bi-filetype-pdf"></i>
 										</a>
@@ -49,12 +54,12 @@
 											Demande refusée
 										{% endif %}
 									</td>
-									<td>{{demande.sendAt|date('d/m/Y')}}</td>
+									<td class="text-center">{{demande.sendAt|date('d/m/Y')}}</td>
 									<td class="text-center">
-										<a href="/admin/role/{{demande.user.id}}">
+										<a href="{{ path('admin_set_chief',{id: demande.user.id})}}">
 											<i class="fs-4 bi bi-check-square-fill"></i>
 										</a>
-										<a href="/admin/refuse/{{demande.user.id}}">
+										<a href="{{ path('admin_refuse',{id: demande.user.id}) }}">
 											<i class="fs-4 bi bi-x-square-fill"></i>
 										</a>
 									</td>
@@ -67,4 +72,9 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('accept_demande') }}
 {% endblock %}
