@@ -5,46 +5,67 @@
 {% endblock %}
 
 {% block content %}
-	<h3>Gestion des ingrédients</h3>
-	<div class="row">
-		<div class="col">
-			<table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
-				<thead>
-					<tr>
-						<th>Créateur</th>
-						<th>Nom</th>
-						<th>Image</th>
-						<th>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{% for ingredient in ingredients %}
-						<tr>
-							<td>{{ ingredient.userId.email }}</td>
-							<td>{{ingredient.name}}</td>
-							<td><img src="{{ ingredient.image }}" loading="lazy" alt="{{ingredient.name}}" width="100" height="100"></td>
-							<td class="text-center">
-								<a href="{{ path('ingredient_show',{id: ingredient.id}) }}" type="button" class="btn btn-secondary">
-									<i class="fs-4 bi-eye"></i>
-								</a>
-								<a href="{{ path('ingredient_edit',{id: ingredient.id}) }}" type="button" class="btn btn-secondary">
-									<i class="fs-4 bi-pen"></i>
-								</a>
-								<button type="button" class="btn btn-secondary">
-									<i class="fs-4 bi-trash"></i>
-								</button>
-							</td>
-
-						</tr>
-					{% endfor %}
-				</tbody>
-			</table>
+<div class="row">
+	<div class="col-md-12">
+		<div class="card">
+			<div class="card-header card-header-primary">
+				<h4 class="card-title">Liste des ingrédients</h4>
+				<p class="card-category">Voir, modifier ou supprimer un ingrédient</p>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table id="ingredientsTable" class="table table-striped table-bordered" style="width:100%">
+						<thead>
+							<tr>
+								<th>Créateur</th>
+								<th>Nom</th>
+								<th>Image</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for ingredient in ingredients %}
+								<tr>
+									<td>{{ ingredient.userId.email }}</td>
+									<td>{{ingredient.name}}</td>
+									<td>
+										<img src="{{ ingredient.image }}" loading="lazy" alt="{{ingredient.name}}" style="width: 100px; height: 100px">
+									</td>
+									<td class="align-middle text-center">
+										<div>
+											<a href="{{ path('ingredient_show',{id: ingredient.id}) }}" type="button" class="btn btn-secondary">
+												<i class="fs-4 bi-eye"></i>
+											</a>
+											<a href="{{ path('ingredient_edit',{id: ingredient.id}) }}" type="button" class="btn btn-secondary">
+												<i class="fs-4 bi-pen"></i>
+											</a>
+											{% if ingredient.recipes is not empty %}
+												<button style="pointer-events: all!important;" type="button" class="btn btn-secondary disabled" data-bs-toggle="tooltip" data-bs-placement="top" title="Cet ingrédient est présent dans {{ ingredient.recipes.count }} recettes">
+													<i class="fs-4 bi-trash"></i>
+												</button>
+											{% else %}
+												<form action="{{ path('ingredient_delete',{id: ingredient.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+													<input type="hidden" name="_token" value="{{ csrf_token('delete'~ingredient.id) }}"/>
+													<input type="hidden" name="_method" value="DELETE"/>
+													<button type="submit" class="btn btn-secondary">
+														<i class="fs-4 bi-trash"></i>
+													</button>
+												</form>
+											{% endif %}
+										</div>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
-
-	{% block javascripts %}
-		{{ parent() }}
-		{{ encore_entry_script_tags('show_ingredients') }}
-	{% endblock %}
+</div>
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('show_ingredients') }}
+{% endblock %}
 
 {% endblock %}

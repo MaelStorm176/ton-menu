@@ -1,51 +1,73 @@
 {% extends "admin/admin.html.twig" %}
 
-{% block title %} Gestion des signalements {% endblock %}
+{% block title %}Gestion des signalements{% endblock %}
 
 {% block content %}
-    <h3>Gestion des signalements</h3>
-    <div class="row">
-        <div class="col">
-            <table id="reportsTable" class="table table-striped table-bordered w-100">
-                <thead>
-                    <tr>
-                        <th>Utilisateur signalé</th>
-                        <th>Message Signalé</th>
-                        <th>Signalé par</th>
-                        <th>Traité</th>
-                        <th>Signalé le</th>
-                        <th>Dernier signalement</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for comment in comments %}
-                        <tr>
-                            <td>{{ comment.message.user.lastname }} {{ comment.message.user.firstname }}</td>
-                            <td>{{comment.message.content}}</td>
-                            <td>
-                                {% for user in comment.userSignalement %}
-                                    {{user.lastname}} {{user.firstname}} <br>
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% if comment.traiter %}
-                                    Oui
-                                {% else %}
-                                    Non
-                                {% endif %}
-                            </td>
-                            <td>{{comment.createAt|date('d/m/Y')}}</td>
-                            <td>{{comment.updateAt|date('d/m/Y')}}</td>
-                            <td class="text-center">
-                                <a href="{{ path('admin_delete_report', {'id': comment.id}) }}" class="btn btn-secondary"><i class="fs-4 bi-trash"></i></a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-primary">
+                <h4 class="card-title">Liste des commentaires signalés</h4>
+                <p class="card-category">Supprimer ou non un commentaire utilisateur</p>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="reportsTable" class="table table-striped table-bordered w-100">
+                        <thead>
+                            <tr>
+                                <th>Utilisateur signalé</th>
+                                <th>Message Signalé</th>
+                                <th>Signalé par</th>
+                                <th>Traité</th>
+                                <th>Dernier signalement</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in comments %}
+                                <tr>
+                                    <td>
+                                        <span class="d-block text-truncate" style="max-width: 150px;">
+                                            <a href="{{ path('admin_user_show',{id: comment.message.user.id}) }}" target="_blank">
+                                                {{ comment.message.user.lastname }} {{ comment.message.user.firstname }}
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>{{comment.message.content}}</td>
+                                    <td class="align-middle">
+                                        <span class="d-block text-truncate" style="max-width: 150px;">
+                                        {% for user in comment.userSignalement %}
+                                            <a class="d-block" href="{{ path('admin_user_show',{id: user.id}) }}" target="_blank">
+                                                {{ user.lastname }} {{ user.firstname }}
+                                            </a>
+                                        {% endfor %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if comment.traiter %}
+                                            Oui
+                                        {% else %}
+                                            Non
+                                        {% endif %}
+                                    </td>
+                                    <td>{{comment.updateAt|date('d/m/Y H:i:s')}}</td>
+                                    <td class="text-center">
+                                        <a href="{{ path('admin_delete_report', {id: comment.id}) }}" class="btn btn-secondary">
+                                            <i class="fs-4 bi-trash"></i>
+                                        </a>
+                                        <a href="{{ path('admin_accept_comment', {id: comment.id}) }}" class="btn btn-success">
+                                            <i class="fs-4 bi-check"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}

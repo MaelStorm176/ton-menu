@@ -14,21 +14,25 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class MarmitonFixtures extends Fixture implements DependentFixtureInterface
 {
     private $faker;
-    public function __construct()
+    private $parameterBag;
+    public function __construct(ParameterBagInterface $parameterBag)
     {
         $this->faker = Factory::create('fr_FR');
+        $this->parameterBag = $parameterBag;
     }
+
 
     public function load(ObjectManager $manager): void
     {
         $user_entity = $manager->getRepository(User::class)->findOneBy(['email'=>'admin@gmail.com']);
         $types_recettes = ["ENTREE","PLAT","DESSERT"];
         $ingredient_name_list = [];
-        $marmitonManager = new MarmitonManager($manager->getRepository(Ingredient::class));
+        //$marmitonManager = new MarmitonManager($manager->getRepository(Ingredient::class), $this->parameterBag);
 
         /**** LECTURE DU JSON ****/
         $t0 = microtime(true);
