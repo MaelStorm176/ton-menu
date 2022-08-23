@@ -43,8 +43,20 @@
 							</button>
 						</div>
 					{% endif %}
-				</div>
-				<!-- for loop while break is false -->
+				{% endfor %}
+				{% if i == 0 %}
+					<div>
+						<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">
+							<i class="bi bi-heart-fill"></i>
+						</a>
+					</div>
+				{% elseif i == 1 %}
+					<div>
+						<a class="btn btn-secondary" href="{{ path('unfollow', {'id': user.id}) }}">
+							<i class="bi bi-heartbreak-fill"></i>
+						</a>
+					</div>
+				{% endif %}
 			</div>
 		</div>
 		<hr class="solid my-2"/>

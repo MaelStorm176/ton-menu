@@ -160,6 +160,30 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('chef_page', ['id' => $id]);
     }
 
+    #[Route('/unfollow/{id}', name: 'unfollow')]
+    public function unfollowChef($id): Response
+    {
+        $user = $this->getUser();
+        $chief = $this->getDoctrine()->getRepository(User::class)->find($id);
+        if (!$user instanceof User) {
+            return $this->redirectToRoute('home');
+        }
+        if (!$chief instanceof User) {
+            throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
+        }
+        $follow = $this->getDoctrine()->getRepository(Follower::class)->findOneBy(['user_id' => $user->getId(), 'chef_id' => $chief->getId()]);
+        if (!$follow instanceof Follower) {
+            throw $this->createNotFoundException('Aucun abonnement trouvé');
+        }
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($follow);
+        $manager->flush();
+
+        $this->addFlash('success', 'Vous n\'êtes plus abonné à ce chef');
+        return $this->redirectToRoute('chef_page', ['id' => $id]);
+    }
+
     #[Route('/profile/refresh-key', name: 'refresh_key', methods: ['GET'])]
     public function refreshApiKey(Request $request)
     {
