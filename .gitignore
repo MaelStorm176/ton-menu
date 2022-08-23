@@ -7,8 +7,8 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/public/img/ingredients/
-/public/img/recipes/
+/public/img/ingredients/*
+/public/img/recipes/*
 /public/profile_picture/
 /public/document/
 /var/
