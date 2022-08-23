@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Personnalisation du profil{% endblock %}
+{% block title %}Personnalisation du profil
+{% endblock %}
 
 {% block body %}
 	<div class="container bg-white mt-5 mb-5">
@@ -9,7 +10,8 @@
 				<div class="d-flex flex-column align-items-center text-center p-3 py-5">
 					<img class="rounded-circle mt-5" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" id="output" loading="lazy">
 					<div class="mt-2">
-						<span class="font-weight-bold">{{ user.firstname }} {{ user.lastname }}</span>
+						<span class="font-weight-bold">{{ user.firstname }}
+							{{ user.lastname }}</span>
 						{% if "ROLE_CHIEF" in user.roles %}
 							<span class="badge bg-primary">Chef</span>
 						{% endif %}
@@ -71,12 +73,12 @@
 						</div>
 					</div>
 					{% if is_granted("ROLE_PREMIUM") or is_granted("ROLE_ADMIN") %}
-						<hr />
+						<hr/>
 						<div class="row mt-3">
 							<div class="col-md-12 input-group">
 								<label for="apiKey" class="labels">Paramètres développeur - clé API</label>
 								<div class="input-group mb-3">
-									<input id="apiKey" name="apiKey" type="text" class="form-control disabled" value="{{ user.apiKey }}" disabled />
+									<input id="apiKey" name="apiKey" type="text" class="form-control disabled" value="{{ user.apiKey }}" disabled/>
 									<button class="btn btn-outline-secondary" type="button" id="button-addon2">
 										<i class="bi bi-clipboard"></i>
 									</button>
@@ -121,8 +123,17 @@
 											</tr>
 										{% endfor %}
 									{% else %}
+										{% for menu in generated_menus|slice(0,3) %}
+											<tr>
+												<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
+												<td class="text-center">{{ menu.nbJours }}</td>
+												<td class="text-center">
+													<a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
+												</td>
+											</tr>
+										{% endfor %}
 										<tr>
-											<td class="text-center" colspan="2">Vous n'avez pas accès à cette fonctionnalité.</td>
+											<td class="text-center" colspan="2">Vous ne pouvez voir au maximum 3 menu générer.</td>
 											<td class="text-center">
 												<a href="{{ path('app_payment') }}" class="btn btn-primary">Obtenir la version premium pour 4.99€/mois</a>
 											</td>
@@ -167,7 +178,8 @@
 									<td>{{ recette.comments|length }}</td>
 									<td>
 										{% if recette.averageRating|length > 0 %}
-											{{ recette.averageRating }} / 5
+											{{ recette.averageRating }}
+											/ 5
 										{% else %}
 											Aucune note
 										{% endif %}

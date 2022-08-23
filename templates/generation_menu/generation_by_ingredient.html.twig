@@ -5,75 +5,78 @@
 
 {% block body %}
 	<div class="container">
-	<div class="row">
-		<div class="col-md-5 m-3">
-			<h3>Liste des ingrédients</h3>
-			{{ form_start(form, {'attr': {'class': 'col-12 mx-auto'}}) }}
-			<div class="mt-1">
-				{{form_widget(form.ingredients)}}
+		<div class="row">
+			<div class="col-md-5 m-3">
+				<h3>Liste des ingrédients</h3>
+				{{ form_start(form, {'attr': {'class': 'col-12 mx-auto'}}) }}
+				<div class="mt-1">
+					{{form_widget(form.ingredients)}}
+				</div>
+				<div class="d-none">
+					{{form_widget(form.nb_jours)}}
+				</div>
+				<div class="mt-3">
+					<button type="submit" class="btn btn-primary">Rechercher</button>
+				</div>
+				{{ form_end(form) }}
 			</div>
-			<div class="mt-3">
-				<button type="submit" class="btn btn-primary">Rechercher</button>
-			</div>
-			{{ form_end(form) }}
-		</div>
-		<div class="col-md-6 m-3 mx-auto">
-			{% if myRecipes %}
-				<h3 class="text-center">Recette générée :</h3>
-				{% for myRecipe in myRecipes %}
-					<!-- Gallery item -->
-					<div class="mb-4 w-50 mx-auto" id="recipe_{{ myRecipe.id }}" data-type="{{ myRecipe.type }}">
-						<div class="bg-white rounded shadow-sm h-100">
-							{% if myRecipe.recipeImages is not empty and myRecipe.recipeImages[0].url %}
-								<img src="{{ asset(myRecipe.recipeImages[0].url) }}" alt="picture" class="img-fluid card-img-top">
-							{% else %}
-								<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid card-img-top">
-							{% endif %}
+			<div class="col-md-6 m-3 mx-auto">
+				{% if myRecipes %}
+					<h3 class="text-center">Recette générée :</h3>
+					{% for myRecipe in myRecipes %}
+						<!-- Gallery item -->
+						<div class="mb-4 w-50 mx-auto" id="recipe_{{ myRecipe.id }}" data-type="{{ myRecipe.type }}">
+							<div class="bg-white rounded shadow-sm h-100">
+								{% if myRecipe.recipeImages is not empty and myRecipe.recipeImages[0].url %}
+									<img src="{{ asset(myRecipe.recipeImages[0].url) }}" alt="picture" class="img-fluid card-img-top">
+								{% else %}
+									<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="img-fluid card-img-top">
+								{% endif %}
 
-							<div class="p-4">
-								<div class="d-flex justify-content-between align-items-center">
-									<h5 class="text-truncate">
-										<a href="{{ path('recipe_show',{id: myRecipe.id}) }}" class="text-dark ">{{ myRecipe.name }}</a>
-									</h5>
-									{% if reload is defined %}
-										<button class="btn btn-dark">
-											<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem;"></i>
-										</button>
-									{% endif %}
-								</div>
-								<div
-									class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
-									<!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
-									<div class="d-flex flex-row justify-content-center">
-										{% for i in 1..5 %}
-											{% if i <= myRecipe.getAverageRating %}
-												<i class="bi bi-star-fill" style="color: yellow"></i>
-											{% else %}
-												<i class="bi bi-star" style="color: yellow"></i>
-											{% endif %}
-										{% endfor %}
-									</div>
-									<div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">
-										{% if myRecipe.averageRating %}
-											{{ myRecipe.averageRating }}/5
-										{% else %}
-											Aucune note
+								<div class="p-4">
+									<div class="d-flex justify-content-between align-items-center">
+										<h5 class="text-truncate">
+											<a href="{{ path('recipe_show',{id: myRecipe.id}) }}" class="text-dark ">{{ myRecipe.name }}</a>
+										</h5>
+										{% if reload is defined %}
+											<button class="btn btn-dark">
+												<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem;"></i>
+											</button>
 										{% endif %}
+									</div>
+									<div
+										class="d-flex align-items-center justify-content-between rounded-pill bg-light px-3 py-2 mt-3">
+										<!--<p class="small mb-0"><i class="fa fa-picture-o mr-2"></i><span class="font-weight-bold">JPG</span></p>-->
+										<div class="d-flex flex-row justify-content-center">
+											{% for i in 1..5 %}
+												{% if i <= myRecipe.getAverageRating %}
+													<i class="bi bi-star-fill" style="color: yellow"></i>
+												{% else %}
+													<i class="bi bi-star" style="color: yellow"></i>
+												{% endif %}
+											{% endfor %}
+										</div>
+										<div class="badge badge-warning px-3 rounded-pill font-weight-normal text-white">
+											{% if myRecipe.averageRating %}
+												{{ myRecipe.averageRating }}/5
+											{% else %}
+												Aucune note
+											{% endif %}
+										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-					<!-- End -->
+						<!-- End -->
 
-				{% endfor %}
-			{% else %}
-				<div class="col-12 text-center">
-					<h3>Aucune recette trouvée.</h3>
-				</div>
-			{% endif %}
+					{% endfor %}
+				{% else %}
+					<div class="col-12 text-center">
+						<h3>Aucune recette trouvée.</h3>
+					</div>
+				{% endif %}
+			</div>
 		</div>
-	</div>
 	</div>
 	{% block javascripts %}
 		{{ parent() }}

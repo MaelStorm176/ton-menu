@@ -40,22 +40,9 @@
 							</div>
 						</td>
 						<td>
-							{% if countGener > 20 and not is_granted('ROLE_PREMIUM') %}
-								<p>Limite de génération atteinte</p>
-							{% elseif countGener <= 20 %}
-								<button type="submit" class="btn btn-outline-primary position-relative">
-									<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
-									<span class="position-absolute start-100 top-100 translate-middle badge rounded-pill bg-light">
-										{{ 20-countGener }}
-									</span>
-								</button>
-							{% elseif is_granted('ROLE_PREMIUM') %}
-								<button type="submit" class="btn btn-outline-primary position-relative">
-									<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
-								</button>
-							{% else %}
-								<p>Erreur</p>
-							{% endif %}
+							<button type="submit" class="btn btn-outline-primary position-relative">
+								<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
+							</button>
 						</td>
 						{{ form_end(form) }}
 						<td>
