@@ -30,14 +30,12 @@
 				<tbody>
 					<tr class="text-center">
 						{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
-						<td>
+						<td class="align-middle">
 							{{ form_widget(form.nb_jours) }}
 						</td>
 						<!-- FILTRE PAR INGREDIENTS -->
-						<td>
-							<div class="col-lg-12 col-md-12 col-sm-12">
-								{{ form_widget(form.ingredients) }}
-							</div>
+						<td class="align-middle">
+							{{ form_widget(form.ingredients) }}
 						</td>
 						<td>
 							{% if countGener > 20 and not is_granted('ROLE_PREMIUM') %}
@@ -62,7 +60,7 @@
 							<!-- SAUVEGARDER LE MENU -->
 							<form class="" method="post" action="{{ path('save_menu') }}">
 								<input type="hidden" id="id_menu" name="id_menu" value="{{ id_menu }}">
-								<input type="hidden" name="nb_jour" value="{{ nb_jour }}">
+								<input type="hidden" name="nb_jours" value="{{ nb_jour }}">
 								<textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
 								<button type="submit" id="save_menu" class="btn btn-outline-primary">
 									<i class="bi bi-file-earmark-arrow-down-fill" style="font-size: 2rem;"></i>

@@ -104,6 +104,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $apiKey;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Recipe::class)
+     */
+    private $recipesLiked;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
@@ -112,6 +117,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->recette = new ArrayCollection();
         $this->savedMenuses = new ArrayCollection();
         $this->follows = new ArrayCollection();
+        $this->recipesLiked = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -449,6 +455,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function refreshApiKey(): self
     {
         $this->apiKey = uniqid();
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getRecipesLiked(): Collection
+    {
+        return $this->recipesLiked;
+    }
+
+    public function addRecipesLiked(Recipe $recipesLiked): self
+    {
+        if (!$this->recipesLiked->contains($recipesLiked)) {
+            $this->recipesLiked[] = $recipesLiked;
+        }
+
+        return $this;
+    }
+
+    public function removeRecipesLiked(Recipe $recipesLiked): self
+    {
+        $this->recipesLiked->removeElement($recipesLiked);
 
         return $this;
     }

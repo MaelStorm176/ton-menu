@@ -265,5 +265,29 @@ class RecipeController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/recipe/like/{id}", name="recipe_like", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function like(Recipe $recipe, Request $request): Response|JsonResponse
+    {
+        if ($request->isXmlHttpRequest()){
+            $user = $this->get('security.token_storage')->getToken()->getUser();
+            if ($user instanceof User){
 
+                if ($user->getId() == $recipe->getUserId()->getId()){
+                    return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre recette'], Response::HTTP_BAD_REQUEST);
+                }
+                if ($user->getRecipesLiked()->contains($recipe)){
+                    return new JsonResponse(['message' => 'Vous aimez déjà cette recette'], Response::HTTP_OK);
+                }
+                $user->addRecipesLiked($recipe);
+                $this->entityManager->flush();
+                return new JsonResponse(['success' => true], Response::HTTP_OK);
+            }else{
+                return $this->json(['error' => 'Vous devez être connecté pour aimer une recette'], Response::HTTP_FORBIDDEN);
+            }
+        } else {
+            return new Response('This is not ajax!', 400);
+        }
+    }
 }

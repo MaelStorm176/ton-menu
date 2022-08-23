@@ -45,11 +45,14 @@ class RandomRecipeController extends AbstractController
     #[Route('/ajax/generation-menu/save_menu', name: 'save_menu', methods: ['POST'])]
     public function saveMenu(Request $request)
     {
-        if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jour")) {
+        if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jours")) {
             $em = $this->getDoctrine()->getManagerForClass(SavedMenus::class);
 
             $menuJson = json_decode($request->get("menu"), true);
             $user = $this->getUser();
+            if (!$user instanceof User)
+                return $this->createAccessDeniedException("Vous devez être connecté pour sauvegarder un menu");
+
             $id_menu = $request->get("id_menu", 0);
             if ($id_menu == 0) {
                 $savedMenu = new SavedMenus();
@@ -58,18 +61,20 @@ class RandomRecipeController extends AbstractController
                 $savedMenu = $this->savedMenusRepository->find($id_menu);
                 $savedMenu->setUpdatedAt(new \DateTimeImmutable());
                 if ($savedMenu->getUser()->getId() != $user->getId()) {
-                    return new JsonResponse(["error" => "Vous n'avez pas le droit d'éditer ce menu"]);
+                    return $this->createAccessDeniedException("Vous n'avez pas le droit de modifier ce menu");
                 }
             }
             $savedMenu->setRecipes($menuJson);
             $em->persist($savedMenu);
             $em->flush();
+
+            $this->addFlash('success', 'La génération de menus a bien été sauvegardée');
             return $this->redirectToRoute('generation_menu', [
                 'id_menu' => $savedMenu->getId(),
-                'nb_jours' => $request->get("nb_jour"),
+                'nb_jours' => $request->get("nb_jours"),
             ]);
         } else {
-            return new Response("Erreur");
+            return $this->createNotFoundException("Menu non valide");
         }
     }
 
@@ -146,7 +151,7 @@ class RandomRecipeController extends AbstractController
         $form->handleRequest($request);
 
         //Nb de jours par défaut
-        $nb_jour = self::MAX_DAYS;
+        $nb_jour = $request->get('nb_jours', self::MAX_DAYS);
 
         //Si je demande à voir un menu en particulier
         $refuseRecipe = [];

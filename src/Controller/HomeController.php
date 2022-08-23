@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use DateTimeImmutable;
 use App\Entity\Demande;
 use App\Form\DemandeType;
@@ -20,18 +21,24 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(RecipeRepository $recipeRepository): Response
     {
-        if($this->getUser()){
-            if ($this->getUser()->getIsVerify() == false) {
-                return $this->redirectToRoute('app_logout');
-            }
+        $user = $this->getUser();
+        if($user instanceof User && !$user->getIsVerify()) {
+            return $this->redirectToRoute('app_logout');
         }
 
         $recipes = $recipeRepository->getRandomRecipes("PLAT", 3);
         $randomRecipes = $recipeRepository->getRandomRecipes("PLAT", 8);
-
+        $countRecipes = $recipeRepository->count([]);
+        try{
+            $countChiefs = $recipeRepository->countChiefs();
+        }catch (\Exception $e) {
+            $countChiefs = 0;
+        }
         return $this->render('home/index.html.twig', [
             'recipes' => $recipes,
             'randomRecipes' => $randomRecipes,
+            'countRecipes' => $countRecipes,
+            'countChiefs' => $countChiefs,
         ]);
     }
 
