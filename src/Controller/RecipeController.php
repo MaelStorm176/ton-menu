@@ -278,7 +278,10 @@ class RecipeController extends AbstractController
                     return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre recette'], Response::HTTP_BAD_REQUEST);
                 }
                 if ($user->getRecipesLiked()->contains($recipe)){
-                    return new JsonResponse(['message' => 'Vous aimez déjà cette recette'], Response::HTTP_OK);
+                    // remove like
+                    $user->removeRecipesLiked($recipe);
+                    $this->entityManager->flush();
+                    return new JsonResponse(['message' => 'Vous avez bien supprimé votre like'], Response::HTTP_OK);
                 }
                 $user->addRecipesLiked($recipe);
                 $this->entityManager->flush();

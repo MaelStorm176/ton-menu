@@ -104,7 +104,7 @@
                     {% if is_granted("ROLE_USER") %}
                         {% if app.user.recipesLiked.contains(recette) %}
                             <i class="bi bi-heart-fill"></i>
-                            Vous aimez cette recette !
+                            Retirer de mes favoris
                         {% else %}
                             <i class="bi bi-heart"></i>
                             Ajouter à mes favoris
@@ -117,6 +117,10 @@
                 <button class="btn-menu animated fadeInUp mx-2" id="share-recipe" data-link="{{ app.request.uri }}">
                     <i class="bi bi-share"></i>
                     Partager la recette
+                </button>
+                <button class="btn-menu animated fadeInUp" id="download-recipe" data-id="{{ recette.id }}">
+                    <i class="bi bi-download"></i>
+                    Télécharger la recette
                 </button>
             </div>
             <p class="title">{{recette.name}}</p>
@@ -134,7 +138,7 @@
 
 
             {% if recette.recipeImages is not empty %}
-            <div class="p-3 d-flex justify-content-center">
+            <div id="main-image" class="p-3 d-flex justify-content-center">
                 <img class="w-50 rounded-2 shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
             </div>
             {% endif %}
