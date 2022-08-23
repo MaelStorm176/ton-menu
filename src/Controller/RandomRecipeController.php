@@ -209,6 +209,8 @@ class RandomRecipeController extends AbstractController
                 $desserts = $this->sortRecipes($this->recipeRepository->findBy(['id' => $idsRecipes['desserts']]), $idsRecipes['desserts']);
 
                 $json_menu = json_encode($idsRecipes);
+                $countGener = $user->getGeneratedCounter();
+
             } else {
                 $this->addFlash('error', 'Ce menu n\'existe pas');
                 return $this->redirectToRoute('home');
