@@ -112,9 +112,6 @@ class ProfileController extends AbstractController
             throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
         }
 
-        $countEntrees = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'ENTREE']);
-        $countPlats = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'PLAT']);
-        $countDesserts = $this->getDoctrine()->getRepository(Recipe::class)->count(['user_id' => $user, 'type' => 'DESSERT']);
         $recettes = $paginator->paginate(
             $user->getRecipes(),
             $request->query->getInt('page', 1),
