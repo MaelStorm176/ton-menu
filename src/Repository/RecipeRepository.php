@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -108,6 +110,20 @@ class RecipeRepository extends ServiceEntityRepository
             ->setParameter('val', 'DESSERT')
             ->getQuery()
             ->getScalarResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function countChiefs()
+    {
+        return $this->createQueryBuilder('t')
+            ->select('count(DISTINCT u.id)')
+            ->join('t.user_id', 'u', 'WITH', 'u.roles LIKE :val', 'u.id')
+            ->setParameter('val', '%"ROLE_CHIEF"%')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function findRecipeByIdAndCountEachRecipe($value)

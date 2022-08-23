@@ -27,7 +27,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route('/profile', name: 'profile')]
-    public function index(Request $request, SluggerInterface $slugger): Response
+    public function index(Request $request, SluggerInterface $slugger, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
         if (!$user instanceof User) {
@@ -95,7 +95,13 @@ class ProfileController extends AbstractController
             $this->addFlash('success', 'Votre profil a bien été mis à jour');
         }
 
+        $recipesLiked = $paginator->paginate(
+            $user->getRecipesLiked(), /* query NOT result */
+            $request->query->getInt('page', 1), /* page number */
+            4 /* limit per page */
+        );
         return $this->render('profile/index.html.twig', [
+            'recipesLiked' => $recipesLiked,
             'user' => $user,
             'form' => $form->createView(),
             'generated_menus' => $this->getDoctrine()->getRepository(SavedMenus::class)->findBy(['user' => $user], ['createdAt' => 'DESC'], 5),
@@ -108,7 +114,7 @@ class ProfileController extends AbstractController
         $user = $this->getDoctrine()->getRepository(User::class)->find($id);
         $follower = $this->getDoctrine()->getRepository(Follower::class)->findBy(['chef_id' => $id]);
         //dd(in_array("ROLE_CHIEF", $user->getRoles()));
-        if (!$user instanceof User || !in_array("ROLE_CHIEF", $user->getRoles()) || !$user->getIsVerify()) {
+        if (!$user instanceof User || !$user->hasRole("ROLE_CHIEF") || !$user->getIsVerify()) {
             throw $this->createNotFoundException('Aucun chef trouvé avec cet id');
         }
 

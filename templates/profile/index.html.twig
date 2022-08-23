@@ -150,7 +150,24 @@
 					</div>
 				</div>
 			</div>
+		</div>
 
+
+
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container">
+				<h1 class="display-4">{{ user.recipesLiked.count }} Recettes en favoris</h1>
+				<div class="row">
+					{% for recette in recipesLiked %}
+						{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+					{% endfor %}
+				</div>
+				<div class="row">
+					<div class="col-12 d-flex justify-content-center">
+						{{ knp_pagination_render(recipesLiked, 'pagination/pagination_template.html.twig') }}
+					</div>
+				</div>
+			</div>
 		</div>
 
 		{% if is_granted("ROLE_CHIEF") or is_granted("ROLE_ADMIN") %}

@@ -87,20 +87,44 @@
 <section id="recipe">
     <div class="container">
         <div class="col">
-            {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
             <div class="d-flex justify-content-center mb-3">
-                <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp mx-2">
+                {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp">
+                    <i class="bi bi-pencil"></i>
                     Modifier la recette
                 </a>
                 <form action="{{ path('recipe_delete',{id: recette.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete'~recette.id) }}"/>
                     <input type="hidden" name="_method" value="DELETE"/>
-                    <button type="submit" class="btn-menu animated fadeInUp">
+                    <button type="submit" class="btn-menu animated fadeInUp mx-2">
+                        <i class="bi bi-trash"></i>
                         Supprimer la recette
                     </button>
                 </form>
+                {% endif %}
+                <button class="btn-menu animated fadeInUp" id="like-recipe" data-recipe="{{ recette.id }}">
+                    {% if is_granted("ROLE_USER") %}
+                        {% if app.user.recipesLiked.contains(recette) %}
+                            <i class="bi bi-heart-fill"></i>
+                            Retirer de mes favoris
+                        {% else %}
+                            <i class="bi bi-heart"></i>
+                            Ajouter à mes favoris
+                        {% endif %}
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                        Ajouter à mes favoris
+                    {% endif %}
+                </button>
+                <button class="btn-menu animated fadeInUp mx-2" id="share-recipe" data-link="{{ app.request.uri }}">
+                    <i class="bi bi-share"></i>
+                    Partager la recette
+                </button>
+                <button class="btn-menu animated fadeInUp" id="download-recipe" data-id="{{ recette.id }}">
+                    <i class="bi bi-download"></i>
+                    Télécharger la recette
+                </button>
             </div>
-            {% endif %}
             <p class="title">{{recette.name}}</p>
             <div class="d-flex flex-row justify-content-center">
                 {% for i in 1..5 %}
@@ -116,8 +140,8 @@
 
 
             {% if recette.recipeImages is not empty %}
-            <div class="p-3 d-flex justify-content-center">
-                <img class="w-50 rounded-2 shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
+            <div id="main-image" class="p-3 d-flex justify-content-center">
+                <img class="w-50 rounded-2 shadow-sm" crossorigin="anonymous" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
             </div>
             {% endif %}
 
@@ -182,7 +206,7 @@
                                         {% set i = 0 %}
                                         {% for step in recette.recipeSteps %}
                                             <span class="fw-bold">Etape {{ i }} : </span>{{step.step}}
-                                            <br />
+                                            <hr class="solid">
                                             {% set i = i + 1 %}
                                         {% endfor %}
                                     </p>
@@ -238,6 +262,21 @@
                             {% for tag in recette.recipeTags %}
                                 {{ tag.name }},
                             {% endfor %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-link"></i>
+                        Lien externe / source : <span class="fw-bold">
+                            {% if recette.url %}
+                                <a href="{{ recette.url }}" target="_blank">Source</a>
+                            {% else %}
+                                <span class="fw-bold">Aucun lien</span>
+                            {% endif %}
                         </span>
                     </p>
                 </div>

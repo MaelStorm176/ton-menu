@@ -147,7 +147,7 @@
 									<th>Type</th>
 									<th>Personnes</th>
 									<th>Difficulté</th>
-									<th>Temps prépration</th>
+									<th>Temps préparation</th>
 									<th>Temps total</th>
 									<th>Actions</th>
 									<th></th>
@@ -184,9 +184,13 @@
 											<a href="{{ path('recipe_edit',{id: recipe.id}) }}" type="button" class="btn btn-secondary d-inline-block">
 												<i class="fs-4 bi-pen"></i>
 											</a>
-											<button type="button" class="btn btn-secondary d-inline-block">
-												<i class="fs-4 bi-trash"></i>
-											</button>
+											<form class="d-inline-block" action="{{ path('recipe_delete',{id: recipe.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');">
+												<input type="hidden" name="_token" value="{{ csrf_token('delete'~recipe.id) }}"/>
+												<input type="hidden" name="_method" value="DELETE"/>
+												<button type="submit" class="btn btn-secondary">
+													<i class="fs-4 bi-trash"></i>
+												</button>
+											</form>
 										</td>
 										<td id="recette_ingredients_results_{{ recipe.id }}">
 											<div style="width: 1000px;"></div>

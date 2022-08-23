@@ -118,7 +118,7 @@ class RecetteType extends AbstractType
             ])
             ->add('ingredients', EntityType::class, [
                 'label' => 'Ingredients',
-                'required' => false,
+                'required' => true,
                 'class' => 'App\Entity\Ingredient',
                 'attr' => ['class' => 'form-control w-100'],
                 'choice_label' => 'name',
