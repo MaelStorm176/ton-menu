@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TransactionController extends AbstractController
 {
     const YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
+    //const YOUR_DOMAIN = 'http://localhost:8741';
 
     #[Route('/payment', name: 'app_payment')]
     public function indexMonthPayment(): Response
@@ -69,11 +70,11 @@ class TransactionController extends AbstractController
         //$responseStripe = $stripe->paymentIntents->retrieve($session_id->getStripeId());
 
         $check_transaction = $transactionRepository->findOneBy(['session_id' => $session_id]);
-
+        //dd($this->getUser());
         if($check_transaction && $check_transaction->getUser() != $this->getUser()) {
             $this->addFlash('error', 'Cette confirmation de paiements à déjà été réalisé et appartient à un autre utilisateur, veuillez avoir l\'argent sur vous au lieux de gratter comme un rat.');
             return $this->redirectToRoute('home');
-        }elseif($check_transaction->getUser() == $this->getUser()){
+        }elseif($check_transaction && $check_transaction->getUser() == $this->getUser()){
             $this->addFlash('error', 'Votre argent nous fais plaisir, mais vous essayez tout de même de nous gruger, cependant comme vous avez déjà payé vous ne pouvez pas.');
             return $this->redirectToRoute('home');
         }
