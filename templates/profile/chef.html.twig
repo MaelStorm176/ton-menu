@@ -79,13 +79,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="row offset-md-4 offset-1">
+				<div class="row w-100 mx-auto">
 					{{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
 				</div>
 			{% endif %}
 		</div>
-	{% endblock %}
+	</div>
+{% endblock %}
 
-	{% block javascripts %}
-		{{ parent() }}
-	{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}
