@@ -1,0 +1,62 @@
+{% extends "admin/admin.html.twig" %}
+
+{% block title %}Gestion des tags{% endblock %}
+
+{% block content %}
+    <h3>Gestion des tags</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title">Liste des tags</h4>
+                    <p class="card-category">Ajouter, modifier ou supprimer un tag</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="tagsTable" class="table">
+                            <thead class="text-primary">
+                            <tr>
+                                <th>
+                                    ID
+                                </th>
+                                <th>
+                                    Nom
+                                </th>
+                                <th>
+                                    Actions
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for tag in tags %}
+                                    <tr>
+                                        <td>
+                                            {{ tag.id }}
+                                        </td>
+                                        <td>
+                                            {{ tag.name }}
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-primary btn-sm">
+                                                <i class="material-icons">edit</i>
+                                            </a>
+                                            <a class="btn btn-danger btn-sm">
+                                                <i class="material-icons">delete</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_recipes') }}
+    {{ encore_entry_script_tags('new_recette_home') }}
+{% endblock %}

@@ -156,12 +156,10 @@ class Ingredient
 
     public function getImage(): ?string
     {
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-            return $this->image;
-        }else if (file_exists(__DIR__ . '/../../public/images/ingredients/' . $this->image)) {
-            return '/images/ingredients/' . $this->image;
+        if ($this->image && file_exists(__DIR__ . '/../../public/img/ingredients/' . $this->image)) {
+            return '/img/ingredients/' . $this->image;
         }
-        return "";
+        return "/img/placeholder.webp";
     }
 
     public function setImage(?string $image): self

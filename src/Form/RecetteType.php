@@ -67,6 +67,7 @@ class RecetteType extends AbstractType
                     'Moyen' => 3,
                     'Difficile' => 4,
                 ],
+                'required' => true,
             ])
             ->add('budget', ChoiceType::class,[
                 'label' => 'Budget',
@@ -76,6 +77,7 @@ class RecetteType extends AbstractType
                     'Moyen' => 2,
                     'Chère' => 3,
                 ],
+                'required' => true,
             ])
             ->add('preparationTime', TimeType::class,[
                 'label' => 'Temps de prépapation (HH:MM)',

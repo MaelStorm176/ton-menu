@@ -70,6 +70,9 @@
 									</li>
 									{% if is_granted('ROLE_CHIEF') %}
 										<li>
+											<a class="dropdown-item" href="{{ path('chef_page',{id: app.user.id}) }}">Mon profil public</a>
+										</li>
+										<li>
 											<a class="dropdown-item" href="{{ path('recipe_add') }}">Ajouter une recette</a>
 										</li>
 									{% endif %}

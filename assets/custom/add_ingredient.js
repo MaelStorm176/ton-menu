@@ -38,4 +38,13 @@ $(document).ready(function() {
     }
     return false;
   });
+
+  if ($("#recipesTable"))
+  {
+    $("#recipesTable").DataTable({
+      pageLength: 10,
+      responsive: true,
+    });
+  }
+
 });

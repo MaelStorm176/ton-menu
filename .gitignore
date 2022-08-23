@@ -10,6 +10,7 @@
 /public/img/ingredients/
 /public/img/recipes/
 /public/profile_picture/
+/public/document/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###

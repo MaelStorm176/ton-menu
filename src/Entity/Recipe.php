@@ -123,7 +123,7 @@ class Recipe
     private $number_of_persons;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      * @Groups({"recipe:list", "recipe:item"})
      */
     private $difficulty;
@@ -148,7 +148,7 @@ class Recipe
     private $user_id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette")
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="recette", orphanRemoval=true)
      */
     private $ratings;
 
@@ -171,7 +171,7 @@ class Recipe
     private $recipeSteps;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recette", orphanRemoval=true, cascade={"persist"})
      */
     private $comments;
 
@@ -274,12 +274,12 @@ class Recipe
         return $this;
     }
 
-    public function getDifficulty(): ?float
+    public function getDifficulty(): ?int
     {
         return $this->difficulty;
     }
 
-    public function setDifficulty(float $difficulty): self
+    public function setDifficulty(int $difficulty): self
     {
         $this->difficulty = $difficulty;
 

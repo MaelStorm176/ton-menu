@@ -88,7 +88,7 @@ $(document).ready(function() {
     placeholder: "Sélectionner un ou plusieurs ingrédients",
     allowClear: true,
     multiple: true,
-    theme: "classic",
+    theme: "bootstrap-5",
     closeOnSelect: true,
     width: "100%"
   });
@@ -97,7 +97,7 @@ $(document).ready(function() {
     placeholder: "Sélectionner un ou plusieurs tags",
     allowClear: true,
     multiple: true,
-    theme: "classic",
+    theme: "bootstrap-5",
     closeOnSelect: true,
     width: "100%"
   });

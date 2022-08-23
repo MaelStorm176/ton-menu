@@ -7,13 +7,19 @@ use App\Entity\Demande;
 use App\Entity\Ingredient;
 use App\Entity\Rating;
 use App\Entity\Recipe;
+use App\Entity\RecipeTags;
 use App\Entity\Signalement;
 use App\Entity\User;
+use App\Form\SearchRecipeType;
 use App\Repository\DemandeRepository;
 use App\Repository\CommentRepository;
 use App\Repository\RecipeRepository;
 use App\Repository\SignalementRepository;
 use App\Services\MarmitonManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,20 +27,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route("/admin", name: "admin_")]
 class AdminController extends AbstractController
 {
-    #[Route("/", name: 'index')]
-    public function index(SignalementRepository $signalementRepository, DemandeRepository $demandeRepository, RecipeRepository $recipeRepository): Response
+    private $entityManager;
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $marmitonManager = new MarmitonManager($this->getDoctrine()->getRepository(Ingredient::class));
-        $marmitonManager->updateIngredientsImage();
+        $this->entityManager = $entityManager;
+    }
 
-        $comments = $signalementRepository->findLast5One();
-        $demande = $demandeRepository->findLast5One();
-        $recipe = $recipeRepository->findLast10One();
+    #[Route("/", name: 'index')]
+    public function index(SignalementRepository $signalementRepository, DemandeRepository $demandeRepository, RecipeRepository $recipeRepository, ParameterBagInterface $parameterBag): Response
+    {
+        //find last 5 signalement where traiter is not true
+        $signalements = $signalementRepository->findBy(['traiter' => false], ['create_at' => 'DESC'], 5);
+        $demandes = $demandeRepository->findBy(['accept' => false], ['send_at' => 'DESC'], 5);
+        $recipes = $recipeRepository->findBy([], ['created_at' => 'DESC'], 10);
 
         return $this->render('admin/index.html.twig', [
-            'comments' => $comments,
-            'demandes' => $demande,
-            'recipes' => $recipe,
+            'comments' => $signalements,
+            'demandes' => $demandes,
+            'recipes' => $recipes,
         ]);
     }
 
@@ -74,14 +84,41 @@ class AdminController extends AbstractController
         ]);
     }
 
+    #[Route("/tags", name: 'tags')]
+    public function show_tags(): Response
+    {
+        $repository = $this->getDoctrine()->getRepository(RecipeTags::class);
+        $tags = $repository->findAll();
+        return $this->render('admin/tags/show_tags.html.twig', [
+            'tags' => $tags,
+        ]);
+    }
+
     #[Route("/recipes",name: 'recipes')]
-    public function show_recipes(): Response
+    public function show_recipes(Request $request): Response
     {
         $repository = $this->getDoctrine()->getRepository(Recipe::class);
-        $recipes = $repository->findAll();
+
+        $form = $this->createForm(SearchRecipeType::class, null, ['method' => 'GET']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
+            $data = $form->getData();
+            $recettesResults = $repository->findBySearch($data);
+        } else
+            $recettesResults = $repository->findBy([], ['created_at' => 'DESC']);
+
+        /*
+        $recettes = $paginator->paginate(
+            $recettesResults,
+            $request->query->getInt('page', 1),
+            8
+        );
+        */
 
         return $this->render('admin/recipes/show_recipes.html.twig', [
-            'recipes' => $recipes,
+            'recipes' => $recettesResults,
+            'form' => $form->createView(),
         ]);
     }
 
@@ -91,9 +128,7 @@ class AdminController extends AbstractController
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $user->setRoles(["ROLE_ADMIN"]);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user)->flush();
         // do anything else you need here, like send an email
         return $this->redirectToRoute('admin_index');
     }
@@ -108,11 +143,13 @@ class AdminController extends AbstractController
         $demande = $demandeRepository->findOneBy(['user' => $user]);
         $demande->setAccept(1);
         $role = $user->getRoles();
-        array_push($role, "ROLE_CHIEF");
+        $role[] = "ROLE_CHIEF";
         $user->setRoles($role);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user, $demande);
-        $entityManager->flush();
+        $this->entityManager->persist($demande);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Le role chef a bien été attribué');
         // do anything else you need here, like send an email
     
         return $this->redirectToRoute('admin_accept_demande');
@@ -143,10 +180,15 @@ class AdminController extends AbstractController
     #[Route('/delete-comment/{id}', name: 'delete_report')]
     public function deleteReport(Signalement $signalement): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->remove($signalement->getMessage());
-        $entityManager->remove($signalement);
-        $entityManager->flush();
+        $this->entityManager->remove($signalement->getMessage())->flush();
+        return $this->redirectToRoute('admin_report_comment');
+    }
+
+    #[Route('/accept-comment/{id}', name: 'accept_comment')]
+    public function acceptComment(Signalement $signalement): Response
+    {
+        $signalement->setTraiter(true);
+        $this->entityManager->persist($signalement)->flush();
         return $this->redirectToRoute('admin_report_comment');
     }
 
@@ -155,16 +197,14 @@ class AdminController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(User::class);
         $user = $repository->find($id);
-        
+
         //get demande with user id
         $demande = $demandeRepository->findOneBy(['user' => $user]);
         $demande->setAccept(2);
-
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($demande);
-        $entityManager->flush();
+        $this->entityManager->persist($demande);
+        $this->entityManager->flush();
         // do anything else you need here, like send an email
-    
+
         return $this->redirectToRoute('admin_accept_demande');
     }
 }

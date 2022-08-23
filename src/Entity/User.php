@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $recipes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Rating::class, mappedBy="user", orphanRemoval=true)
      */
     private $ratings;
 
@@ -147,6 +147,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         return (string) $this->email;
+    }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->getRoles());
     }
 
     /**
@@ -433,6 +442,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setApiKey(?string $apiKey): self
     {
         $this->apiKey = $apiKey;
+
+        return $this;
+    }
+
+    public function refreshApiKey(): self
+    {
+        $this->apiKey = uniqid();
 
         return $this;
     }

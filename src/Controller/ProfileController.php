@@ -29,16 +29,15 @@ class ProfileController extends AbstractController
     #[Route('/profile', name: 'profile')]
     public function index(Request $request, SluggerInterface $slugger): Response
     {
-        if($this->getUser()){
-            if ($this->getUser()->getIsVerify() == false) {
-                return $this->redirectToRoute('app_logout');
-            }
-        }
-
         $user = $this->getUser();
         if (!$user instanceof User) {
             return $this->redirectToRoute('home');
         }
+        if(!$user->getIsVerify()){
+            return $this->redirectToRoute('app_logout');
+        }
+
+
         $oldHash = $user->getPassword();
         $oldPicture = $user->getProfilePicture();
         $manager = $this->getDoctrine()->getManager();
@@ -183,5 +182,23 @@ class ProfileController extends AbstractController
 
         $this->addFlash('success', 'Vous n\'êtes plus abonné à ce chef');
         return $this->redirectToRoute('chef_page', ['id' => $id]);
+    }
+
+    #[Route('/profile/refresh-key', name: 'refresh_key', methods: ['GET'])]
+    public function refreshApiKey(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $user = $this->getUser();
+            if (!$user instanceof User || !$user->getIsVerify() || (!$user->hasRole("ROLE_PREMIUM") && !$user->hasRole("ROLE_ADMIN"))) {
+                return $this->json(['error' => 'Vous n\'avez pas accès à cette page'], Response::HTTP_FORBIDDEN);
+            }
+            $user->refreshApiKey();
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($user);
+            $manager->flush();
+
+            return $this->json(['key' => $user->getApiKey(), 'success' => true]);
+        }
+        return $this->createNotFoundException('Page not found');
     }
 }
