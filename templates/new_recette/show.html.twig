@@ -89,13 +89,15 @@
         <div class="col">
             <div class="d-flex justify-content-center mb-3">
                 {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
-                <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp mx-2">
+                <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp">
+                    <i class="bi bi-pencil"></i>
                     Modifier la recette
                 </a>
                 <form action="{{ path('recipe_delete',{id: recette.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('delete'~recette.id) }}"/>
                     <input type="hidden" name="_method" value="DELETE"/>
-                    <button type="submit" class="btn-menu animated fadeInUp">
+                    <button type="submit" class="btn-menu animated fadeInUp mx-2">
+                        <i class="bi bi-trash"></i>
                         Supprimer la recette
                     </button>
                 </form>
@@ -139,7 +141,7 @@
 
             {% if recette.recipeImages is not empty %}
             <div id="main-image" class="p-3 d-flex justify-content-center">
-                <img class="w-50 rounded-2 shadow-sm" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
+                <img class="w-50 rounded-2 shadow-sm" crossorigin="anonymous" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
             </div>
             {% endif %}
 
@@ -204,7 +206,7 @@
                                         {% set i = 0 %}
                                         {% for step in recette.recipeSteps %}
                                             <span class="fw-bold">Etape {{ i }} : </span>{{step.step}}
-                                            <br />
+                                            <hr class="solid">
                                             {% set i = i + 1 %}
                                         {% endfor %}
                                     </p>

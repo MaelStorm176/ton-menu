@@ -77,18 +77,17 @@ function like(id) {
 
 function download(id){
   const recipeContainer = $("#recipe > .container");
-  recipeContainer.find("#main-image").remove();
-  const recipe = recipeContainer.html();
+  const recipe = recipeContainer.clone();
 
   html2canvas(recipeContainer[0], {
     useCORS: true,
     allowTaint: true,
     logging: true,
     scale: 1,
-    //proxy: "https://cors-anywhere.herokuapp.com/",
+    proxy: "https://cors-anywhere.herokuapp.com/",
   }).then(canvas => {
     const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF("p", "mm", [canvas.width/2, canvas.height/2]);
+    const pdf = new jsPDF("p", "px", [canvas.width/2, canvas.height/2]);
     const width = pdf.internal.pageSize.getWidth();
     const height = pdf.internal.pageSize.getHeight();
     pdf.addImage(imgData, 'PNG', 0, 0, width, height);
