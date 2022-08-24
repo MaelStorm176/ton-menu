@@ -141,7 +141,7 @@
 
             {% if recette.recipeImages is not empty %}
             <div id="main-image" class="p-3 d-flex justify-content-center">
-                <img class="w-50 rounded-2 shadow-sm" crossorigin="anonymous" src="{{ recette.recipeImages[0].url }}" loading="lazy" alt="{{ recette.name }}">
+                <img class="w-50 rounded-2 shadow-sm" crossorigin="anonymous" src="{{ recette.recipeImages[0].url }}?not-from-cache-please" loading="lazy" alt="{{ recette.name }}">
             </div>
             {% endif %}
 
