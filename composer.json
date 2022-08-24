@@ -115,7 +115,8 @@
         },
         "paas": {
             "compile": [
-                "npm run build"
+                "npm run build",
+                "symfony console marmiton:get-images"
             ]
         }
     }
