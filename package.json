@@ -30,8 +30,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "marmiton": "node marmiton_api.js",
-        "marmiton-image": "symfony console marmiton:get-images"
+        "marmiton": "node marmiton_api.js"
     },
     "dependencies": {
         "@babel/core": "^7.17.10",
