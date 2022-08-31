@@ -1,16 +1,19 @@
-import "blueimp-file-upload";
 import {showError} from "./toasts";
 
 $(document).ready(function() {
-  /*
-  const ingredientImages = $('.input-images');
-  ingredientImages.imageUploader({
-    maxSize: 2 * 1024 * 1024,
-    maxFiles: 1
-  });
-   */
   let isSubmitted = false;
-  $("form[name='ingredient']").submit(function(e) {
+
+  $("#tag_recipe").select2({
+    tags: true,
+    placeholder: "Sélectionner une ou plusieurs recettes",
+    allowClear: true,
+    multiple: true,
+    theme: "bootstrap-5",
+    closeOnSelect: true,
+    width: "100%",
+  });
+
+  $("form[name='tag']").submit(function(e) {
     if (isSubmitted === true) {
       return;
     }
@@ -19,9 +22,9 @@ $(document).ready(function() {
     const formData = form.serializeArray();
 
     //On test si le nom de l'ingrédient existe en base
-    if ($("input[name='name']").val() !== "" && formData[0].value !== "") {
+    if ($("input[name='tag[name]']").val() !== "" && formData[0].value !== "") {
       $.ajax({
-        url: '/ingredient/check-name?name=' + formData[0].value,
+        url: '/tag/check-name?name=' + formData[0].value,
         type: "get",
         dataType: "json",
         processData: false,
@@ -46,5 +49,4 @@ $(document).ready(function() {
       responsive: true,
     });
   }
-
 });

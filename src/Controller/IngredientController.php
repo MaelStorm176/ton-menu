@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
-use App\Entity\RecipeIngredients;
 use App\Form\IngredientType;
 use App\Repository\IngredientRepository;
 use DateTimeImmutable;

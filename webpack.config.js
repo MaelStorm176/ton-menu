@@ -31,6 +31,7 @@ Encore
 .addEntry('new_recette_home', './assets/custom/new_recette_home.js')
 .addEntry('add_recipe', './assets/custom/add_recipe.js')
 .addEntry('add_ingredient', './assets/custom/add_ingredient.js')
+.addEntry('add_tag', './assets/custom/add_tag.js')
 .addEntry('file_uploader', './assets/custom/image-uploader.min.js')
 .addEntry('profile_index', './assets/custom/profile_index.js')
 .addEntry('generation_ingredient', './assets/custom/generation_ingredient.js')
