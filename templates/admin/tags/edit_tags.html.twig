@@ -1,0 +1,66 @@
+{% extends 'admin/admin.html.twig' %}
+
+{% block title %}Creation tag{% endblock %}
+
+{% block content %}
+    {% if tag is defined %}
+        <h3>Modification du tag <span class="fw-bold">{{ tag.name }}</span></h3>
+    {% else %}
+        <h3>Création d'un tag</h3>
+    {% endif %}
+    {{ form_start(tagForm) }}
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            {{ form_row(tagForm.name) }}
+        </div>
+    </div>
+    {{ form_end(tagForm) }}
+
+    {% if tag is defined %}
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="card-title">Attention ce tag est présent dans {{ tag.recipe.count }} recettes</h4>
+            </div>
+            <div class="card-body">
+                <table id="recipesTable" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Nom de la recette</th>
+                        <th>Auteur</th>
+                        <th>Date de création</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for recipe in tag.recipe %}
+                        <tr>
+                            <td>{{ recipe.name }}</td>
+                            <td>{{ recipe.userId.lastname }} {{ recipe.userId.firstname }}</td>
+                            <td class="text-center">{{ recipe.createdAt|date('d/m/Y') }}</td>
+                            <td class="text-center">
+                                <a href="{{ path('recipe_show', {'id': recipe.id}) }}" class="btn btn-primary">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+
+                                {% if recipe.userId is same as app.user %}
+                                    <a href="{{ path('recipe_edit', {'id': recipe.id}) }}" class="btn btn-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+
+                                    <a href="{{ path('recipe_delete', {'id': recipe.id}) }}" class="btn btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

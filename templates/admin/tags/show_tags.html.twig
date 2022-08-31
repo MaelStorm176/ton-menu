@@ -3,7 +3,6 @@
 {% block title %}Gestion des tags{% endblock %}
 
 {% block content %}
-    <h3>Gestion des tags</h3>
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -12,8 +11,7 @@
                     <p class="card-category">Ajouter, modifier ou supprimer un tag</p>
                 </div>
                 <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="tagsTable" class="table">
+                        <table id="tagsTable" class="table table-striped table-bordered">
                             <thead class="text-primary">
                             <tr>
                                 <th>
@@ -21,6 +19,9 @@
                                 </th>
                                 <th>
                                     Nom
+                                </th>
+                                <th>
+                                    Recettes utilisant le tag
                                 </th>
                                 <th>
                                     Actions
@@ -37,18 +38,26 @@
                                             {{ tag.name }}
                                         </td>
                                         <td>
-                                            <a class="btn btn-primary btn-sm">
-                                                <i class="material-icons">edit</i>
+                                            {{ tag.recipe.count }}
+                                        </td>
+                                        <td class="align-middle text-center">
+                                            <div>
+                                            <a href="{{ path('tag_edit',{tag: tag.id}) }}" type="button" class="btn btn-secondary">
+                                                <i class="fs-4 bi-pen"></i>
                                             </a>
-                                            <a class="btn btn-danger btn-sm">
-                                                <i class="material-icons">delete</i>
-                                            </a>
+                                            <form action="{{ path('tag_delete',{tag: tag.id}) }}" method="post" onsubmit="return confirm('Etes vous sur de supprimer ce Tag');">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('delete'~tag.id) }}"/>
+                                                <input type="hidden" name="_method" value="DELETE"/>
+                                                <button type="submit" class="btn btn-secondary">
+                                                    <i class="fs-4 bi-trash"></i>
+                                                </button>
+                                            </form>
+                                            </div>
                                         </td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
                         </table>
-                    </div>
                 </div>
             </div>
         </div>
@@ -57,6 +66,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('show_recipes') }}
-    {{ encore_entry_script_tags('new_recette_home') }}
+    {{ encore_entry_script_tags('show_tags') }}
 {% endblock %}

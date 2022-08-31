@@ -27,7 +27,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[Route("/admin", name: "admin_")]
 class AdminController extends AbstractController
 {
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;

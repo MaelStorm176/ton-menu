@@ -1,4 +1,5 @@
 import "blueimp-file-upload";
+import {showError} from "./toasts";
 
 $(document).ready(function() {
   /*
@@ -18,7 +19,6 @@ $(document).ready(function() {
     const formData = form.serializeArray();
 
     //On test si le nom de l'ingrédient existe en base
-    console.log(formData);
     if ($("input[name='name']").val() !== "" && formData[0].value !== "") {
       $.ajax({
         url: '/ingredient/check-name?name=' + formData[0].value,
@@ -27,7 +27,7 @@ $(document).ready(function() {
         processData: false,
         success: function (data) {
           if (!data.success && data.message) {
-            alert(data.message);
+            showError(data.message);
           } else {
             isSubmitted = true;
             form.submit();

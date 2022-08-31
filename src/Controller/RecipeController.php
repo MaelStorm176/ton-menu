@@ -275,7 +275,7 @@ class RecipeController extends AbstractController
             if ($user instanceof User){
 
                 if ($user->getId() == $recipe->getUserId()->getId()){
-                    return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre recette'], Response::HTTP_BAD_REQUEST);
+                    return new JsonResponse(['error' => 'Vous ne pouvez pas liker votre propre recette'], Response::HTTP_ACCEPTED);
                 }
                 if ($user->getRecipesLiked()->contains($recipe)){
                     // remove like
