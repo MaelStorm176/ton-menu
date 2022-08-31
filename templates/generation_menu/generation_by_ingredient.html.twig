@@ -7,22 +7,11 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-5">
-				<h3>Liste des ingrédients</h3>
-				{{ form_start(form, {'attr': {'class': 'col-12 mx-auto'}}) }}
-				<div class="mt-1">
-					{{form_widget(form.ingredients)}}
-				</div>
-				<div class="d-none">
-					{{form_widget(form.nb_jours)}}
-				</div>
-				<div class="mt-3">
-					<button type="submit" class="btn btn-primary">Rechercher</button>
-				</div>
-				{{ form_end(form) }}
+				{{ form(form) }}
 			</div>
 			<div class="col-md-6 m-3 mx-auto">
 				{% if myRecipes %}
-					<h3 class="text-center">Recette générée :</h3>
+					<h3 class="text-center">Ton Menu vous propose :</h3>
 					{% for myRecipe in myRecipes %}
 						<!-- Gallery item -->
 						<div class="mb-4 w-50 mx-auto" id="recipe_{{ myRecipe.id }}" data-type="{{ myRecipe.type }}">
@@ -70,10 +59,6 @@
 						<!-- End -->
 
 					{% endfor %}
-				{% else %}
-					<div class="col-12 text-center">
-						<h3>Aucune recette trouvée.</h3>
-					</div>
 				{% endif %}
 			</div>
 		</div>

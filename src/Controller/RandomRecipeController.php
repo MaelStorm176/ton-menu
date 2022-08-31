@@ -7,6 +7,7 @@ use App\Entity\Ingredient;
 use App\Entity\SavedMenus;
 use App\Entity\User;
 use App\Form\IngredientFilterType;
+use App\Form\TonFrigoType;
 use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -281,7 +282,7 @@ class RandomRecipeController extends AbstractController
     public function generationByIngredient(Request $request): Response
     {
         $ingredientRepository = $this->getDoctrine()->getRepository(Ingredient::class);
-        $form = $this->createForm(IngredientFilterType::class, null, ['method' => 'GET']);
+        $form = $this->createForm(TonFrigoType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
