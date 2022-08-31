@@ -287,12 +287,14 @@ class RandomRecipeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $myRecipe = $this->recipeRepository->findByIngredient($data["ingredients"]);
-                return $this->render('generation_menu/generation_by_ingredient.html.twig', [
-                    'ingredients' => $ingredientRepository->findAll(),
-                    'myRecipes' => $myRecipe,
-                    "form" => $form->createView(),
-                ]);
+            //dd($data);
+            $myRecipe = $this->recipeRepository->getBySearchQueryBuilder($data)->orderBy('RAND()')->setMaxResults(1)->getQuery()->getResult();
+            dd($myRecipe);
+            return $this->render('generation_menu/generation_by_ingredient.html.twig', [
+                'ingredients' => $ingredientRepository->findAll(),
+                'myRecipes' => $myRecipe,
+                "form" => $form->createView(),
+            ]);
         }
         return $this->render('generation_menu/generation_by_ingredient.html.twig', [
             'ingredients' => $ingredientRepository->findAll(),

@@ -1,4 +1,4 @@
-$('#ton_frigo_ingredients_frigo').select2({
+$('#ton_frigo_ingredients').select2({
     placeholder: "Sélectionner un ou plusieurs ingrédients",
     allowClear: true,
     multiple: true,
@@ -7,7 +7,7 @@ $('#ton_frigo_ingredients_frigo').select2({
     width: "100%"
 });
 
-$('#ton_frigo_ingredients_not_frigo').select2({
+$('#ton_frigo_ingredients_not').select2({
     placeholder: "Sélectionner un ou plusieurs ingrédients",
     allowClear: true,
     multiple: true,

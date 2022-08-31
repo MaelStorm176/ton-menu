@@ -17,7 +17,7 @@ class TonFrigoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('ingredients_frigo', EntityType::class, [
+            ->add('ingredients', EntityType::class, [
                 'label' => 'Ingredients dans votre frigo',
                 'required' => true,
                 'class' => 'App\Entity\Ingredient',
@@ -26,7 +26,7 @@ class TonFrigoType extends AbstractType
                 'multiple' => true,
                 'expanded' => false,
             ])
-            ->add('ingredients_not_frigo', EntityType::class, [
+            ->add('ingredients_not', EntityType::class, [
                 'label' => 'Ingredients à bannir',
                 'required' => false,
                 'class' => 'App\Entity\Ingredient',
@@ -57,10 +57,12 @@ class TonFrigoType extends AbstractType
             ]);
     }
 
+    /*
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Recipe::class,
         ]);
     }
+    */
 }
