@@ -13,6 +13,9 @@
         <div class="col-md-6 col-sm-12">
             {{ form_row(tagForm.name) }}
         </div>
+        <div class="col-md-6 col-sm-12">
+            {{ form_row(tagForm.recipe) }}
+        </div>
     </div>
     {{ form_end(tagForm) }}
 
@@ -63,4 +66,5 @@
 
 {% block javascripts %}
     {{ parent() }}
+    {{ encore_entry_script_tags('add_tag') }}
 {% endblock %}

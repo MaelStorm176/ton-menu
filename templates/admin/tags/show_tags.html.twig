@@ -42,16 +42,16 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <div>
-                                            <a href="{{ path('tag_edit',{tag: tag.id}) }}" type="button" class="btn btn-secondary">
-                                                <i class="fs-4 bi-pen"></i>
-                                            </a>
-                                            <form action="{{ path('tag_delete',{tag: tag.id}) }}" method="post" onsubmit="return confirm('Etes vous sur de supprimer ce Tag');">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('delete'~tag.id) }}"/>
-                                                <input type="hidden" name="_method" value="DELETE"/>
-                                                <button type="submit" class="btn btn-secondary">
-                                                    <i class="fs-4 bi-trash"></i>
-                                                </button>
-                                            </form>
+                                                <a href="{{ path('tag_edit',{tag: tag.id}) }}" type="button" class="btn btn-secondary">
+                                                    <i class="fs-4 bi-pen"></i>
+                                                </a>
+                                                <form action="{{ path('tag_delete',{tag: tag.id}) }}" method="post" onsubmit="return confirm('Etes vous sur de supprimer ce Tag');">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete'~tag.id) }}"/>
+                                                    <input type="hidden" name="_method" value="DELETE"/>
+                                                    <button type="submit" class="btn btn-secondary">
+                                                        <i class="fs-4 bi-trash"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
