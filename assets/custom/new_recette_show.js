@@ -77,8 +77,6 @@ function like(id) {
 
 function download(id){
   const recipeContainer = $("#recipe > .container");
-  const recipe = recipeContainer.clone();
-
   html2canvas(recipeContainer[0], {
     useCORS: true,
     allowTaint: true,

@@ -1,3 +1,5 @@
+import {showError, showSuccess} from "./toasts";
+
 $(document).ready(function (){
   console.log("results_menu.js loaded");
 
@@ -41,17 +43,15 @@ $(document).ready(function (){
         },
         success: function(data){
           if (data.success === true && data.msg !== "") {
-            console.log(data);
-            alert(data.msg);
+            showSuccess(data.msg);
           }else if (data.success === false && data.msg !== "") {
-            alert(data.msg);
+            showError(data.msg);
           } else{
-            alert("Une erreur est survenue");
+            showError("Une erreur est survenue");
           }
         },
         error: function(data){
-          console.log(data);
-          alert("Une erreur est survenue");
+          showError("Erreur de communication avec le serveur");
         }
       });
     }

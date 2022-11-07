@@ -2,6 +2,7 @@ import {showError} from "./toasts";
 
 $(document).ready(function() {
   let isSubmitted = false;
+  const recipes_table = $("#recipesTable");
 
   $("#tag_recipe").select2({
     tags: true,
@@ -42,9 +43,9 @@ $(document).ready(function() {
     return false;
   });
 
-  if ($("#recipesTable"))
+  if (recipes_table.length > 0)
   {
-    $("#recipesTable").DataTable({
+    recipes_table.DataTable({
       pageLength: 10,
       responsive: true,
     });

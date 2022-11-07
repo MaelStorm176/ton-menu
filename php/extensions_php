@@ -16,5 +16,5 @@ COPY /php/local.ini /usr/local/etc/php/conf.d/local.ini
 WORKDIR /var/www/app
 
 RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
