@@ -23,8 +23,6 @@ $(document).ready(function (){
     });
 
     function show_ingredients(id_recette, obj){
-        const trigger_td = $("recette_ingredients_trigger_"+id_recette);
-        const results_td = $("recette_ingredients_results_"+id_recette);
         const tr = $(obj).closest('tr');
         const row = recipes_table.row( tr );
 

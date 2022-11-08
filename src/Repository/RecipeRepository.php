@@ -82,7 +82,7 @@ class RecipeRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
-    public function countEntreeRecipe()
+    public function countEntreeRecipe(): array|float|int|string
     {
         return $this->createQueryBuilder('t')
             ->select('t.id')
@@ -92,7 +92,7 @@ class RecipeRepository extends ServiceEntityRepository
             ->getScalarResult();
     }
 
-    public function countPlatRecipe()
+    public function countPlatRecipe(): array|float|int|string
     {
         return $this->createQueryBuilder('t')
             ->select('t.id')
@@ -102,7 +102,7 @@ class RecipeRepository extends ServiceEntityRepository
             ->getScalarResult();
     }
 
-    public function countDessertRecipe()
+    public function countDessertRecipe(): array|float|int|string
     {
         return $this->createQueryBuilder('t')
             ->select('t.id')
@@ -191,7 +191,9 @@ class RecipeRepository extends ServiceEntityRepository
                 ->setParameter('ingredients', $filters['ingredients'])
                 ->setParameter('count', count($filters['ingredients']));
         }
-
+        if (isset($filters['ingredients_not']) && !$filters['ingredients_not']->isEmpty()) {
+            $qb->andWhere('r.ingredients IN (:ingredients_not)')->setParameter('ingredients_not', $filters['ingredients_not']);
+        }
         if (isset($filters['tags']) && !$filters['tags']->isEmpty()) {
             $qb->innerJoin('r.recipeTags', 't', 'WITH', 't.id IN (:tags)')
                 ->groupBy('r.id')
@@ -283,31 +285,5 @@ class RecipeRepository extends ServiceEntityRepository
             ->orderBy('RAND()')
             ->setMaxResults(1);
         return $qb->getQuery()->getResult();
-    }
-
-    // Find/search articles by title/content
-    public function findArticlesByName(string $query)
-    {
-        $qb = $this->createQueryBuilder('p');
-        $qb
-            ->where(
-                $qb->expr()->andX(
-                    $qb->expr()->orX(
-                        $qb->expr()->like('p.name', ':query'),
-                    ),
-                )
-            )
-            ->setParameter('query', '%' . $query . '%');
-        return $qb
-            ->getQuery()
-            ->getResult();
-    }
-
-    public function findLast10One(){
-        return $this->createQueryBuilder('c')
-            ->orderBy('c.created_at', 'DESC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
     }
 }

@@ -14,6 +14,7 @@ $(document).ready(function (){
 
     }
     const table = $("#ingredientsTable").DataTable(dataTableOptions);
-    if ($("#recipesTable"))
-        $("#recipesTable").DataTable(dataTableOptions);
+    if ($("#recipesTable")){
+        const recipesTable = $("#recipesTable").DataTable(dataTableOptions);
+    }
 });

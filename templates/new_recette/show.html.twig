@@ -87,7 +87,7 @@
 <section id="recipe">
     <div class="container">
         <div class="col">
-            <div class="d-flex justify-content-center mb-3">
+            <div class="d-flex justify-content-center mb-3" data-html2canvas-ignore="true">
                 {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
                 <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp">
                     <i class="bi bi-pencil"></i>
@@ -185,8 +185,8 @@
                     <!-- INGREDIENTS + ETAPES -->
                     <div class="row h-100">
                         <div class="col-md-12">
-                            <div class="card">
-                                <h5 class="card-header">Ingrédients</h5>
+                            <div class="card shadow-sm">
+                                <h5 class="card-header">Ingrédients et quantités</h5>
                                 <div class="card-body">
                                     <p class="card-text">
                                         {% for quantitie in recette.recipeQuantities %}
@@ -199,7 +199,7 @@
                         </div>
 
                         <div class="col-md-12 mt-3">
-                            <div class="card">
+                            <div class="card shadow-sm">
                                 <h5 class="card-header">Etapes</h5>
                                 <div class="card-body">
                                     <p class="card-text">
@@ -338,7 +338,10 @@
                                 <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
                                 {% endif %}
                                 <br/>
-                                <small class="text-muted">{{comment.createdAt | date("d/m/Y h:i:s")}}</small>
+                                <small class="text-muted">
+                                    <i class="icon bi bi-clock"></i>
+                                    {{comment.createdAt | date("d/m/Y H:i")}}
+                                </small>
                             </div>
                             <div class="align-self-baseline ms-auto btn-group">
                                 <button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton{{ comment.id }}" data-bs-toggle="dropdown" aria-expanded="false"></button>

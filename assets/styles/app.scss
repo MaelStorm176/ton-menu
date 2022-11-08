@@ -68,6 +68,25 @@ a:hover {
 #header .logo img {
   max-height: 70px;
 }
+
+#header .nav-item .nav-link {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  transition: 0.3s;
+  position: relative;
+  padding: 10px 15px;
+  display: block;
+}
+
+#header .nav-item .nav-link:hover {
+  color: #cda45e;
+}
+
+#header .nav-item .nav-link.active {
+  color: #cda45e;
+}
+
 /**
 * Desktop Navigation 
 */
