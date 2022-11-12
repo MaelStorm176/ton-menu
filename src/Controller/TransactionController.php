@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TransactionController extends AbstractController
 {
-    const YOUR_DOMAIN = 'https://tonmenu.osc-fr1.scalingo.io';
+    const YOUR_DOMAIN = 'https://ton-menu-rattrapage.osc-fr1.scalingo.io/';
     //const YOUR_DOMAIN = 'http://localhost:8741';
 
     #[Route('/payment', name: 'app_payment')]

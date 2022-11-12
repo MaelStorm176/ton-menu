@@ -71,4 +71,3 @@ resultsStarter.then((recipesStarter) => {
         });
     });
 });
-
