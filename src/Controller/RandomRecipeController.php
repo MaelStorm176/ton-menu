@@ -289,7 +289,7 @@ class RandomRecipeController extends AbstractController
             $data = $form->getData();
             //dd($data);
             $myRecipe = $this->recipeRepository->getBySearchQueryBuilder($data)->orderBy('RAND()')->setMaxResults(1)->getQuery()->getResult();
-            dd($myRecipe);
+            //dd($myRecipe);
             return $this->render('generation_menu/generation_by_ingredient.html.twig', [
                 'ingredients' => $ingredientRepository->findAll(),
                 'myRecipes' => $myRecipe,
