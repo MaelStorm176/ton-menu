@@ -6,6 +6,7 @@ use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -74,6 +75,10 @@ class RecipeRepository extends ServiceEntityRepository
         return $qb->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countRecipe()
     {
         return $this->createQueryBuilder('t')
@@ -172,27 +177,28 @@ class RecipeRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getBySearchQueryBuilder($filters)
+    public function getBySearchQueryBuilder($filters): QueryBuilder
     {
         $qb = $this->createQueryBuilder('r');
         if (isset($filters['type']) && !empty($filters['type'])) {
-            $qb->andWhere('r.type IN (:type)')->setParameter('type', $filters['type']);
+            $qb->andWhere('r.type IN (:type)')
+                ->setParameter('type', $filters['type']);
         }
         if (isset($filters['name'])) {
-            $qb->andWhere('r.name like :name')->setParameter('name', "%" . $filters['name'] . "%");
+            $qb->andWhere('r.name like :name')
+                ->setParameter('name', "%" . $filters['name'] . "%");
         }
         if (isset($filters['difficulty']) && !empty($filters['difficulty'])) {
-            $qb->andWhere('r.difficulty IN (:difficulty)')->setParameter('difficulty', $filters['difficulty']);
+            $qb->andWhere('r.difficulty IN (:difficulty)')
+                ->setParameter('difficulty', $filters['difficulty']);
         }
         if (isset($filters['ingredients']) && !$filters['ingredients']->isEmpty()) {
-            $qb->innerJoin('r.ingredients', 'i', 'WITH', 'i.id IN (:ingredients)')
+            $qb->innerJoin('r.ingredients', 'i')
+                ->andWhere('i IN (:ingredients)')
                 ->groupBy('r.id')
                 ->having('COUNT(i.id) = :count')
                 ->setParameter('ingredients', $filters['ingredients'])
                 ->setParameter('count', count($filters['ingredients']));
-        }
-        if (isset($filters['ingredients_not']) && !$filters['ingredients_not']->isEmpty()) {
-            $qb->andWhere('r.ingredients IN (:ingredients_not)')->setParameter('ingredients_not', $filters['ingredients_not']);
         }
         if (isset($filters['tags']) && !$filters['tags']->isEmpty()) {
             $qb->innerJoin('r.recipeTags', 't', 'WITH', 't.id IN (:tags)')

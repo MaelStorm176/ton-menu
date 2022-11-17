@@ -2,12 +2,10 @@
 {% set badges ={'ENTREE': 'bg-light','PLAT': 'bg-primary','DESSERT': 'bg-secondary'} %}
 <div class="col-xl-3 col-lg-4 col-md-6 mb-4" id="recipe_{{ recipe.id }}" data-type="{{ recipe.type }}">
 	<div class="bg-white rounded shadow-sm h-100">
-		{% if is_granted("ROLE_PREMIUM") %}
-			{% if reload is defined and reload is same as(true) %}
-				<button class="btn btn-primary position-absolute p-2 m-2">
-					<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem"></i>
-				</button>
-			{% endif %}
+		{% if reload is defined and reload is same as(true) %}
+			<button class="btn btn-primary position-absolute p-2 m-2">
+				<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem"></i>
+			</button>
 		{% endif %}
 
 		{% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}

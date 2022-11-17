@@ -52,8 +52,9 @@
 					</div>
 					<div class="row mt-3">
 						<div class="col-md-12">
-							<label for="email" class="labels">Email</label>
-							<input name="email" type="text" class="form-control disabled" value="{{ user.email }}" disabled>
+							<label for="email" class="labels">
+								<input name="email" type="text" class="form-control disabled" value="{{ user.email }}" disabled>
+							</label>
 						</div>
 					</div>
 					<div class="row mt-3">
@@ -118,7 +119,7 @@
 												<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
 												<td class="text-center">{{ menu.nbJours }}</td>
 												<td class="text-center">
-													<a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
+													<a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jours': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
 												</td>
 											</tr>
 										{% endfor %}
@@ -128,7 +129,7 @@
 												<td class="text-center">{{ menu.createdAt|date("d/m/Y H:i") }}</td>
 												<td class="text-center">{{ menu.nbJours }}</td>
 												<td class="text-center">
-													<a href="{{ path('generation_menu', {'id_menu': menu.id, 'nb_jour': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
+													<a href="{{ path('generation_menu',{'id_menu': menu.id, 'nb_jours': menu.nbJours}) }}" class="btn btn-primary">Voir</a>
 												</td>
 											</tr>
 										{% endfor %}
@@ -154,6 +155,7 @@
 
 
 
+		{% if recipesLiked.count > 0 %}
 		<div class="jumbotron jumbotron-fluid">
 			<div class="container">
 				<h1 class="display-4">{{ user.recipesLiked.count }} Recettes en favoris</h1>
@@ -169,6 +171,8 @@
 				</div>
 			</div>
 		</div>
+		{% endif %}
+
 
 		{% if is_granted("ROLE_CHIEF") or is_granted("ROLE_ADMIN") %}
 			<div class="row">

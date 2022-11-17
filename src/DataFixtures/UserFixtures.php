@@ -6,11 +6,12 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture {
     private UserPasswordHasherInterface $encoder;
-    private \Faker\Generator $faker;
+    private Generator $faker;
     public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
@@ -62,7 +63,7 @@ class UserFixtures extends Fixture {
             ->setPassword($password_encoded)
             ->setRoles(["ROLE_ADMIN", "ROLE_CHIEF"])
             ->setIsVerify(true)
-            ->setApiKey(uniqid())
+            ->setApiKey(uniqid('', true))
             ->setProfilePicture("/blank.png");
         return $user;
     }
@@ -103,7 +104,7 @@ class UserFixtures extends Fixture {
         $user->setFirstName($this->faker->firstName);
         $user->setLastName($this->faker->lastName);
         $user->setIsVerify(true);
-        $user->setApiKey(uniqid());
+        $user->setApiKey(uniqid('', true));
         $user->setProfilePicture("/blank.png");
         $user->setRoles(['ROLE_PREMIUM']);
         return $user;

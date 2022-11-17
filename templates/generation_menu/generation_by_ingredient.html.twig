@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Personnalisation d'une recette
-{% endblock %}
+{% block title %}Ton Frigo{% endblock %}
 
 {% block body %}
 	<div class="container">
@@ -68,8 +67,10 @@
 			</div>
 		</div>
 	</div>
-	{% block javascripts %}
-		{{ parent() }}
-		{{ encore_entry_script_tags('generation_ingredient') }}
-	{% endblock %}
+</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('generation_ingredient') }}
 {% endblock %}
