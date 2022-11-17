@@ -21,11 +21,11 @@
 						</li>
 					{% endif %}
 					<li class="nav-item event-item">
-						<a class="nav-link scrollto" href="{{ path('generation_menu',{nb_jour: 7}) }}">Génération de menus</a>
+						<a class="nav-link scrollto" href="{{ path('generation_menu',{nb_jours: 7}) }}">Génération de menus</a>
 					</li>
 					{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
 						<li class="nav-item">
-							<a class="nav-link scrollto" href="{{ path('generation_by_ingredient') }}">Génération par ingrédients</a>
+							<a class="nav-link scrollto" href="{{ path('generation_by_ingredient') }}">Ton Frigo</a>
 						</li>
 					{% elseif is_granted('ROLE_USER') %}
 						<li class="nav-item">

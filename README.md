@@ -4,7 +4,7 @@
 Site web développé pour notre projet de fin de 4e année Ingénierie du Web.
 Ton Menu met à disposition des centaines de recettes, ingrédients ainsi qu'un générateur complet de menus.
 
-Un partie "réseau social" est aussi présente permettant à des chefs aussi bien professionnels que débutants de proposer leurs recettes et leurs menus.
+Une partie "réseau social" est aussi présente permettant à des chefs aussi bien professionnels que débutants de proposer leurs recettes et leurs menus.
 
 
 
@@ -33,7 +33,7 @@ OU
 ```
 OU
 ```bash
-  make npm-build
+  make npm-watch
 ```
 #### Importation des données de Marmiton (optionnel)
 ```bash

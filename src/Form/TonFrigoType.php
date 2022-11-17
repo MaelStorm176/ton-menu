@@ -52,7 +52,7 @@ class TonFrigoType extends AbstractType
                 'attr' => ['maxlength' => 4, 'min' => 1, 'max' => 100, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Nombre de personnes']
             ])
             ->add('save', SubmitType::class, [
-                'label' => 'Générez un menu complet !',
+                'label' => 'Proposez moi un menu !',
                 'attr' => ['class' => 'btn btn-primary']
             ]);
     }

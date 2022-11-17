@@ -10,6 +10,7 @@ use App\Form\IngredientFilterType;
 use App\Form\TonFrigoType;
 use App\Repository\RecipeRepository;
 use App\Repository\SavedMenusRepository;
+use JsonException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -46,13 +47,13 @@ class RandomRecipeController extends AbstractController
     #[Route('/ajax/generation-menu/save_menu', name: 'save_menu', methods: ['POST'])]
     public function saveMenu(Request $request)
     {
-        if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jours")) {
+        if ($request->get("menu") && $request->get("nb_jours") && json_decode($request->get("menu"), true)) {
             $em = $this->getDoctrine()->getManagerForClass(SavedMenus::class);
-
-            $menuJson = json_decode($request->get("menu"), true);
+            $menuJson = json_decode($request->get("menu"), true, 512, JSON_THROW_ON_ERROR);
             $user = $this->getUser();
-            if (!$user instanceof User)
+            if (!$user instanceof User) {
                 return $this->createAccessDeniedException("Vous devez être connecté pour sauvegarder un menu");
+            }
 
             $id_menu = $request->get("id_menu", 0);
             if ($id_menu == 0) {
@@ -61,7 +62,7 @@ class RandomRecipeController extends AbstractController
             } else {
                 $savedMenu = $this->savedMenusRepository->find($id_menu);
                 $savedMenu->setUpdatedAt(new \DateTimeImmutable());
-                if ($savedMenu->getUser()->getId() != $user->getId()) {
+                if ($savedMenu->getUser()->getId() !== $user->getId()) {
                     return $this->createAccessDeniedException("Vous n'avez pas le droit de modifier ce menu");
                 }
             }
@@ -74,9 +75,9 @@ class RandomRecipeController extends AbstractController
                 'id_menu' => $savedMenu->getId(),
                 'nb_jours' => $request->get("nb_jours"),
             ]);
-        } else {
-            return $this->createNotFoundException("Menu non valide");
         }
+
+        return $this->createNotFoundException("Menu non valide");
     }
 
     #[Route('/ajax/generation-menu/refresh', name: 'refresh_menu', methods: ['GET'])]
@@ -84,21 +85,25 @@ class RandomRecipeController extends AbstractController
     {
         if ($request->isXmlHttpRequest()){
             $type = $request->get("type");
-            if ($type == "ENTREE") {
+            if ($type === "ENTREE") {
                 return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomEntrees()[0], 'reload' => true]));
-            } elseif ($type == "PLAT") {
-                return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomPlats()[0], 'reload' => true]));
-            } elseif ($type == "DESSERT") {
-                return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomDesserts()[0], 'reload' => true]));
-            } else {
-                return new JsonResponse(array(
-                    'success' => false,
-                    'msg' => 'Erreur lors de la récupération des recettes'
-                ));
             }
-        } else {
-            return new Response('This is not ajax!', 400);
+
+            if ($type === "PLAT") {
+                return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomPlats()[0], 'reload' => true]));
+            }
+
+            if ($type === "DESSERT") {
+                return new Response($this->renderView('components/recipe_thumbnail.html.twig', ['recipe' => $this->randomDesserts()[0], 'reload' => true]));
+            }
+
+            return new JsonResponse(array(
+                'success' => false,
+                'msg' => 'Erreur lors de la récupération des recettes'
+            ));
         }
+
+        return new Response('This is not ajax!', 400);
     }
 
     #[Route('/ajax/generation-menu/send', name: 'send_to_mail', methods: ['POST'])]
@@ -107,7 +112,7 @@ class RandomRecipeController extends AbstractController
         if ($request->get("menu") && json_decode($request->get("menu"), true)) {
             $menuJson = json_decode($request->get("menu"), true);
             $user = $this->getUser();
-            if ($user->getEmail() == null) {
+            if ($user->getEmail() === null) {
                 return new JsonResponse(["error" => "Vous n'avez pas d'email"]);
             }
             if (is_array($menuJson)) {
@@ -136,9 +141,9 @@ class RandomRecipeController extends AbstractController
                 }
             }
             return new JsonResponse(["success" => true, "msg" => "Votre menu a été envoyé à votre adresse email"]);
-        } else {
-            return new JsonResponse(["error" => "Erreur"]);
         }
+
+        return new JsonResponse(["error" => "Erreur"]);
     }
 
     #[Route('/generation-menu', name: 'generation_menu', methods: ['GET'])]
@@ -167,7 +172,7 @@ class RandomRecipeController extends AbstractController
         //Si je demande à voir un menu en particulier
         if ($id_menu = $request->get('id_menu')) {
             $monMenu = $this->savedMenusRepository->find($id_menu);
-            if ($monMenu && $monMenu->getUser()->getId() == $user->getId()) {
+            if ($monMenu && $monMenu->getUser()->getId() === $user->getId()) {
                 $nb_jour_mon_menu = $monMenu->getNbJours();
                 if ($nb_jour != $nb_jour_mon_menu) {
                     //Si le nombre de jour demandé est SUPERIEUR au nombre de jours du menu en base
@@ -178,13 +183,13 @@ class RandomRecipeController extends AbstractController
                         $newPlats = $this->randomPlats($diff, $monMenu->getRecipes()['plats']);
                         $newDesserts = $this->randomDesserts($diff, $monMenu->getRecipes()['desserts']);
 
-                        $newEntreesIds = array_map(function ($e) {
+                        $newEntreesIds = array_map(static function ($e) {
                             return $e->getId();
                         }, $newEntrees);
-                        $newPlatsIds = array_map(function ($p) {
+                        $newPlatsIds = array_map(static function ($p) {
                             return $p->getId();
                         }, $newPlats);
-                        $newDessertsIds = array_map(function ($d) {
+                        $newDessertsIds = array_map(static function ($d) {
                             return $d->getId();
                         }, $newDesserts);
 
@@ -239,24 +244,29 @@ class RandomRecipeController extends AbstractController
             $plats = $this->randomPlats($nb_matin_soir, $refuseRecipe);
             $desserts = $this->randomDesserts($nb_matin_soir, $refuseRecipe);
 
-            $entreesIds = array_map(function ($e) {
+            $entreesIds = array_map(static function ($e) {
                 return $e->getId();
             }, $entrees);
-            $platsIds = array_map(function ($p) {
+            $platsIds = array_map(static function ($p) {
                 return $p->getId();
             }, $plats);
-            $dessertsIds = array_map(function ($d) {
+            $dessertsIds = array_map(static function ($d) {
                 return $d->getId();
             }, $desserts);
 
-            $json_menu = json_encode([
-                "entrees" => $entreesIds,
-                "plats" => $platsIds,
-                "desserts" => $dessertsIds,
-            ]);
+            try{
+                $json_menu = json_encode([
+                    "entrees" => $entreesIds,
+                    "plats" => $platsIds,
+                    "desserts" => $dessertsIds,
+                ], JSON_THROW_ON_ERROR);
+            }catch (\JsonException $e){
+                $this->addFlash('error', 'Une erreur est survenue');
+                return $this->redirectToRoute('home');
+            }
         }
 
-        //Si on a bien générer des entrees, plats et desserts, on peut rendre la vue
+        //Si on a bien généré des entrees, plats et desserts, on peut rendre la vue
         if ($entrees && $plats && $desserts && count($entrees) == count($plats) && count($plats) == count($desserts)) {
             return $this->render('generation_menu/index.html.twig', [
                 'id_menu' => $id_menu,
@@ -270,10 +280,8 @@ class RandomRecipeController extends AbstractController
             ]);
         }
         //Si on n'a pas généré des entrees, plats et desserts, on redirige vers la page d'accueil
-        else {
-            $this->addFlash('error', 'Il n\'y a pas assez de recettes disponibles pour générer un menu');
-            return $this->redirectToRoute('home');
-        }
+        $this->addFlash('error', 'Il n\'y a pas assez de recettes disponibles pour générer un menu');
+        return $this->redirectToRoute('home');
     }
 
     /**
@@ -287,12 +295,36 @@ class RandomRecipeController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            //dd($data);
-            $myRecipe = $this->recipeRepository->getBySearchQueryBuilder($data)->orderBy('RAND()')->setMaxResults(1)->getQuery()->getResult();
-            //dd($myRecipe);
+            //filter data to remove empty values
+            $data = array_filter($data, static function ($value) {
+                return $value !== null;
+            });
+            $myRecipes = $this
+                ->recipeRepository
+                ->getBySearchQueryBuilder($data)
+                ->orderBy('RAND()')
+                ->getQuery()
+                ->getResult();
+
+            if (isset($data["ingredients_not"])){
+                //filter all recipes to remove recipes with ingredients in $data["ingredients_not"]
+                $myRecipes = array_filter($myRecipes, static function ($recipe) use ($data) {
+                    $ingredients = $recipe->getIngredients();
+                    $ingredients = $ingredients->map(static function ($ingredient) {
+                        return $ingredient->getId();
+                    }, $ingredients);
+                    $ingredients = $ingredients->toArray();
+                    $ingredients_not = $data["ingredients_not"]->map(static function ($ingredient) {
+                        return $ingredient->getId();
+                    }, $data["ingredients_not"]);
+                    $ingredients_not = $ingredients_not->toArray();
+                    return !array_intersect($ingredients, $ingredients_not);
+                });
+            }
+
             return $this->render('generation_menu/generation_by_ingredient.html.twig', [
                 'ingredients' => $ingredientRepository->findAll(),
-                'myRecipes' => $myRecipe,
+                'myRecipes' => $myRecipes,
                 "form" => $form->createView(),
             ]);
         }
@@ -324,15 +356,15 @@ class RandomRecipeController extends AbstractController
         $type = strtoupper($type);
         if (in_array($type, ["ENTREE", "PLAT", "DESSERT"])) {
             return $this->recipeRepository->getRandomRecipes($type, $max, $notIn);
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     private function sortRecipes($recipes, $order)
     {
         $new_recipes = array_flip($order);
-        usort($recipes, function($a, $b) use ($new_recipes) {
+        usort($recipes, static function($a, $b) use ($new_recipes) {
             return $new_recipes[$a->getId()] <=> $new_recipes[$b->getId()];
         });
         return $recipes;

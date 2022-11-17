@@ -9,7 +9,7 @@
 }
 %}
 
-{% if is_granted('ROLE_USER') %}
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PREMIUM') %}
 	{% set reload = true %}
 {% else %}
 	{% set reload = false %}
