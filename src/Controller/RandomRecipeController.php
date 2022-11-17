@@ -49,7 +49,6 @@ class RandomRecipeController extends AbstractController
     {
         if ($request->get("menu") && $request->get("nb_jours") && json_decode($request->get("menu"), true)) {
             $em = $this->getDoctrine()->getManagerForClass(SavedMenus::class);
-
             $menuJson = json_decode($request->get("menu"), true, 512, JSON_THROW_ON_ERROR);
             $user = $this->getUser();
             if (!$user instanceof User) {
@@ -267,7 +266,7 @@ class RandomRecipeController extends AbstractController
             }
         }
 
-        //Si on a bien générer des entrees, plats et desserts, on peut rendre la vue
+        //Si on a bien généré des entrees, plats et desserts, on peut rendre la vue
         if ($entrees && $plats && $desserts && count($entrees) == count($plats) && count($plats) == count($desserts)) {
             return $this->render('generation_menu/index.html.twig', [
                 'id_menu' => $id_menu,
