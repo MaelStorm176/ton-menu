@@ -39,7 +39,6 @@ $(document).ready(function (){
         dataType: "json",
         data: {
           menu: generatedMenu,
-          nb_jours: $("input[name='nb_jour']").val()
         },
         success: function(data){
           if (data.success === true && data.msg !== "") {
