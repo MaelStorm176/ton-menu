@@ -160,27 +160,27 @@
 								{% for recipe in recipes %}
 									<tr id="recette_{{ recipe.id }}">
 										<td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
-										<td>
+										<td class="align-middle">
 											<span class="d-block text-truncate" style="max-width: 150px;">
 												<a href="{{ path('admin_user_show',{id: recipe.userId.id}) }}" target="_blank">
 													{{ recipe.userId.lastname }} {{ recipe.userId.firstname }}
 												</a>
 											</span>
 										</td>
-										<td>
+										<td class="align-middle">
 											<span class="d-block text-truncate" style="max-width: 300px;">
 												<a href="{{ path('recipe_show',{id: recipe.id}) }}" target="_blank">
 													{{ recipe.name }}
 												</a>
 											</span>
 										</td>
-										<td>{{ recipe.type }}</td>
-										<td class="text-center">{{ recipe.NumberOfPersons }}</td>
-										<td class="text-center">{{ recipe.difficulty }}
+										<td class="align-middle">{{ recipe.type }}</td>
+										<td class="align-middle text-center">{{ recipe.NumberOfPersons }}</td>
+										<td class="align-middle text-center">{{ recipe.difficulty }}
 											/ 5</td>
-										<td class="text-center">{{ recipe.PreparationTime|date("H:i") }}</td>
-										<td class="text-center">{{ recipe.TotalTime|date("H:i") }}</td>
-										<td class="text-center">
+										<td class="align-middle text-center">{{ recipe.PreparationTime|date("H:i") }}</td>
+										<td class="align-middle text-center">{{ recipe.TotalTime|date("H:i") }}</td>
+										<td class="align-middle text-center">
 											<a href="{{ path('recipe_show',{id: recipe.id}) }}" type="button" class="btn btn-secondary d-inline-block">
 												<i class="fs-4 bi-eye"></i>
 											</a>

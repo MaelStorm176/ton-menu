@@ -20,6 +20,7 @@ use App\Repository\RecipeRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -48,61 +49,61 @@ class RecipeController extends AbstractController
 
         $form = $this->createForm(RecetteType::class, $recette);
         $form->handleRequest($request);
-        if ($request->isMethod('POST')) {
-            if ($form->isSubmitted() && $form->isValid()) {
+        if ($request->isMethod('POST') && $form->isSubmitted() && $form->isValid()) {
 
-                if ($request->files->get('images') != null) {
-                    $images = $request->files->get('images');
-                    foreach ($images as $image) {
-                        $fichier = uniqid() . '.' . $image->guessExtension();
-                        $image->move(
-                            $this->getParameter('recipe_image_directory'),
-                            $fichier
-                        );
-                        $recipeImage = new RecipeImages();
-                        $recipeImage->setPath('/img/recipes/' . $fichier);
-                        $recipeImage->setRecipe($recette);
-                        $this->entityManager->persist($recipeImage);
-                    }
+            if ($request->files->get('images') !== null) {
+                $images = $request->files->get('images');
+                foreach ($images as $image) {
+                    $fichier = uniqid('', true) . '.' . $image->guessExtension();
+                    $image->move(
+                        $this->getParameter('recipe_image_directory'),
+                        $fichier
+                    );
+                    $recipeImage = new RecipeImages();
+                    $recipeImage->setPath('/img/recipes/' . $fichier);
+                    $recipeImage->setRecipe($recette);
+                    $this->entityManager->persist($recipeImage);
                 }
-
-                /** AJOUT DES ETAPES A LA RECETTE **/
-                $i = 1;
-                foreach ($recette->getRecipeSteps() as $step) {
-                    $step->setRecipe($recette);
-                    $step->setOrdre($i);
-                    $i++;
-                }
-
-                foreach ($recette->getRecipeQuantities() as $recipeQuantity) {
-                    $recipeQuantity->setRecipe($recette);
-                }
-
-                $recette->setCreatedAt(new DateTimeImmutable());
-                $recette->setUserId($user);
-                $this->entityManager->persist($recette)->flush();
-                foreach ($followers as $follower) {
-                    $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
-                    $email = (new TemplatedEmail())
-                        ->from('tonmenu@mange.fr')
-                        ->to($follow->getEmail())
-                        ->subject("Nouvelle recette de votre chef !")
-                        ->htmlTemplate('new_recette/new.html.twig')
-                        ->context([
-                            'recette' => $recette,
-                        ]);
-                    try {
-                        $mailer->send($email);
-                    } catch (\Exception $e) {
-                        return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
-                    }
-                }
-
-                $this->addFlash('success', 'Votre recette a bien été ajoutée !');
-                return $this->redirectToRoute('recipe_show', [
-                    'id' => $recette->getId()
-                ]);
             }
+
+            /** AJOUT DES ETAPES A LA RECETTE **/
+            $i = 1;
+            foreach ($recette->getRecipeSteps() as $step) {
+                $step->setRecipe($recette);
+                $step->setOrdre($i);
+                $i++;
+            }
+
+            foreach ($recette->getRecipeQuantities() as $recipeQuantity) {
+                $recipeQuantity->setRecipe($recette);
+            }
+
+            $recette->setCreatedAt(new DateTimeImmutable());
+            $recette->setUserId($user);
+            $this->entityManager->persist($recette)->flush();
+            foreach ($followers as $follower) {
+                $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
+                $email = (new TemplatedEmail())
+                    ->from('tonmenu@mange.fr')
+                    ->to($follow->getEmail())
+                    ->subject("Nouvelle recette de votre chef !")
+                    ->htmlTemplate('new_recette/new.html.twig')
+                    ->context([
+                        'recette' => $recette,
+                    ]);
+                try {
+                    $mailer->send($email);
+                } catch (\Exception $e) {
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                } catch (TransportExceptionInterface $e) {
+                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                }
+            }
+
+            $this->addFlash('success', 'Votre recette a bien été ajoutée !');
+            return $this->redirectToRoute('recipe_show', [
+                'id' => $recette->getId()
+            ]);
         }
 
         return $this->render('new_recette/create.html.twig', [
@@ -147,12 +148,11 @@ class RecipeController extends AbstractController
             return $this->redirectToRoute('home');
         }
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token')) && $user->getId() == $recipe->getUserId()->getId()) {
-
             $images = $recipe->getRecipeImages();
             foreach ($images as $image) {
-                $file = $this->getParameter('recipe_image_directory') . $image->getPath();
-                if (file_exists($file)) {
-                    unlink($file);
+
+                if ($image->getPath() && file_exists($this->getParameter('recipe_image_directory') . $image->getPath())) {
+                    unlink($this->getParameter('recipe_image_directory') . $image->getPath());
                 }
                 $this->entityManager->remove($image);
             }
@@ -180,8 +180,9 @@ class RecipeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid() && !empty(array_filter($form->getData()))) {
             $data = $form->getData();
             $recettesResults = $this->recipeRepository->findBySearch($data);
-        } else
+        } else {
             $recettesResults = $recipeRepository->findBy([], ['created_at' => 'DESC']);
+        }
 
         $recettes = $paginator->paginate(
             $recettesResults,
@@ -245,9 +246,9 @@ class RecipeController extends AbstractController
             return $this->render('admin/recipes/table_ingredients.html.twig', [
                 'ingredients' => $ingredients
             ]);
-        } else {
-            return new Response('This is not ajax!', 400);
         }
+
+        return new Response('This is not ajax!', 400);
     }
 
     /**
@@ -260,9 +261,9 @@ class RecipeController extends AbstractController
             return $this->render('admin/recipes/table_tags.html.twig', [
                 'tags' => $tags
             ]);
-        } else {
-            return new Response('This is not ajax!', 400);
         }
+
+        return new Response('This is not ajax!', 400);
     }
 
     /**
@@ -286,11 +287,11 @@ class RecipeController extends AbstractController
                 $user->addRecipesLiked($recipe);
                 $this->entityManager->flush();
                 return new JsonResponse(['success' => true], Response::HTTP_OK);
-            }else{
-                return $this->json(['error' => 'Vous devez être connecté pour aimer une recette'], Response::HTTP_FORBIDDEN);
             }
-        } else {
-            return new Response('This is not ajax!', 400);
+
+            return $this->json(['error' => 'Vous devez être connecté pour aimer une recette'], Response::HTTP_FORBIDDEN);
         }
+
+        return new Response('This is not ajax!', 400);
     }
 }
