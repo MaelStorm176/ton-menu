@@ -80,7 +80,8 @@ class RecipeController extends AbstractController
 
                 $recette->setCreatedAt(new DateTimeImmutable());
                 $recette->setUserId($user);
-                $this->entityManager->persist($recette)->flush();
+                $this->entityManager->persist($recette);
+                $this->entityManager->flush();
                 foreach ($followers as $follower) {
                     $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
                     $email = (new TemplatedEmail())

@@ -104,7 +104,7 @@ class RandomRecipeController extends AbstractController
     #[Route('/ajax/generation-menu/send', name: 'send_to_mail', methods: ['POST'])]
     public function send_to_mail(Request $request, MailerInterface $mailer): JsonResponse
     {
-        if ($request->get("menu") && json_decode($request->get("menu"), true) && $request->get("nb_jours")) {
+        if ($request->get("menu") && json_decode($request->get("menu"), true)) {
             $menuJson = json_decode($request->get("menu"), true);
             $user = $this->getUser();
             if ($user->getEmail() == null) {
@@ -115,7 +115,7 @@ class RandomRecipeController extends AbstractController
                 $entrees = $this->recipeRepository->findBy(["id" => $menus["entrees"]]);
                 $plats = $this->recipeRepository->findBy(["id" => $menus["plats"]]);
                 $desserts = $this->recipeRepository->findBy(["id" => $menus["desserts"]]);
-                $nb_jours = $request->get("nb_jours");
+                $nb_jours = (count($menuJson["entrees"]))/2;
                 $email = (new TemplatedEmail())
                     ->from('tonmenu@mange.fr')
                     ->to($user->getEmail())
