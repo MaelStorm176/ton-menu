@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Recipe;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -50,6 +51,11 @@ class TonFrigoType extends AbstractType
                 'label' => 'Combien êtes-vous ?',
                 'required' => false,
                 'attr' => ['maxlength' => 4, 'min' => 1, 'max' => 100, 'step' => 1, 'class' => 'form-control', 'placeholder' => 'Nombre de personnes']
+            ])
+            ->add('menu_complet', CheckboxType::class, [
+                'label' => 'Souhaitez-vous un menu complet ? (entrée, plat, dessert)',
+                'required' => false,
+                'label_attr' => ['class' => 'checkbox-inline'],
             ])
             ->add('save', SubmitType::class, [
                 'label' => 'Proposez moi un menu !',
