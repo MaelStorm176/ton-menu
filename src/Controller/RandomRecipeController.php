@@ -24,7 +24,7 @@ class RandomRecipeController extends AbstractController
 {
     private RecipeRepository $recipeRepository;
     private SavedMenusRepository $savedMenusRepository;
-    const MAX_DAYS = 7;
+    public const MAX_DAYS = 7;
     public function __construct(RecipeRepository $recipeRepository, SavedMenusRepository $savedMenusRepository)
     {
         //get recipe repository
@@ -320,6 +320,11 @@ class RandomRecipeController extends AbstractController
                     $ingredients_not = $ingredients_not->toArray();
                     return !array_intersect($ingredients, $ingredients_not);
                 });
+            }
+
+            if (isset($data['menu_complet']) && $data['menu_complet'] == true){
+                //choose 1 recipe for each category
+
             }
 
             return $this->render('generation_menu/generation_by_ingredient.html.twig', [
