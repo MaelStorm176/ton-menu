@@ -322,9 +322,12 @@ class RandomRecipeController extends AbstractController
                 });
             }
 
-            if (isset($data['menu_complet']) && $data['menu_complet'] == true){
+            if (isset($data['menu_complet']) && $data['menu_complet'] === true){
                 //choose 1 recipe for each category
-
+                $myRecipes = $this->chooseOneRecipeByCategory($myRecipes);
+            }else{
+                //choose 3 recipes
+                $myRecipes = array_slice($myRecipes, 0, 3);
             }
 
             return $this->render('generation_menu/generation_by_ingredient.html.twig', [
@@ -340,6 +343,29 @@ class RandomRecipeController extends AbstractController
         ]);
     }
 
+    private function chooseOneRecipeByCategory(array $recipes): array
+    {
+        $recipesByCategory = [
+            "ENTREE" => [],
+            "PLAT" => [],
+            "DESSERT" => [],
+        ];
+        foreach ($recipes as $recipe){
+            if ($recipe instanceof Recipe){
+                $recipesByCategory[$recipe->getType()][] = $recipe;
+            }
+        }
+        $recipesByCategory = array_map(static function ($recipes) {
+            if (count($recipes) > 0){
+                return $recipes[array_rand($recipes)];
+            }
+           return null;
+        }, $recipesByCategory);
+        //remove null values
+        return array_filter($recipesByCategory, static function ($recipe) {
+            return $recipe !== null;
+        });
+    }
 
     private function randomEntrees($nb_matin_soir = 1, $not_in = [])
     {
