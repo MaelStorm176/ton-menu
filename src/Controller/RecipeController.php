@@ -73,32 +73,30 @@ class RecipeController extends AbstractController
                 $step->setOrdre($i);
                 $i++;
             }
-
+            
             foreach ($recette->getRecipeQuantities() as $recipeQuantity) {
                 $recipeQuantity->setRecipe($recette);
             }
-
-            $recette->setCreatedAt(new DateTimeImmutable());
-            $recette->setUserId($user);
-            $this->entityManager->persist($recette)->flush();
-            foreach ($followers as $follower) {
-                $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
-                $email = (new TemplatedEmail())
-                    ->from('tonmenu@mange.fr')
-                    ->to($follow->getEmail())
-                    ->subject("Nouvelle recette de votre chef !")
-                    ->htmlTemplate('new_recette/new.html.twig')
-                    ->context([
-                        'recette' => $recette,
-                    ]);
-                try {
-                    $mailer->send($email);
-                } catch (\Exception $e) {
-                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
-                } catch (TransportExceptionInterface $e) {
-                    return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                $recette->setCreatedAt(new DateTimeImmutable());
+                $recette->setUserId($user);
+                $this->entityManager->persist($recette);
+                $this->entityManager->flush();
+                foreach ($followers as $follower) {
+                    $follow = $this->entityManager->getRepository(User::class)->findOneBy(['id' => $follower->getUserId()]);
+                    $email = (new TemplatedEmail())
+                        ->from('tonmenu@mange.fr')
+                        ->to($follow->getEmail())
+                        ->subject("Nouvelle recette de votre chef !")
+                        ->htmlTemplate('new_recette/new.html.twig')
+                        ->context([
+                            'recette' => $recette,
+                        ]);
+                    try {
+                        $mailer->send($email);
+                    } catch (\Exception $e) {
+                        return new JsonResponse(["error" => "Erreur lors de l'envoi du mail" . $e->getMessage()]);
+                    }
                 }
-            }
 
             $this->addFlash('success', 'Votre recette a bien été ajoutée !');
             return $this->redirectToRoute('recipe_show', [

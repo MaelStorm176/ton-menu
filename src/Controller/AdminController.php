@@ -180,7 +180,11 @@ class AdminController extends AbstractController
     #[Route('/delete-comment/{id}', name: 'delete_report')]
     public function deleteReport(Signalement $signalement): Response
     {
-        $this->entityManager->remove($signalement->getMessage())->flush();
+        //dd($signalement);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($signalement->getMessage());
+        $entityManager->remove($signalement);
+        $entityManager->flush();
         return $this->redirectToRoute('admin_report_comment');
     }
 
@@ -188,7 +192,8 @@ class AdminController extends AbstractController
     public function acceptComment(Signalement $signalement): Response
     {
         $signalement->setTraiter(true);
-        $this->entityManager->persist($signalement)->flush();
+        $this->entityManager->persist($signalement);
+        $this->entityManager->flush();
         return $this->redirectToRoute('admin_report_comment');
     }
 
