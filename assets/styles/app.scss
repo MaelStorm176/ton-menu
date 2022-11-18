@@ -14,6 +14,15 @@
   src: url("../fonts/Montserrat-Regular.otf") format("otf")
  }
 
+html {
+  font-family: "Montserrat Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #212529;
+  background-color: #fff;
+  scroll-behavior: smooth;
+}
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/

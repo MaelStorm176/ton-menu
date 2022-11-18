@@ -10,6 +10,7 @@ $(document).ready(function () {
   });
 
   $("#share-recipe").click(function () {
+    //copy to clipboard
     navigator.clipboard.writeText($(this).data("link")).then(() => {
       showSuccess("Lien copié dans le presse-papier");
     })
