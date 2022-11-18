@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Generation Menu {% endblock %}
+
+{% block body %}
+    <div class="container min-vh-100 d-flex flex-column justify-content-center">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="text-center">Génération de menus</h1>
+                <!-- explicatif -->
+                <p class="text-center">
+                    Le générateur de menu vous permet de générer des menus aléatoires en fonction de vos préférences.
+                </p>
+                <p class="text-center">
+                    Pour bénéficier des meilleures fonctionnalités de ce service vous devez être connecté.
+                </p>
+                <p class="text-center">
+                    Passer en Premium vous permettra de générer des menus personnalisés et de les sauvegarder !
+                    Pour plus d'informations, rendez-vous sur la page <a href="{{ path('app_payment') }}" target="_blank">Premium</a>.
+                </p>
+            </div>
+        </div>
+        <hr/>
+        {% include 'generation_menu/table_menu.html.twig' %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('results_menu') }}
+{% endblock %}

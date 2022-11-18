@@ -1,0 +1,198 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\IngredientRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * @ORM\Entity(repositoryClass=IngredientRepository::class)
+ */
+class Ingredient
+{
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * @ORM\Column(type="string", length=40, unique=true)
+     */
+    private $name;
+
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $primary_type;
+
+    /**
+     * @ORM\Column(type="string", length=20, nullable=true)
+     */
+    private $secondary_type;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="ingredients")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user_id;
+
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
+    private $created_at;
+
+    /**
+     * @ORM\Column(type="datetime_immutable", nullable=true)
+     */
+    private $updated_at;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $image;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Recipe::class, mappedBy="ingredients")
+     */
+    private $recipes;
+
+    public function __construct()
+    {
+        $this->recipes = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return str_replace("®","",utf8_decode($this->name));
+    }
+
+    public function getNameEncoded(): ?string
+    {
+        return $this->name;
+    }
+
+    public function getSluggedName(): ?string
+    {
+        return \Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')->transliterate(str_replace([' ', "'", '"'], '-', strtolower($this->getName())));
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getPrimaryType(): ?string
+    {
+        return $this->primary_type;
+    }
+
+    public function setPrimaryType(string $primary_type): self
+    {
+        $this->primary_type = $primary_type;
+
+        return $this;
+    }
+
+    public function getSecondaryType(): ?string
+    {
+        return $this->secondary_type;
+    }
+
+    public function setSecondaryType(?string $secondary_type): self
+    {
+        $this->secondary_type = $secondary_type;
+
+        return $this;
+    }
+
+    public function getUserId(): ?User
+    {
+        return $this->user_id;
+    }
+
+    public function setUserId(?User $user_id): self
+    {
+        $this->user_id = $user_id;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->created_at;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updated_at): self
+    {
+        $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        if ($this->image && file_exists(__DIR__ . '/../../public/img/ingredients/' . $this->image)) {
+            return '/img/ingredients/' . $this->image;
+        }
+        return "/img/placeholder.webp";
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getRecipes(): Collection
+    {
+        return $this->recipes;
+    }
+
+    public function addRecipe(Recipe $recipe): self
+    {
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->addIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipe(Recipe $recipe): self
+    {
+        if ($this->recipes->removeElement($recipe)) {
+            $recipe->removeIngredient($this);
+        }
+
+        return $this;
+    }
+}

@@ -1,0 +1,54 @@
+{% extends "admin/admin.html.twig" %}
+
+{% block title %} Gestion des utilisateurs {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-primary">
+                    <h4 class="card-title">Liste des utilisateurs</h4>
+                    <p class="card-category">Voir, modifier ou supprimer un utilisateur</p>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="usersTable" class="table table-striped table-bordered" style="width:100%">
+                            <thead class="text-primary">
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Mail</th>
+                                    <th>Roles</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.lastname }} {{ user.firstname }}</td>
+                                        <td>{{user.email}}</td>
+                                        <td>
+                                        {% for role in user.roles %}
+                                            {{ role }} <br>
+                                        {% endfor %}
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ path('admin_user_show',{id: user.id}) }}" type="button" class="btn btn-secondary"><i class="fs-4 bi-eye"></i></a>
+                                            <button type="button" class="btn btn-secondary"><i class="fs-4 bi-pen"></i></button>
+                                            <button type="button" class="btn btn-secondary"><i class="fs-4 bi-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('show_user') }}
+{% endblock %}
+

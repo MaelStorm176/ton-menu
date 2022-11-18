@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ton Frigo{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<div class="row">
+			<!-- description of the functionnalities -->
+			<div class="col-md-6">
+				<h1>Bienvenu dans Ton Frigo !</h1>
+				<p>
+					Ton Frigo est une extension de Ton-Menu qui permet de générer des recettes à partir des ingrédients que vous avez dans votre frigo.
+				</p>
+				<p>
+					Renseignez simplement <b>les ingrédients</b> que vous avez dans votre frigo et Ton Frigo vous proposera des <b>recettes</b> qui vous permettront de les utiliser.
+				</p>
+			</div>
+		</div>
+		<hr class="solid"/>
+		<div class="row">
+			{% if myRecipes %}
+				<div class="col-md-3 col-sm-12">
+			{% else %}
+				<div class="col-md-12">
+			{% endif %}
+				<h2>
+					Mon frigo
+				</h2>
+				{{ form(form) }}
+			</div>
+			<div class="col-md-9 col-sm-12 m-3 mx-auto">
+				
+				{% if myRecipes %}
+					<h3 class="text-center">Ton Frigo vous propose :</h3>
+					<div class="row justify-content-center mt-2">
+						{% for myRecipe in myRecipes %}
+							{% include 'components/recipe_thumbnail.html.twig' with {recipe: myRecipe} %}
+						{% endfor %}
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('generation_ingredient') }}
+{% endblock %}

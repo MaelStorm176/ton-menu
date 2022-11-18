@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+ 
+{% block title %}Accueil{% endblock %}
+ 
+{% block body %} 
+        {% include 'home/hero.html.twig' %}
+        {% include 'home/about.html.twig' %}
+        {% include 'home/ourbest.html.twig' with {recipes:recipes} %}
+        {% include 'home/chef.html.twig' %}
+        {% include 'home/gallery.html.twig' %}
+
+{% endblock %}

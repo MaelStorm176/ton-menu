@@ -12,6 +12,14 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'login')]
     public function index(AuthenticationUtils $authenticationUtils): Response {
         // get the login error if there is one
+        
+        if ($this->getUser()) {
+            return $this->redirectToRoute('home');
+        }
+
+        //if user is not verify can't login redirecgt to page confirm
+
+
         $error = $authenticationUtils->getLastAuthenticationError();
 
         // last username entered by the user

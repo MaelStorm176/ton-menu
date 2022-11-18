@@ -1,0 +1,10 @@
+<div {% if id is defined %} id="{{ id }}" {% endif %} class="toast" {% if type is same as "success" %} role="status" aria-live="polite" {% else %} role="alert" aria-live="assertive" {% endif %} aria-atomic="true">
+    <div class="toast-header text-white {% if type is same as "success" %} bg-primary {% else %} bg-danger {% endif %}">
+        <strong class="me-auto">{{ title }}</strong>
+        <small>à l'instant</small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {{ message }}
+    </div>
+</div>

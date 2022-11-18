@@ -1,0 +1,377 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ recette.name }}{% endblock %}
+
+{% block body %}
+{% set difficulty = {
+    '1': 'Très facile',
+    '2': 'Facile',
+    '3': 'Moyen',
+    '4': 'Difficile'
+} %}
+
+{% set budget = {
+    '1': '€',
+    '2': '€€',
+    '3': '€€€',
+} %}
+
+{% set i = 1 %}
+    <style>
+        .comment-wrapper .panel-body {
+            max-height:650px;
+            overflow:auto;
+        }
+
+        .comment-wrapper .media-list .media img {
+            width:64px;
+            height:64px;
+            border:2px solid #e5e7e8;
+        }
+
+        .showLeft {
+            background-color: white !important;
+            border: 1px solid white !important;
+            text-shadow: white !important;
+            color: black !important;
+            padding: 10px;
+        }
+
+        .icons li {
+            background: none repeat scroll 0 0 black;
+            height: 7px;
+            width: 7px;
+            line-height: 0;
+            list-style: none outside none;
+            margin-right: 15px;
+            margin-top: 3px;
+            vertical-align: top;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .dropbtn:hover,
+        .dropbtn:focus {
+            background-color: #3e8e41;
+        }
+        .dropdown-content {
+            display: none;
+            position: relative;
+            margin-top: 60px;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .recipe-img {
+            width: auto;
+            height: 225px;
+            max-height: 225px;
+        }
+
+    </style>
+
+<section id="recipe">
+    <div class="container">
+        <div class="col">
+            <div class="d-flex justify-content-center mb-3" data-html2canvas-ignore="true">
+                {% if recette.userId == app.user or is_granted("ROLE_ADMIN") %}
+                <a href="{{ path('recipe_edit',{id: recette.id}) }}" class="btn-menu animated fadeInUp">
+                    <i class="bi bi-pencil"></i>
+                    Modifier la recette
+                </a>
+                <form action="{{ path('recipe_delete',{id: recette.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete'~recette.id) }}"/>
+                    <input type="hidden" name="_method" value="DELETE"/>
+                    <button type="submit" class="btn-menu animated fadeInUp mx-2">
+                        <i class="bi bi-trash"></i>
+                        Supprimer la recette
+                    </button>
+                </form>
+                {% endif %}
+                <button class="btn-menu animated fadeInUp" id="like-recipe" data-recipe="{{ recette.id }}">
+                    {% if is_granted("ROLE_USER") %}
+                        {% if app.user.recipesLiked.contains(recette) %}
+                            <i class="bi bi-heart-fill"></i>
+                            Retirer de mes favoris
+                        {% else %}
+                            <i class="bi bi-heart"></i>
+                            Ajouter à mes favoris
+                        {% endif %}
+                    {% else %}
+                        <i class="bi bi-heart"></i>
+                        Ajouter à mes favoris
+                    {% endif %}
+                </button>
+                <button class="btn-menu animated fadeInUp mx-2" id="share-recipe" data-link="{{ app.request.uri }}">
+                    <i class="bi bi-share"></i>
+                    Partager la recette
+                </button>
+                <button class="btn-menu animated fadeInUp" id="download-recipe" data-id="{{ recette.id }}">
+                    <i class="bi bi-download"></i>
+                    Télécharger la recette
+                </button>
+            </div>
+            <p class="title">{{recette.name}}</p>
+            <div class="d-flex flex-row justify-content-center">
+                {% for i in 1..5 %}
+                    {% if i <= recette.averageRating %}
+                        <i class="bi bi-star-fill" style="color: black"></i>
+                    {% else %}
+                        <i class="bi bi-star" style="color: black"></i>
+                    {% endif %}
+                {% endfor %}
+
+                <span class="mx-3">({{recette.numberOfRating}} avis)</span>
+            </div>
+
+
+            {% if recette.recipeImages is not empty %}
+            <div id="main-image" class="p-3 d-flex justify-content-center">
+                <img class="w-50 rounded-2 shadow-sm" crossorigin="anonymous" src="{{ recette.recipeImages[0].url }}?not-from-cache-please" loading="lazy" alt="{{ recette.name }}">
+            </div>
+            {% endif %}
+
+            <!--
+            <div class="row">
+                {% for image in recette.recipeImages %}
+                    <div class="col-md-3 mt-2">
+                        <img class="w-100 recipe-img rounded-2 shadow-sm" src="{{ image.url }}" loading="lazy" alt="{{ recette.name }}">
+                    </div>
+                {% endfor %}
+            </div>
+            -->
+
+
+            {% if recette.description %}
+                <hr class="solid">
+                <p class="description_recipe text-center">"{{ recette.description }}"</p>
+            {% endif %}
+            <hr class="solid">
+            <div class="d-flex justify-content-around align-items-center">
+                <span>
+                    <i class="icon bi bi-clock"></i>
+                    Cuisiné en : <span class="fw-bold">{{ recette.preparationTime|date('H:i') }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-check-circle"></i>
+                    Prêt en : <span class="fw-bold">{{ recette.totalTime|date('H:i') }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-bar-chart"></i>
+                    Difficulté : <span class="fw-bold">{{ difficulty[recette.difficulty] }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi-currency-euro"></i>
+                    Budget : <span class="fw-bold">{{ budget[recette.budget] }}</span>
+                </span>
+                <span>
+                    <i class="icon bi bi bi-people"></i>
+                    Pour : <span class="fw-bold">{{ recette.numberOfPersons }}</span>
+                </span>
+            </div>
+            <hr class="solid">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- INGREDIENTS + ETAPES -->
+                    <div class="row h-100">
+                        <div class="col-md-12">
+                            <div class="card shadow-sm">
+                                <h5 class="card-header bg-light">Ingrédients et quantités</h5>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        {% for quantitie in recette.recipeQuantities %}
+                                            <span class="fw-bold">{{quantitie.content}}</span>
+                                            <br />
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="card shadow-sm">
+                                <h5 class="card-header bg-light">Etapes</h5>
+                                <div class="card-body">
+                                    <p class="card-text">
+                                        {% set i = 0 %}
+                                        {% for step in recette.recipeSteps %}
+                                            <span class="fw-bold">Etape {{ i }} : </span>{{step.step}}
+                                            <hr class="solid">
+                                            {% set i = i + 1 %}
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- FIN INGREDIENTS + ETAPES -->
+
+                <!-- IMAGES INGREDIENTS -->
+                <div class="col-md-6 mt-sm-3 mt-md-0">
+                    <div class="grid row">
+                    {% for ingredient in recette.ingredients %}
+                        <div class="col-md-4 col-sm-4 mb-2">
+                            <div class="rounded shadow-sm border h-100">
+                                <a href="{{ path('ingredient_show', {id: ingredient.id}) }}" class="d-flex flex-column align-items-center text-center h-100">
+                                    {% if ingredient.image %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ ingredient.image }}">
+                                    {% else %}
+                                    <img class="w-100 h-75" alt="image_ingredient" loading="lazy" src="{{ asset('img/placeholder.webp') }}">
+                                    {% endif %}
+                                    <p class="fw-bold text-wrap mt-2">{{ingredient.name}}</p>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                <!-- FIN IMAGES INGREDIENTS -->
+            </div>
+            <hr class="solid">
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-award"></i>
+                        Crée par : <a href="{{ path('chef_page',{id: recette.userId.id}) }}"><span class="fw-bold">{{ recette.userId.firstName }} {{ recette.userId.lastName }}</span></a>
+                    </p>
+                </div>
+                <div class="col ">
+                    <p class="float-end description">
+                        <i class="icon bi bi-calendar2-week"></i>
+                        Ajouté le : <span class="fw-bold">{{ recette.createdAt|date('d/m/Y') }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-tags"></i>
+                        Tags : <span class="fw-bold">
+                            {% for tag in recette.recipeTags %}
+                                {{ tag.name }},
+                            {% endfor %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <div class="col">
+                    <p class="description">
+                        <i class="icon bi bi-link"></i>
+                        Lien externe / source : <span class="fw-bold">
+                            {% if recette.url %}
+                                <a href="{{ recette.url }}" target="_blank">Source</a>
+                            {% else %}
+                                <span class="fw-bold">Aucun lien</span>
+                            {% endif %}
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="container comment-wrapper mt-5">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 class="text-center">Avis et commentaires</h3>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-header">
+                <div class="rating">
+                    {% for i in (1..5) %}
+                        {% if rating != [] and rating.rate == i %}
+                            <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" checked data-recipe="{{ recette.id }}">
+                        {% else %}
+                            <input type="radio" name="rating" value="{{ i }}" id="rating_{{ i }}" data-recipe="{{ recette.id }}">
+                        {% endif %}
+                        <label for="rating_{{ i }}">☆</label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="panel-body">
+                {{ form_start(recetteForm) }}
+                    {{ form_row(recetteForm.content) }}
+                    {{ form_row(recetteForm.save) }}
+                {{ form_end(recetteForm) }}
+
+                <h3 class="panel-title">Commentaires ({{ recette.comments.count }})</h3>
+                <ul class="media-list list-group">
+                    {% for comment in recette.comments %}
+                    <li class="media list-group-item">
+                        <div class="d-flex align-items-center">
+                            <a href="#">
+                                <img src="{{ asset('profile_picture/'~comment.user.profilePicture) }}" alt="profile_picture" class="rounded-circle">
+                            </a>
+                            <div class="p-2">
+                                {% if "ROLE_CHIEF" in comment.user.roles %}
+                                    <span class="badge bg-primary">Chef</span>
+                                {% endif %}
+                                {% if "ROLE_PREMIUM" in comment.user.roles %}
+                                    <span class="badge bg-light">Premium</span>
+                                {% endif %}
+                                {% if "ROLE_ADMIN" in comment.user.roles %}
+                                    <span class="badge bg-secondary">Admin</span>
+                                {% endif %}
+
+                                {% if "ROLE_CHIEF" in comment.user.roles %}
+                                <a href="{{ path('chef_page',{id: comment.user.id}) }}">
+                                    <span class="fw-bold">{{ comment.user.firstName }} {{ comment.user.lastName }}</span>
+                                </a>
+                                {% else %}
+                                <strong class="text-success">{{comment.user.firstname}} {{ comment.user.lastname }}</strong>
+                                {% endif %}
+                                <br/>
+                                <small class="text-muted">
+                                    <i class="icon bi bi-clock"></i>
+                                    {{comment.createdAt | date("d/m/Y H:i")}}
+                                </small>
+                            </div>
+                            <div class="align-self-baseline ms-auto btn-group">
+                                <button class="btn bg-transparent dropdown-toggle" type="button" id="dropdownMenuButton{{ comment.id }}" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ comment.id }}">
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('send_signalement', {'id': comment.id}) }}">Signaler ce message</a>
+                                    </li>
+                                    {% if comment.user.id == app.user.id or is_granted("ROLE_ADMIN") %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ path('delete_comment', {'id': comment.id}) }}">Supprimer le message</a>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <p class="mt-2">{{comment.content}}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('new_recette_show') }}
+{% endblock %}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>Nouvelle recette</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	</head>
+	<body>
+		<div class="container">
+			<div>
+				<h1>Nouvelle recette de
+					{{recette.userId.firstname}}
+					{{recette.userId.lastname}}</h1>
+			</div>
+			<div>
+				<!-- Gallery item -->
+				{% set badges ={'ENTREE': 'bg-light','PLAT': 'bg-primary','DESSERT': 'bg-secondary'} %}
+				<div class="col-xl-3 col-lg-4 col-md-6 mb-4" id="recipe_{{ recette.id }}" data-type="{{ recette.type }}">
+					<div class="bg-white rounded shadow-sm h-100">
+
+						{% if reload is defined and reload is same as(true) %}
+							<button class="btn btn-primary position-absolute p-2 m-2">
+								<i class="bi bi-arrow-clockwise" style="font-size: 1.5rem"></i>
+							</button>
+						{% endif %}
+
+						{% if recette.recipeImages is not empty and recette.recipeImages[0].url %}
+							<img src="{{ asset(recette.recipeImages[0].url) }}" alt="picture" class="card-img-top w-sm-50" style="height: 60%">
+						{% else %}
+							<img src="{{ asset('img/placeholder.webp') }}" alt="picture" class="card-img-top w-sm-50" style="height: 60%">
+						{% endif %}
+
+						<span class="badge float-end p-2 m-2 {{ badges[recette.type] }}">{{ recette.type|capitalize }}</span>
+
+						<div style="height: 40%" class="p-4">
+							<div class="d-flex justify-content-between align-items-center">
+								<h5 class="text-truncate">
+									<a href="{{ path('recipe_show',{id: recette.id}) }}" class="text-dark">{{ recette.name }}</a>
+								</h5>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End -->
+
+			</div>
+		</div>
+	</body>
+</html>

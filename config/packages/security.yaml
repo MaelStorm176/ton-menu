@@ -13,10 +13,21 @@ security:
       entity:
         class: App\Entity\User
         property: email
+    apikey_user_provider:
+      entity:
+        class: App\Entity\User
+        property: apiKey
   firewalls:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+    api:
+      pattern: ^/api
+      security: true
+      provider: apikey_user_provider
+      guard:
+        authenticators:
+          - App\Security\ApiKeyAuthentificator
     main:
       lazy: true
       provider: app_user_provider
@@ -27,6 +38,8 @@ security:
         enable_csrf: true
       logout:
         path: app_logout
+      entry_point: App\Security\AuthenticationEntryPoint
+      #access_denied_handler: App\Security\AccessDeniedHandler
 
       # activate different ways to authenticate
       # https://symfony.com/doc/current/security.html#the-firewall
@@ -37,10 +50,28 @@ security:
   # Easy way to control access for large sections of your site
   # Note: Only the *first* access control that matches will be used
   access_control:
-    - {
-        path: ^/articles,
-        roles: [IS_ANONYMOUS, IS_AUTHENTICATED_FULLY],
-        methods: GET,
-      }
-    # - { path: ^/admin, roles: ROLE_ADMIN }
-    # - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/admin, roles: ROLE_ADMIN }
+    - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/recipe/add, roles: [ROLE_CHIEF, ROLE_ADMIN] }
+    - { path: ^/rate, roles: ROLE_USER }
+    - { path: ^/logout, roles: ROLE_USER }
+    - { path: ^/chef, roles: ROLE_USER }
+    - { path: ^/ingredient/add, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/edit/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/check-name, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/delete/\d+$, roles: [ROLE_ADMIN] }
+    - { path: ^/ingredient/\d+$, roles: ROLE_USER }
+    - { path: ^/recipe/edit/\d+$, roles: [ROLE_ADMIN, ROLE_CHIEF] }
+    - { path: ^/generation-by-ingredient, roles: [ROLE_PREMIUM, ROLE_CHIEF, ROLE_ADMIN] }
+    - { path: ^/api, roles: [ROLE_PREMIUM, ROLE_ADMIN] }
+    - { path: ^/demande, roles: ROLE_USER }
+    - { path: ^/recipe/all, roles: ROLE_USER }
+    - { path: ^/recipe/\d+$, roles: ROLE_USER }
+    - { path: ^/payment, roles: ROLE_USER }
+    - { path: ^/delete/\d+$, roles: ROLE_USER }
+    - { path: ^/signalement/\d+$, roles: ROLE_USER }
+    - { path: ^/follow/\d+$, roles: ROLE_USER }
+    - { path: ^/ajax, roles: ROLE_USER }
+    - { path: ^/rate/\d+$, roles: ROLE_USER }
+    - { path: ^/success, roles: ROLE_USER }
+    - { path: ^/cancel, roles: ROLE_USER }

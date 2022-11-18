@@ -1,16 +1,20 @@
-FROM php:8.0.13-apache
+FROM php:8.0-fpm
 
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN apt update \
+    && apt install -y zlib1g-dev g++ wget make libicu-dev zip libzip-dev zip \
+    && docker-php-ext-install intl opcache pdo pdo_mysql \
+    && pecl install apcu \
+    && docker-php-ext-enable apcu \
+    && docker-php-ext-configure zip \
+    && docker-php-ext-install zip
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends locales apt-utils git libicu-dev g++ libpng-dev libxml2-dev libzip-dev libonig-dev libxslt-dev;
+RUN wget https://github.com/elastic/apm-agent-php/releases/download/v1.5/apm-agent-php_1.5_all.deb
+RUN dpkg -i apm-agent-php_1.5_all.deb
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
-    echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen && \
-    locale-gen
+COPY /php/local.ini /usr/local/etc/php/conf.d/local.ini
 
-RUN docker-php-ext-configure intl
-RUN docker-php-ext-install pdo pdo_mysql gd opcache intl zip calendar dom mbstring zip gd xsl
-RUN pecl install apcu && docker-php-ext-enable apcu
+WORKDIR /var/www/app
 
-WORKDIR /var/www/
+RUN curl -sS https://get.symfony.com/cli/installer | bash
+RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
+

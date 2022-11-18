@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% set break = false %}
+{% set i = 0 %}
+
+
+{% block title %}Page Chef
+{% endblock %}
+
+{% block body %}
+	<button class="btn btn-primary m-2" onclick="history.back();">Revenir sur votre recette</button>
+	<div class="container bg-white mb-5">
+		<div class="row">
+			<div class="col-md-3 border-right mx-auto">
+				<div class="d-flex flex-column align-items-center text-center p-3 py-4">
+					<img class="rounded-circle mt-2" width="150px" alt="profile_picture" src="{{ asset('/profile_picture/' ~ user.profilePicture) }}" id="output" loading="lazy">
+					<span class="font-weight-bold">{{ user.firstname }}
+						{{ user.lastname }}</span>
+					<span class="text-black-50">Chef</span>
+					{% for follow in follower %}
+						{% if break == false %}
+							{% if app.user.id != user.id and app.user.id != follow.userId %}
+								{% set i = 0 %}
+							{% elseif app.user.id == follow.userId %}
+								{% set i = 1 %}
+								{% set break = true %}
+							{% elseif app.user.id == user.id %}
+								{% set i = 2 %}
+								{% set break = true %}
+							{% endif %}
+						{% endif %}
+					{% endfor %}
+					{% if i == 0 %}
+						<div>
+							<a class="btn btn-primary" href="{{ path('follow', {'id': user.id}) }}">
+								<i class="bi bi-heart-fill"></i>
+							</a>
+						</div>
+					{% elseif i == 1 %}
+						<div>
+							<a class="btn btn-secondary" href="{{ path('unfollow', {'id': user.id}) }}">
+								<i class="bi bi-heartbreak-fill"></i>
+							</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+			<hr class="solid my-2"/>
+
+			{% if bestRecipes %}
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container">
+						<h4 class="text-center">{{ user.firstname }}
+							{{ user.lastname }}
+							vous propose ses meilleures recettes</h4>
+						<div class="row justify-content-center">
+							{% for recette in bestRecipes %}
+								{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+							{% endfor %}
+						</div>
+				</div>
+			</div>
+
+			{% if recettes and recettes.count > 0 %}
+				<div class="jumbotron jumbotron-fluid mt-3">
+					<div class="container">
+						<h4>Découvrez les recettes de
+							{{ user.firstname }}
+							{{ user.lastname }}</h4>
+						<div class="row">
+							{% for recette in recettes %}
+								{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+				<div class="row w-100 mx-auto">
+					{{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+				</div>
+			{% endif %}
+			{% else %}
+				<h4 class="text-center">{{ user.firstname }}
+					{{ user.lastname }}
+					n'a pas encore proposé de recette</h4>
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ ingredient.name }}
+{% endblock %}
+
+{% block body %}
+
+	<div class="container">
+		<div class="my-3">
+			<button class="btn btn-primary" onclick="history.back()">Revenir sur la page précédente</button>
+		</div>
+		<div class="d-flex flex-column align-items-center mx-auto">
+			<div class="jumbotron jumbotron-fluid">
+				<div class="container">
+					<h3 class="display-5 mb-3">{{ ingredient.recipes.count }}
+						Recettes contiennent l'ingrédient
+						<span class="fw-bold"> {{ ingredient.name }}</span>
+					</h3>
+					<div class="row">
+						{% for recette in pagination %}
+							{% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+						{% endfor %}
+					</div>
+
+					<div class="row">
+						<div class="col-12 d-flex justify-content-center">
+							{{ knp_pagination_render(pagination, 'pagination/pagination_template.html.twig') }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

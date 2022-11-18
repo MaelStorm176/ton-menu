@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des recettes{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            {% include 'components/recipe_filter.html.twig' with {form: form} %}
+        </div>
+
+        <hr/>
+
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">{{ countRecettes }} Recettes</h1>
+                <div class="row">
+                    {% for recette in recettes %}
+                        {% include 'components/recipe_thumbnail.html.twig' with {recipe: recette} %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center">
+                {{ knp_pagination_render(recettes, 'pagination/pagination_template.html.twig') }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('new_recette_home') }}
+{% endblock %}

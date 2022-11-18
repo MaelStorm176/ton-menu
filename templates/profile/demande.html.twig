@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('form') }}
+{% endblock %}
+
+{% block title %}Demande de role
+{% endblock %}
+{% block body %}
+	<div class="page-wrapper p-t-45 p-b-50" style="min-height: 50vh !important">
+		<div class="wrapper wrapper--w900">
+			<div class="card card-6">
+				<div class="card-heading">
+					<h2 class="title">Devenir chef</h2>
+				</div>
+				<div class="card-body">
+				
+					{% if demande == 0 %}
+						{{ form_start(form) }}
+						<div class="form-row">
+							<div class="name">Full name</div>
+							<div class="value">
+								{{ form_widget(form.name) }}
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Message</div>
+							<div class="value">
+								<div class="input-group">
+									{{ form_widget(form.message) }}
+								</div>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="name">Upload CV</div>
+							<div class="value">
+								<div class="input-group js-input-file">
+									{{ form_widget(form.document) }}
+								</div>
+								<div class="label--desc">Upload your CV/Resume or any other relevant file. Max file size 50 MB</div>
+							</div>
+						</div>
+						<div class="card-footer">
+							<button class="btn btn--radius-2 btn--blue-2 text-white" type="submit">Envoyer la demande</button>
+						</div>
+						{{ form_end(form )}}
+					{% else %}
+						<div>
+							<p class="m-5">Une demande est déjà en cours ou à déjà était accepté.</p>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

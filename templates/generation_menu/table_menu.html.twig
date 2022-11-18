@@ -1,0 +1,126 @@
+{% set trans_day_hash = {
+    "Monday": "Lundi",
+    "Tuesday": "Mardi",
+    "Wednesday": "Mercredi",
+    "Thursday": "Jeudi",
+    "Friday": "Vendredi",
+    "Saturday": "Samedi",
+    "Sunday": "Dimanche"
+}
+%}
+
+{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PREMIUM') %}
+	{% set reload = true %}
+{% else %}
+	{% set reload = false %}
+{% endif %}
+<div>
+	{% if is_granted('ROLE_USER') %}
+		<div class="row mb-3 col-12 mx-auto table-responsive">
+			<table class="table" id="results-table">
+				<thead>
+					<tr class="text-center">
+						<th>Jours générés</th>
+						<th>Ingrédients à éviter</th>
+						<th>Nouveau menu</th>
+						<th>Sauvegarde</th>
+						<th>Envoi par mail</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="text-center">
+						{{ form_start(form, {'attr': {'class': 'row col-12 mx-auto'}}) }}
+						<td class="align-middle">
+							{{ form_widget(form.nb_jours) }}
+						</td>
+						<!-- FILTRE PAR INGREDIENTS -->
+						<td class="align-middle">
+							{{ form_widget(form.ingredients) }}
+						</td>
+						<td>
+							<button type="submit" class="btn btn-outline-primary position-relative">
+								<i class="bi bi-caret-right-square-fill" style="font-size:2rem;"></i>
+							</button>
+						</td>
+						{{ form_end(form) }}
+						<td>
+							<!-- SAUVEGARDER LE MENU -->
+							<form class="" method="post" action="{{ path('save_menu') }}">
+								<input type="hidden" id="id_menu" name="id_menu" value="{{ id_menu }}">
+								<input type="hidden" name="nb_jours" value="{{ nb_jour }}">
+								<textarea class="d-none" name="menu" id="menu" cols="30" rows="10">{{ json_menu|raw }}</textarea>
+								<button type="submit" id="save_menu" class="btn btn-outline-primary">
+									<i class="bi bi-file-earmark-arrow-down-fill" style="font-size: 2rem;"></i>
+								</button>
+							</form>
+						</td>
+						<td>
+							<!-- EXPORTER LE MENU PAR MAIL -->
+							<form id="send_menu" name="send_menu" class="" method="post" action="#">
+								<button type="submit" class="btn btn-outline-primary">
+									<i class="bi bi-envelope-fill" style="font-size: 2rem;"></i>
+								</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	{% endif %}
+
+	<div class="row m-0">
+		<div class="col-md-12 col-sm-12 col-lg-12">
+			<div class="d-flex flex-row justify-content-md-center justify-content-md-around align-items-center overflow-auto mw-100">
+				{% for i in range(0,nb_jour-1) %}
+					<p id="jour_{{ i }}" class="my-auto d-flex flex-column align-items-center btn btn-outline-primary col-md-1 col-sm-2 m-1 {% if i is same as 0 %} active {% endif %} rounded shadow-sm">
+						<span>{{ trans_day_hash["now"| date_modify("+" ~ i ~ " day") | date("l","Europe/Paris")] }}</span>
+						<span class="fw-bold">{{ "now"| date_modify("+" ~ i ~ " day") | date("d/m","Europe/Paris") }}</span>
+					</p>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="container mt-3">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-lg-12" id="midi">
+				{% for i in range(0,nb_jour-1) %}
+					<div class="bg-light row {% if i is same as 0 %} d-block {% else %} d-none {% endif %}" id="show_jour_{{ i }}">
+						<div id="carouselExampleControls_{{ i }}" class="carousel slide carousel-animation">
+							<div class="carousel-inner">
+								<div class="carousel-item active">
+									<div class="row p-3 justify-content-center">
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i], reload: reload} %}
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i], reload: reload} %}
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i], reload: reload} %}
+									</div>
+									<div class="carousel-caption d-none d-md-block position-static">
+										<h5>Midi</h5>
+									</div>
+								</div>
+								<div class="carousel-item">
+									<div class="row p-3 justify-content-center">
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: entrees[i+nb_jour], reload: reload} %}
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: plats[i+nb_jour], reload: reload} %}
+										{% include 'components/recipe_thumbnail.html.twig' with {recipe: desserts[i+nb_jour], reload: reload} %}
+									</div>
+									<div class="carousel-caption d-none d-md-block position-static">
+										<h5>Soir</h5>
+									</div>
+								</div>
+							</div>
+							<a class="carousel-control-prev" href="#carouselExampleControls_{{ i }}" role="button" data-bs-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Previous</span>
+							</a>
+							<a class="carousel-control-next" href="#carouselExampleControls_{{ i }}" role="button" data-bs-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Next</span>
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>

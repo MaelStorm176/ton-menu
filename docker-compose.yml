@@ -1,44 +1,91 @@
 version: "3.8"
 
 services:
-  www:
+## PHP - NPM
+  php:
+    container_name: php
     build:
-      context: .
       dockerfile: ./php/extensions_php
-    container_name: www_docker_symfony
     ports:
-      - "8741:80"
+      - "9000:9000"
     volumes:
-      - ./php/vhosts:/etc/apache2/sites-enabled
-      - ./:/var/www
-    restart: always
+      - ./:/var/www/app:delegated
     networks:
       - dev
 
+## Web Server NGINX
+  nginx:
+    container_name: nginx
+    image: nginx:stable-alpine
+    ports:
+      - '8741:80'
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:cached
+      - ./public:/var/www/app/public:delegated
+    depends_on:
+      - php
+      - db
+    networks:
+      - dev
+
+## Composer
   composer:
+    container_name: composer_fa
     image: composer:2.1.9
-    entrypoint: composer
     volumes:
       - .:/app
+    working_dir: /app
 
+## Node - yarn - npm
+  encore:
+    container_name: encore_fa
+    image: node:14-alpine
+    volumes:
+      - .:/app
+    working_dir: /app
+
+## MY SQL
   db:
-    image: mysql:5.6
+    container_name: mysql_fa
+    image: mysql:5.7
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=${DB_USER}
       - MYSQL_PASSWORD=${DB_PASSWORD}
       - MYSQL_DATABASE=${DB_NAME}
     volumes:
-      - ./database:/var/lib/postgresql/data:rw
+      - ./datavolume:/var/lib/mysql:rw
     ports:
-      - 3306:3306
+      - '3306:3306'
+    networks:
+      - dev
 
+## ADMINER
   adminer:
+    container_name: adminer_fa
     image: adminer
+    environment:
+      - DB_HOST=db
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=3306
+      - DB_CHARSET=utf8
+      - DB_COLLATION=utf8_general_ci
+      - ADMINER_DESIGN=nette
     ports:
-      - 8080:8080
+      - '8080:8080'
     depends_on:
       - db
+    networks:
+      - dev
+
+volumes:
+  datavolume:
 
 networks:
   dev:
+    name: dev
+  elk:
+    name: elk_external
+    external: true

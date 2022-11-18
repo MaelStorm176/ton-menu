@@ -1,0 +1,91 @@
+{% extends "admin/admin.html.twig" %}
+
+{% block title %}Gestion des recettes{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card">
+				<div class="card-header card-header-primary">
+					<h4 class="card-title">Liste des recettes</h4>
+					<p class="card-category">Voir, modifier ou supprimer une recette</p>
+				</div>
+				<div class="card-body">
+					<div class="row mt-3">
+						{% include 'components/recipe_filter.html.twig' with {form: form} %}
+					</div>
+					<div class="table-responsive">
+						<table id="recipesTable" class="display table table-striped table-bordered w-100">
+							<thead class="text-primary">
+								<tr>
+									<th style="width: 10px"></th>
+									<th>ID</th>
+									<th>Créateur</th>
+									<th>Nom</th>
+									<th>Type</th>
+									<th>Personnes</th>
+									<th>Difficulté</th>
+									<th>Temps préparation</th>
+									<th>Temps total</th>
+									<th>Actions</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for recipe in recipes %}
+									<tr id="recette_{{ recipe.id }}">
+										<td id="recette_ingredients_trigger_{{ recipe.id }}" data-id="{{ recipe.id }}"></td>
+										<td class="align-middle text-center">{{ recipe.id }}</td>
+										<td class="align-middle">
+											<span class="d-block text-truncate" style="max-width: 150px;">
+												<a href="{{ path('admin_user_show',{id: recipe.userId.id}) }}" target="_blank">
+													{{ recipe.userId.lastname }} {{ recipe.userId.firstname }}
+												</a>
+											</span>
+										</td>
+										<td class="align-middle">
+											<span class="d-block text-truncate" style="max-width: 300px;">
+												<a href="{{ path('recipe_show',{id: recipe.id}) }}" target="_blank">
+													{{ recipe.name }}
+												</a>
+											</span>
+										</td>
+										<td class="align-middle">{{ recipe.type }}</td>
+										<td class="text-center align-middle">{{ recipe.NumberOfPersons }}</td>
+										<td class="text-center align-middle">{{ recipe.difficulty }} / 5</td>
+										<td class="text-center align-middle">{{ recipe.PreparationTime|date("H:i") }}</td>
+										<td class="text-center align-middle">{{ recipe.TotalTime|date("H:i") }}</td>
+										<td class="text-center align-middle">
+											<a href="{{ path('recipe_show',{id: recipe.id}) }}" type="button" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-eye"></i>
+											</a>
+											<a href="{{ path('recipe_edit',{id: recipe.id}) }}" type="button" class="btn btn-secondary d-inline-block">
+												<i class="fs-4 bi-pen"></i>
+											</a>
+											<form class="d-inline-block" action="{{ path('recipe_delete',{id: recipe.id}) }}" method="post" onsubmit="return confirm('Etes-vous sûr de supprimer cette recette ?');">
+												<input type="hidden" name="_token" value="{{ csrf_token('delete'~recipe.id) }}"/>
+												<input type="hidden" name="_method" value="DELETE"/>
+												<button type="submit" class="btn btn-secondary">
+													<i class="fs-4 bi-trash"></i>
+												</button>
+											</form>
+										</td>
+										<td id="recette_ingredients_results_{{ recipe.id }}">
+											<div style="width: 1000px;"></div>
+										</td>
+									</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('show_recipes') }}
+	{{ encore_entry_script_tags('new_recette_home') }}
+{% endblock %}

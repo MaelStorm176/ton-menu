@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+	<head>
+		<link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+		<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
+		<link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
+		<link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
+		<link rel="mask-icon" href="{{ asset('favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#da532c">
+		<meta name="theme-color" content="#ffffff">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Administrateur -{% endblock %}
+		</title>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+			{{ encore_entry_link_tags('admin') }}
+		{% endblock %}
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+			{{ encore_entry_script_tags('admin_css') }}
+		{% endblock %}
+	</head>
+	<body class="sb-nav-fixed">
+		{% block body %}
+			<div class="container-fluid">
+				<div class="flex-nowrap">
+					{% block navbar %}
+						<nav
+							class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+							<!-- Navbar Brand-->
+							<a class="navbar-brand ps-3" href="{{ path('admin_index') }}">Administration</a>
+							<!-- Sidebar Toggle-->
+							<button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
+								<i class="bi bi-list"></i>
+							</button>
+						</nav>
+						<div id="layoutSidenav">
+							<div id="layoutSidenav_nav">
+								<nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+									<div class="sb-sidenav-menu">
+										<div class="nav">
+											<div class="sb-sidenav-menu-heading">Vue d'ensemble</div>
+											<a class="nav-link" href="{{ path('admin_index') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-speedometer"></i>
+												</div>
+												Dashboard
+											</a>
+											<div class="sb-sidenav-menu-heading">Recettes</div>
+											<a class="nav-link" href="{{ path('admin_ingredients') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-card-list"></i>
+												</div>
+												Ingrédients
+											</a>
+											<a class="nav-link" href="{{ path('admin_recipes') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-book"></i>
+												</div>
+												Recettes
+											</a>
+											<a class="nav-link" href="{{ path('admin_tags') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-tag"></i>
+												</div>
+												Tags
+											</a>
+											<div class="sb-sidenav-menu-heading">Utilisateurs</div>
+											<a class="nav-link" href="{{ path('admin_users') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-person-lines-fill"></i>
+												</div>
+												Utilisateurs
+											</a>
+											<a class="nav-link" href="{{ path('admin_report_comment') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-flag-fill"></i>
+												</div>
+												Signalement
+											</a>
+											<a class="nav-link" href="{{ path('admin_accept_demande') }}">
+												<div class="sb-nav-link-icon">
+													<i class="bi bi-award"></i>
+												</div>
+												Demande de roles
+											</a>
+										</div>
+									</div>
+									<div class="sb-sidenav-footer">
+										<a class="nav-link text-white" href="{{ path('home') }}">
+											<div class="sb-nav-link-icon d-inline-block">
+												<i class="bi bi-house-fill"></i>
+											</div>
+											Page d'accueil
+										</a>
+									</div>
+								</nav>
+							</div>
+						</div>
+					{% endblock %}
+					<div class="col" style="margin-left: 15rem !important; margin-top: 4rem !important">
+						{% block content %}{% endblock %}
+					</div>
+				</div>
+			</div>
+		{% endblock %}
+		<div aria-live="polite" aria-atomic="true">
+			<div class="toast-container position-fixed bottom-0 end-0 p-3">
+				{% for flashMessage in app.session.flashBag.get('success') %}
+					{% include 'components/toast.html.twig' with {title: "Succes !", message: flashMessage, type: "success"} %}
+				{% endfor %}
+
+				{% for flashMessage in app.session.flashBag.get('error') %}
+					{% include 'components/toast.html.twig' with {title: "Erreur !", message: flashMessage, type: "error"} %}
+				{% endfor %}
+
+				{% if error is defined and error %}
+					{% include 'components/toast.html.twig' with {title: "Erreur !", message: error.messageKey|trans(error.messageData, 'security'), type: "error"} %}
+				{% endif %}
+
+				{% include 'components/toast.html.twig' with {title: "Succes !", message: '', type: "success", id: "custom-success"} %}
+				{% include 'components/toast.html.twig' with {title: "Erreur !", message: '', type: "error", id: "custom-error"} %}
+			</div>
+		</div>
+	</body>
+</html>

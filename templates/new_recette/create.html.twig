@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {% if recipe is defined %}
+        Modification de la recette {{ recipe.name }}
+    {% else %}
+        Personnalisation d'une recette
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        {{ form_start(recetteForm) }}
+        <div class="row mt-5 mb-5">
+            <div class="col-md-12">
+                {% if recipe is defined %}
+                    <h1>Modification de la recette <span class="fw-bold">{{ recipe.name }}</span></h1>
+                {% else %}
+                    <h1>Personnalisation d'une recette</h1>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6">
+                {{ form_row(recetteForm.ingredients) }}
+            </div>
+
+            <div class="col-md-6">
+                {{ form_row(recetteForm.recipeTags) }}
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="parametrage-tab" data-bs-toggle="tab" data-bs-target="#parametrage" type="button" role="tab" aria-controls="parametrage" aria-selected="true">Paramétrage</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="photos-tab" data-bs-toggle="tab" data-bs-target="#photos" type="button" role="tab" aria-controls="photos" aria-selected="false">Photos</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="etapes-tab" data-bs-toggle="tab" data-bs-target="#etapes" type="button" role="tab" aria-controls="etapes" aria-selected="false">Etapes</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="quantites-tab" data-bs-toggle="tab" data-bs-target="#quantites" type="button" role="tab" aria-controls="quantites" aria-selected="false">Quantités</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="parametrage" role="tabpanel" aria-labelledby="parametrage-tab">
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        {{ form_row(recetteForm.name) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_row(recetteForm.type) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_row(recetteForm.number_of_persons) }}
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(recetteForm.url) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_row(recetteForm.difficulty) }}
+                    </div>
+                    <div class="col-md-3">
+                        {{ form_row(recetteForm.budget) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form_row(recetteForm.preparationTime) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(recetteForm.totalTime) }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form_row(recetteForm.description) }}
+                    </div>
+                </div>
+            </div>
+            <!-- PHOTOS -->
+            <div class="tab-pane fade" id="photos" role="tabpanel" aria-labelledby="photos-tab">
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <div class="input-images"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ETAPES -->
+            <div class="tab-pane fade" id="etapes" role="tabpanel" aria-labelledby="etapes-tab">
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <ul class="steps list-group"
+                            data-index="{{ recetteForm.recipeSteps|length > 0 ? recetteForm.recipeSteps|last.vars.name + 1 : 0 }}"
+                            data-prototype="{{ form_widget(recetteForm.recipeSteps.vars.prototype)|e('html_attr') }}"
+                        >
+                            {% for step in recetteForm.recipeSteps %}
+                                <li class="list-group-item">{{ form_row(step.step) }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUANTITE -->
+            <div class="tab-pane fade" id="quantites" role="tabpanel" aria-labelledby="quantites-tab">
+                <div class="row mb-2">
+                    <div class="col-md-12">
+                        <ul class="quantites list-group"
+                            data-index="{{ recetteForm.recipeQuantities|length > 0 ? recetteForm.recipeQuantities|last.vars.name + 1 : 0 }}"
+                            data-prototype="{{ form_widget(recetteForm.recipeQuantities.vars.prototype)|e('html_attr') }}"
+                        >
+                            {% for quantity in recetteForm.recipeQuantities %}
+                                <li class="list-group-item">{{ form_row(quantity.content) }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    {{ form_end(recetteForm) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('file_uploader') }}
+    {{ encore_entry_script_tags('add_recipe') }}
+{% endblock %}

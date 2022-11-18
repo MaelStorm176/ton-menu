@@ -1,19 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ asset('favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="theme-color" content="#ffffff">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
-
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
+        <title>Ton Menu - {% block title %}{% endblock %}</title>
+        {% block stylesheets %}{{ encore_entry_link_tags('app') }}{% endblock %}
+        {% block javascripts %}{{ encore_entry_script_tags('app') }}{% endblock %}
     </head>
     <body>
+        {% include 'base/nav.html.twig' %}
         {% block body %}{% endblock %}
+
+        <div aria-live="polite" aria-atomic="true">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                {% for flashMessage in app.session.flashBag.get('success') %}
+                    {% include 'components/toast.html.twig' with {title: "Succes !", message: flashMessage, type: "success"} %}
+                {% endfor %}
+
+                {% for flashMessage in app.session.flashBag.get('error') %}
+                    {% include 'components/toast.html.twig' with {title: "Erreur !", message: flashMessage, type: "error"} %}
+                {% endfor %}
+
+                {% if error is defined and error %}
+                    {% include 'components/toast.html.twig' with {title: "Erreur !", message: error.messageKey|trans(error.messageData, 'security'), type: "error"} %}
+                {% endif %}
+
+                {% include 'components/toast.html.twig' with {title: "Succes !", message: '', type: "success", id: "custom-success"} %}
+                {% include 'components/toast.html.twig' with {title: "Erreur !", message: '', type: "error", id: "custom-error"} %}
+            </div>
+        </div>
+        {% include 'base/footer.html.twig' %}
     </body>
 </html>

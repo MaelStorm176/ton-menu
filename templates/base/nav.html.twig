@@ -1,0 +1,125 @@
+<header id="header" class="w-100">
+	<nav class="navbar navbar-expand-lg bg-light shadow-sm">
+		<div class="container-fluid mx-3">
+			<a class="navbar-brand w-sm-75" href="{{ path('home') }}">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-block d-md-none" loading="lazy" width="50%">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-none d-md-block d-lg-none" loading="lazy" width="35%">
+				<img src="{{ asset('img/ton_menu.png') }}" alt="Logo ton menu" class="img-fluid d-none d-lg-block" loading="lazy" width="20%">
+			</a>
+
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<i class="bi bi-list" style="font-size: 2rem;"></i>
+			</button>
+			<div class="collapse navbar-collapse mr-5" id="navbarSupportedContent" style="flex-grow: 0 !important">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+					<li class="nav-item">
+						<a class="nav-link scrollto" href="{{ path('home') }}">Accueil</a>
+					</li>
+					{% if is_granted('ROLE_USER') %}
+						<li class="nav-item">
+							<a class="nav-link scrollto" href="{{ path('recipe_all') }}">Liste des recettes</a>
+						</li>
+					{% endif %}
+					<li class="nav-item event-item">
+						<a class="nav-link scrollto" href="{{ path('generation_menu',{nb_jours: 7}) }}">Génération de menus</a>
+					</li>
+					{% if is_granted('ROLE_PREMIUM') or is_granted('ROLE_ADMIN') %}
+						<li class="nav-item">
+							<a class="nav-link scrollto" href="{{ path('generation_by_ingredient') }}">Ton Frigo</a>
+						</li>
+					{% elseif is_granted('ROLE_USER') %}
+						<li class="nav-item">
+							<a class="nav-link scrollto" href="{{ path('app_payment') }}">Obtenir le pass premium</a>
+						</li>
+					{% endif %}
+					<li class="nav-item">
+						{% if is_granted('ROLE_ADMIN') %}
+							<div class="dropdown nav-item mx-0 mx-lg-1">
+								<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+									<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="{{ path('login') }}">
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark text-small shadow">
+									<li>
+										<a class="dropdown-item" href="{{ path('profile') }}">
+											<i class="bi bi-person-circle"></i>
+											Mon Profil
+										</a>
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('recipe_add') }}">
+											<i class="bi bi-plus-circle"></i>
+											Publier une recette
+										</a>
+									</li>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('admin_index') }}">
+											<i class="bi bi-gear"></i>
+											Dashboard Admin
+										</a>
+									</li>
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_logout') }}">
+											<i class="bi bi-box-arrow-right"></i>
+											Déconnexion
+										</a>
+									</li>
+								</ul>
+							</div>
+
+						{% elseif is_granted('ROLE_USER') %}
+							<div class="dropdown nav-item mx-0 mx-lg-1">
+								<a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+									<img class="rounded-circle" src="{{ asset('/profile_picture/' ~ app.user.profilePicture) }}" width="50" height="50" alt="" href="/login">
+								</a>
+								<ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+									<li>
+										<a class="dropdown-item" href="{{ path('profile') }}">
+											<i class="bi bi-person-circle"></i>
+											Mon Profil
+										</a>
+									</li>
+									{% if is_granted('ROLE_CHIEF') %}
+										<li>
+											<a class="dropdown-item" href="{{ path('chef_page',{id: app.user.id}) }}">
+												<i class="bi bi-person-circle"></i>
+												Mon profil public
+											</a>
+										</li>
+										<li>
+											<a class="dropdown-item" href="{{ path('recipe_add') }}">
+												<i class="bi bi-plus-circle"></i>
+												Ajouter une recette
+											</a>
+										</li>
+									{% endif %}
+									<li>
+										<hr class="dropdown-divider">
+									</li>
+									<li>
+										<a class="dropdown-item" href="{{ path('app_logout') }}">
+											<i class="bi bi-box-arrow-right"></i>
+											Déconnexion
+										</a>
+									</li>
+								</ul>
+							</div>
+
+						{% else %}
+							<div class="d-lg-flex">
+								<div class="vr d-none d-lg-block"></div>
+								<a class="nav-link scrollto text-dark" href="{{ path('login') }}">Se Connecter</a>
+								<a class="nav-link scrollto text-dark" href="{{ path('app_register') }}">S'inscrire</a>
+							</div>
+						{% endif %}
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+</header>

@@ -1,0 +1,28 @@
+ <!-- ======= Our Best Section ======= -->
+    <section id="why-us" class="why-us">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Nos Meilleures recettes</h2>
+          <p>Recettes du Moments</p>
+        </div>
+
+        <div class="row">
+          {% for recipe in recipes %}
+            <div class="col-lg-4">
+                <a href="{{ path('recipe_show',{id: recipe.id}) }}">
+                  <div class="box" data-aos="zoom-in" data-aos-delay="100">
+                    <h4>{{recipe.name}}</h4>
+                    {% if recipe.recipeImages is not empty and recipe.recipeImages[0].url %}
+                    <img src="{{ asset(recipe.recipeImages[0].url) }}" alt="recette" class="img-fluid rounded" style="width: 356px; height: 257px">
+                    {% else %}
+                    <img src="{{ asset('img/placeholder.webp') }}" alt="recette" class="img-fluid rounded" style="width: 356px; height: 257px">
+                    {% endif %}
+                  </div>
+                </a>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </section><!-- End Why Us Section -->
