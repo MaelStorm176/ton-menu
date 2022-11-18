@@ -3,6 +3,12 @@ import {showError, showSuccess} from "./toasts";
 $(document).ready(function (){
   console.log("results_menu.js loaded");
 
+  //auto scroll to table
+  const table = document.getElementById("results-table");
+  if (table !== null){
+    table.scrollIntoView();
+  }
+
   $("p[id^='jour_']").click(function(){
     const id = $(this).attr("id");
     const jour = id.substring(5);
