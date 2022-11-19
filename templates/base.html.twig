@@ -17,6 +17,9 @@
     </head>
     <body>
         {% include 'base/nav.html.twig' %}
+        {% if app.request.get('_route') != 'home' %}
+            {% include 'base/breadcrum.html.twig' %}
+        {% endif %}
         {% block body %}{% endblock %}
 
         <div aria-live="polite" aria-atomic="true">
